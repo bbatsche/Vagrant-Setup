@@ -23,3 +23,7 @@
 
 - name: Make sure unattended-upgrades only installs security updates
   lineinfile: dest=/etc/apt/apt.conf.d/50unattended-upgrades regexp="-backports" state=absent
+
+- name: Symlink VBoxGuestAdditions
+  command: ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions
+  sudo: yes

@@ -1,11 +1,10 @@
 # Vagrant Lamp Ansible Setup
 
-	$ vagrant up
+##1. Either clone or download this repo
 
-After install
+	$ cd vagrant-lamp
 
-	// Needed to halt then up again to show shared sync_folder does not show on first load
-	$ vagrant halt
+##2. Once inside directory run the following commands 
 
 	$ vagrant up
 
@@ -14,7 +13,7 @@ After install
 
     $ ansible-playbook -i local_hosts local-site-create.yml -e "domain=codeup.dev"
 
-    $ vagrant ssh
+    // Needed to halt then up again to show shared sync_folder does not show on first load
+	$ vagrant halt
 
-    // once in vm
-    $ sudo service nginx restart
+	$ vagrant up

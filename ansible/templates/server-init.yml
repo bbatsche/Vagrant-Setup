@@ -1,0 +1,28 @@
+---
+
+# Run as follows:
+# ansible-playbook -i hosts server-init.yml -e "hostname=server1" -e "domain=example.com" -e "admin_email=admin@example.com"
+
+- name: Server initialization
+  hosts: "{{ hostname }}"
+
+  tasks:
+
+  - include: tasks/hostname.yml
+  - include: tasks/timezone.yml
+  - include: tasks/sysctl.yml
+  - include: tasks/system_updates.yml
+  - include: tasks/system_utilities.yml
+  - include: tasks/lockdown_basic.yml
+  - include: tasks/fail2ban.yml
+  - include: tasks/ufw.yml
+  - include: tasks/mysql.yml
+  - include: tasks/nginx.yml
+  - include: tasks/php.yml
+  - include: tasks/php_composer.yml
+  - include: tasks/postfix.yml
+  - include: tasks/reboot.yml
+
+  handlers:
+
+  - include: handlers.yml
