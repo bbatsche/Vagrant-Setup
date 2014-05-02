@@ -1,0 +1,45 @@
+---
+
+# Run as follows:
+# ansible-playbook -i local_hosts local-site-create.yml -e "domain=codeup.dev"
+
+- name: Site Create
+
+  vars:
+    hostname: default
+    www_home: /vagrant/sites
+    git_create: True
+
+  hosts: "{{ hostname }}"
+
+  tasks:
+
+  - name: Create site directory
+    file: path={{ www_home }}/{{ domain }} state=directory owner=www-data group=www-data mode=0755
+    sudo: yes
+
+  - name: Ensure directory permissions persit
+    command: chmod -R g+rws {{ www_home }}/{{ domain }}
+    sudo: yes
+
+  - name: Deploy nginx site config
+    template: src=templates/nginx-site.conf.j2 dest=/etc/nginx/sites-available/{{ domain }} owner={{ ansible_ssh_user }}
+    sudo: yes
+    notify:
+      - restart nginx
+
+  - name: Activate nginx site
+    file: src=/etc/nginx/sites-available/{{ domain }} dest=/etc/nginx/sites-enabled/{{ domain }} state=link owner={{ ansible_ssh_user }}
+    sudo: yes
+    notify:
+      - restart nginx
+
+  - name: Deploy php-fpm pool config
+    template: src=templates/php-fpm-pool.conf.j2 dest=/etc/php5/fpm/pool.d/{{ domain }}.conf owner={{ ansible_ssh_user }}
+    sudo: yes
+    notify:
+      - restart php-fpm
+
+  handlers:
+
+  - include: handlers.yml
