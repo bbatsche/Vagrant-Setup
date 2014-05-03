@@ -9,7 +9,7 @@ box      = 'chef/ubuntu-14.04'
 hostname = 'trusty'
 domain   = 'codeup.dev'
 ip       = '192.168.77.77'
-ram      = '1024'
+ram      = '512'
 
 VAGRANTFILE_API_VERSION = "2"
 
@@ -31,6 +31,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "ansible/local-server-init.yml"
+    ansible.limit = "all"
+    ansible.host_key_checking = false
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "ansible/local-site-create.yml"
     ansible.limit = "all"
     ansible.host_key_checking = false
   end

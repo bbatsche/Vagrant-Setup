@@ -2,7 +2,7 @@
 
 - name: restart nginx
   service: name=nginx state=restarted
-  # sudo: yes
+  sudo: yes
 
 - name: restart postfix
   service: name=postfix state=restarted
@@ -25,6 +25,3 @@
 
 - name: restart server
   command: /sbin/reboot
-
-# - name: restart network-manager
-#   command: name=network-manager state=restarted
