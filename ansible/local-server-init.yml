@@ -2,17 +2,15 @@
 - name: Server initialization
 
   vars:
-    hostname: trusty
-    domain: "codeup.dev"
-    admin_email: "admin@example.com"
     www_home: /vagrant/sites
+    php_error_reporting: "E_ALL"
+    php_error_display: "On"
 
   hosts: default
   user: vagrant
   sudo: true
 
   tasks:
-
   - include: tasks/timezone.yml
   - include: tasks/sysctl.yml
   - include: tasks/system_updates.yml
@@ -21,9 +19,6 @@
   - include: tasks/nginx.yml
   - include: tasks/php.yml
   - include: tasks/php_composer.yml
-  - include: tasks/postfix.yml
-  - include: tasks/reboot.yml
 
   handlers:
-
   - include: handlers.yml

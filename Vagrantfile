@@ -9,7 +9,7 @@ box      = 'chef/ubuntu-14.04'
 hostname = 'trusty'
 domain   = 'codeup.dev'
 ip       = '192.168.77.77'
-ram      = '1024'
+ram      = '512'
 
 VAGRANTFILE_API_VERSION = "2"
 
@@ -27,12 +27,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", ram]
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vb.customize ["setextradata", :id, "--VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+    vb.customize ["guestproperty", "set", :id, "--timesync-threshold", 10000]
   end
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "ansible/local-server-init.yml"
-    ansible.limit = "all"
-    ansible.host_key_checking = false
+    ansible.extra_vars = {
+      hostname: hostname,
+    }
   end
 
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "ansible/local-site-create.yml"
+    ansible.extra_vars = {
+      domain: domain
+    }
+  end
 end

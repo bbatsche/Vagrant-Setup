@@ -1,5 +1,4 @@
 ---
-
 # test mail with the following command:
 # echo "Mail test." | mail -s "Just Testing" mailtest123@mailinator.com
 

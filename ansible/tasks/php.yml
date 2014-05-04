@@ -1,5 +1,4 @@
 ---
-
 - name: Install php
   apt: package={{ item }} state=present
   with_items:
@@ -40,6 +39,6 @@
   file: path=/var/lib/php/session state=directory owner=www-data
 
 - name: Modify php.ini settings
-  copy: src=templates/php.ini dest=/etc/php5/fpm/php.ini
+  template: src=templates/php.ini.j2 dest=/etc/php5/fpm/php.ini
   notify:
     - restart php-fpm

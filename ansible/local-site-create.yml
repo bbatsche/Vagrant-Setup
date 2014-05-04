@@ -1,8 +1,4 @@
 ---
-
-# Run as follows:
-# ansible-playbook -i local_hosts local-site-create.yml -e "domain=codeup.dev" -m service -a 'name=nginx state=restarted'
-
 - name: Site Create
 
   vars:
@@ -10,17 +6,16 @@
     www_home: /vagrant/sites
     git_create: True
 
-  hosts: "{{ hostname }}"
+  hosts: default
+  user: vagrant
+  sudo: true
 
   tasks:
-
   - name: Create site directory
     file: path={{ www_home }}/{{ domain }} state=directory owner=www-data group=www-data mode=0755
-    sudo: yes
 
   - name: Ensure directory permissions persit
     command: chmod -R g+rws {{ www_home }}/{{ domain }}
-    sudo: yes
 
   - name: Deploy nginx site config
     template: src=templates/nginx-site.conf.j2 dest=/etc/nginx/sites-available/{{ domain }} owner={{ ansible_ssh_user }}
@@ -41,5 +36,4 @@
       - restart php-fpm
 
   handlers:
-
   - include: handlers.yml

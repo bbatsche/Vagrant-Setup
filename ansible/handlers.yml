@@ -1,20 +1,23 @@
 ---
-
 - name: restart nginx
   service: name=nginx state=restarted
-  # sudo: yes
+  sudo: yes
 
 - name: restart postfix
   service: name=postfix state=restarted
+  sudo: yes
 
 - name: restart fail2ban
   service: name=fail2ban state=restarted
+  sudo: yes
 
 - name: restart ssh
   service: name=ssh state=restarted
+  sudo: yes
 
 - name: restart ufw
   service: name=ufw state=restarted
+  sudo: yes
 
 - name: restart php-fpm
   service: name=php5-fpm state=restarted
@@ -22,9 +25,8 @@
 
 - name: restart mysql
   service: name=mysql state=restarted
+  sudo: yes
 
 - name: restart server
   command: /sbin/reboot
-
-# - name: restart network-manager
-#   command: name=network-manager state=restarted
+  sudo: yes
