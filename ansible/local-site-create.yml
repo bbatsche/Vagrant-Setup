@@ -9,6 +9,8 @@
     hostname: default
     www_home: /vagrant/sites
     git_create: True
+    domain: "codeup.dev"
+    ansible_ssh_user: vagrant
 
   hosts: "{{ hostname }}"
 
