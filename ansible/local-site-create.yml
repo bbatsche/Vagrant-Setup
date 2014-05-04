@@ -4,7 +4,6 @@
   vars:
     hostname: default
     www_home: /vagrant/sites
-    git_create: True
 
   hosts: default
   user: vagrant
