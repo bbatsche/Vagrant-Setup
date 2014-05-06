@@ -5,6 +5,7 @@
     www_home: /vagrant/sites
     php_error_reporting: "E_ALL"
     php_error_display: "On"
+    laravel_env: local
 
   hosts: default
   user: vagrant

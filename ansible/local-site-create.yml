@@ -4,6 +4,7 @@
   vars:
     hostname: default
     www_home: /vagrant/sites
+    laravel_env: local
 
   hosts: default
   user: vagrant
