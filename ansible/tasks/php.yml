@@ -12,12 +12,11 @@
     - php5-imagick
     - php5-fpm
 
-# Ubuntu 13.10 has a bug in where the mcrypt ini file is placed.
+# Ubuntu 13.10+ has a bug in where the mcrypt ini file is placed.
 # Work around those by copying the file to the proper location and enabling mcrypt.
 - name: Copy mcrypt ini to proper location and enable
-  # shell: cp /etc/php5/conf.d/mcrypt.ini /etc/php5/mods-available/mcrypt.ini && php5enmod mcrypt creates=/etc/php5/mods-available/mcrypt.ini
-  shell: php5enmod mcrypt creates=/etc/php5/mods-available/mcrypt.ini
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'saucy'
+  shell: php5enmod mcrypt creates=/etc/php5/fpm/conf.d/20-mcrypt.ini
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '13.10'
   notify:
     - restart php-fpm
 
