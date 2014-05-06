@@ -33,5 +33,5 @@ env[TEMP] = /tmp/php/{{ domain }}
 {%- endif %}
 
 
-php_admin_value[open_basedir] = /var/log/php/:/var/lib/php/:{{ www_home }}/{{ domain }}/:/tmp/php/{{ domain }}/
-php_admin_value[upload_tmp_dir] = /tmp/php/{{ domain }}
+php_admin_value[open_basedir] = /var/log/php:/var/lib/php:{{ www_home }}/{{ domain }}:/tmp
+php_admin_value[upload_tmp_dir] = /tmp
