@@ -13,6 +13,9 @@
   - name: Create site directory
     file: path={{ www_home }}/{{ domain }} state=directory owner=www-data group=www-data mode=0755
 
+  - name: Create upload temp directory
+    file: path=/tmp/php/{{ domain }} state=directory owner={{ ansible_ssh_user }} group=www-data mode=775
+
   - name: Ensure directory permissions persit
     command: chmod -R g+rws {{ www_home }}/{{ domain }}
 
