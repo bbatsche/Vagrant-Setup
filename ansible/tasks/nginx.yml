@@ -9,7 +9,7 @@
   file: path=/etc/nginx/sites-available/default state=absent
 
 - name: Create nginx log directory
-  file: path=/var/log/nginx state=directory
+  file: path=/var/log/nginx state=directory mode=755
 
 - name: Create nginx includes directory
   file: path=/etc/nginx/includes state=directory

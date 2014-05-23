@@ -102,6 +102,11 @@ fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
+
 {% if laravel_env is defined -%}
     export LARAVEL_ENV="{{ laravel_env }}"
-{%- endif %}
+{% endif -%}
+
+{% if inventory_hostname == 'vagrant' -%}
+    cd /vagrant
+{% endif -%}

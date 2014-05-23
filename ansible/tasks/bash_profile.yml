@@ -3,4 +3,4 @@
   apt: package=bash-completion state=present
 
 - name: Install Bash Profile
-  template: src=templates/bashrc.j2 dest=/home/{{ ansible_ssh_user }}/.bashrc
+  template: src=templates/bashrc.j2 dest=~/.bashrc

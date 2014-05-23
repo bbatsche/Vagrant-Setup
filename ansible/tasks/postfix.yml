@@ -20,7 +20,7 @@
     - restart postfix
 
 - name: Set postfix hostname
-  lineinfile: dest=/etc/postfix/main.cf regexp="^myhostname" line="myhostname = {{ hostname }}.{{ domain }}" state=present
+  lineinfile: dest=/etc/postfix/main.cf regexp="^myhostname" line="myhostname = {{ ansible_fqdn }}" state=present
   notify:
     - restart postfix
 
