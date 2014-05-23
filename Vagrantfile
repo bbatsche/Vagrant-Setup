@@ -32,10 +32,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision :ansible do |ansible|
-    ansible.playbook = "ansible/local-server-init.yml"
-    ansible.extra_vars = {
-      hostname: hostname
-    }
+    ansible.inventory_path = "ansible/hosts"
+    ansible.limit          = "vagrant"
+    ansible.playbook       = "ansible/vagrant-init.yml"
   end
 
   config.vm.provision :ansible do |ansible|

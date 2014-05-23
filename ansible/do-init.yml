@@ -1,0 +1,28 @@
+---
+- name: Initializing Server
+  hosts: digital_ocean
+  user: root
+
+  vars_prompt:
+    - name: "new_user"
+      prompt: "New User Name"
+      private: no
+    - name: "new_user_password"
+      prompt: "New User Password"
+      private: yes
+      confirm: yes
+      encrypt: "md5_crypt"
+      salt_size: 7
+    - name: "admin_email"
+      prompt: "Notification eMail Address"
+      private: no
+
+  tasks:
+  - include: init-common.yml
+  - include: tasks/lockdown_full.yml
+  - include: tasks/fail2ban.yml
+  - include: tasks/ufw.yml
+  - include: tasks/postfix.yml
+
+  handlers:
+  - include: handlers.yml
