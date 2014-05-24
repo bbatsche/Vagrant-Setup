@@ -4,3 +4,4 @@
 
 - name: Install Bash Profile
   template: src=templates/bashrc.j2 dest=~/.bashrc
+  sudo: false

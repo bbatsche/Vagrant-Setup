@@ -38,9 +38,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision :ansible do |ansible|
-    ansible.playbook = "ansible/local-site-create.yml"
-    ansible.extra_vars = {
-      domain: domain
-    }
+    ansible.inventory_path = "ansible/hosts"
+    ansible.limit          = "vagrant"
+    ansible.playbook       = "ansible/site-create.yml"
+    ansible.extra_vars     = { domain: domain }
+    ansible.ask_sudo_pass  = true
   end
 end

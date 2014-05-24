@@ -1,5 +1,5 @@
 ---
-- name: Install php
+- name: Install PHP
   apt: package={{ item }} state=present
   with_items:
     - php5
@@ -11,6 +11,14 @@
     - php5-gd
     - php5-imagick
     - php5-fpm
+  notify:
+    - restart php-fpm
+
+- name: Install PHP Xdebug
+  apt: package=php5-xdebug state=present
+  when: php_debug
+  notify:
+    - restart php-fpm
 
 # Ubuntu 13.10+ has a bug in where the mcrypt ini file is placed.
 # Work around those by copying the file to the proper location and enabling mcrypt.
@@ -20,24 +28,21 @@
   notify:
     - restart php-fpm
 
-- name: Remove default php-fpm pool
+- name: Remove Default PHP-FPM Pool
   file: path=/etc/php5/fpm/pool.d/www.conf state=absent
   notify:
     - restart php-fpm
 
-- name: Create php-fpm log directory
+- name: Create PHP-FPM Log Directory
   file: path=/var/log/php-fpm state=directory owner=www-data
 
-- name: Create php log directory
+- name: Create PHP Log Directory
   file: path=/var/log/php state=directory owner=www-data
 
-- name: Create php upload directory
-  file: path=/var/lib/php/upload state=directory owner=www-data
-
-- name: Create php session directory
+- name: Create PHP Session Directory
   file: path=/var/lib/php/session state=directory owner=www-data
 
-- name: Modify php.ini settings
+- name: Modify php.ini Settings
   template: src=templates/php.ini.j2 dest=/etc/php5/fpm/php.ini
   notify:
     - restart php-fpm
