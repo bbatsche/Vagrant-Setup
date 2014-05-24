@@ -1,13 +1,17 @@
 ---
 - name: Initializing Server
   hosts: vagrant
-  sudo: true
+  sudo: yes
 
   vars_files:
   - "vars/{{ inventory_hostname }}.yml"
 
   tasks:
   - include: init-common.yml
+
+  - name: Install PHPUnit
+    command: composer global require "phpunit/phpunit=4.1.*"
+    sudo: no
 
   handlers:
   - include: handlers.yml

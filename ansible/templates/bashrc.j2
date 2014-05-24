@@ -108,3 +108,5 @@ fi
 {% if inventory_hostname == 'vagrant' -%}
     cd /vagrant
 {% endif -%}
+
+export PATH="$PATH:$HOME/.composer/vendor/bin"
