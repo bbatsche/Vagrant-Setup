@@ -32,8 +32,8 @@
     when: git_create
 
   - name: Add entry to local hosts file
-    local_action: 'lineinfile dest=/etc/hosts line="{{ ansible_eth1.ipv4.address }} {{ domain }}" regexp="{{ domain }}$"'
-    when: '"{{ inventory_hostname }}" == "vagrant"'
+    local_action: 'lineinfile dest=/etc/hosts line="{{ ansible_ssh_host }} {{ domain }}" regexp="{{ domain }}$"'
+    when: append_host is defined and append_host
 
   handlers:
   - include: handlers.yml

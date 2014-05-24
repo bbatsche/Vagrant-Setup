@@ -42,6 +42,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.limit          = "vagrant"
     ansible.playbook       = "ansible/site-create.yml"
     ansible.extra_vars     = { domain: domain }
-    ansible.ask_sudo_pass  = true
   end
 end
