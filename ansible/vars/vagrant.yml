@@ -1,0 +1,4 @@
+---
+www_home: /vagrant/sites
+git_create: no
+php_debug: yes

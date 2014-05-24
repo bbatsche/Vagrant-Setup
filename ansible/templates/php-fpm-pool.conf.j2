@@ -28,9 +28,7 @@ env[HOSTNAME] = $HOSTNAME
 env[TMP] = /tmp/php/{{ domain }}
 env[TMPDIR] = /tmp/php/{{ domain }}
 env[TEMP] = /tmp/php/{{ domain }}
-{% if laravel_env is defined -%}
-    env[LARAVEL_ENV] = {{ laravel_env }}
-{%- endif %}
+{% if php_debug %}env[LARAVEL_ENV] = local{% endif %}
 
 
 php_admin_value[open_basedir] = /var/log/php:/var/lib/php:{{ www_home }}/{{ domain }}:/tmp

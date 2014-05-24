@@ -3,11 +3,8 @@
   hosts: vagrant
   sudo: true
 
-  vars:
-    php_debug: yes
-    php_error_reporting: "E_ALL"
-    php_error_display: "On"
-    laravel_env: local
+  vars_files:
+  - "vars/{{ inventory_hostname }}.yml"
 
   tasks:
   - include: init-common.yml

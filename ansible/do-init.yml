@@ -3,6 +3,9 @@
   hosts: digital_ocean
   user: root
 
+  vars_files:
+  - "vars/{{ inventory_hostname }}.yml"
+
   vars_prompt:
     - name: "new_user"
       prompt: "New User Name"

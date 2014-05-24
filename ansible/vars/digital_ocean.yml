@@ -1,0 +1,6 @@
+---
+www_home: /srv/www
+git_home: /var/git
+git_create: no
+ansible_ssh_port: 22
+php_debug: yes
