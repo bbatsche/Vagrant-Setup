@@ -1,0 +1,18 @@
+---
+- name: Creating MySQL Database
+  hosts: all
+
+  vars_prompt:
+    - name: mysql_user
+      prompt: "New Username"
+      private: no
+    - name: mysql_pass
+      prompt: "New Password"
+      private: yes
+      confirm: yes
+
+  tasks:
+  - include: tasks/mysql_db.yml
+
+  handlers:
+  - include: handlers.yml

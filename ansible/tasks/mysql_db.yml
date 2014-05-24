@@ -1,0 +1,12 @@
+---
+- name: Create MySQL Database
+  mysql_db: name={{ db_name }} state=present
+  when: db_name is defined
+
+- name: Add MySQL User
+  mysql_user: name={{ mysql_user }} password={{ mysql_pass }} priv={{ db_name }}.*:ALL state=present
+  when: db_name is defined and (mysql_admin is not defined or not mysql_admin)
+
+- name: Add MySQL Administer
+  mysql_user: name={{ mysql_user }} password={{ mysql_pass }} priv=*.*:ALL,GRANT state=present
+  when: mysql_admin is defined and mysql_admin

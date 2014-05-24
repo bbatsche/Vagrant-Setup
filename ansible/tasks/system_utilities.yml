@@ -6,3 +6,4 @@
     - git
     - curl
     - ansible
+    - python-mysqldb
