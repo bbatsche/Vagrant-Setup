@@ -11,7 +11,7 @@
     file: path={{ www_home }}/{{ domain }} state=directory owner={{ ansible_ssh_user }} group=www-data mode=0755
 
   - name: Ensure directory permissions persit
-    command: chmod -R g+rws {{ www_home }}/{{ domain }}
+    command: chmod -R ug+rws {{ www_home }}/{{ domain }}
 
   - name: Deploy nginx site config
     template: src=templates/nginx-site.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}
