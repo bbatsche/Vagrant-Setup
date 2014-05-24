@@ -5,6 +5,7 @@
 
 - name: Create git repo for new site
   shell: git init --bare chdir={{ git_home }}/{{ domain }}.git creates={{ git_home }}/{{ domain }}.git/config
+  sudo: no
 
 - name: Create git post-receive hook
   template: src=templates/git-post-receive.j2 dest={{ git_home }}/{{ domain }}.git/hooks/post-receive mode=0755
