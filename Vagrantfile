@@ -20,6 +20,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.network :private_network, ip: ip
 
+  config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
+      owner: "vagrant",
+      group: "www-data",
+      mount_options: ["dmode=775,fmode=664"]
+
   config.vm.provider :virtualbox do |vb|
     vb.name = hostname
 
