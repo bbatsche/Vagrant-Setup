@@ -1,8 +1,8 @@
 ---
-- name: Install mysql
+- name: Install MySQL
   apt: package=mysql-server state=present
 
-- name: Create mysql configuration file
+- name: Create MySQL Configuration File
   template: src=templates/mysql.cnf.j2 dest=/etc/my.cnf
   notify:
-    - restart mysql
+    - Restart MySQL

@@ -1,7 +1,5 @@
 ---
-# task for updating timezone settings
-
-- name: Set timezone
+- name: Set Timezone
   copy:
     content: '{{ timezone | default("UTC") }}'
     dest: /etc/timezone
@@ -9,10 +7,10 @@
     group: root
     mode: 0644
 
-- name: Remove existing localtime configuration file
+- name: Remove Existing Localtime Config
   file: path=/etc/localtime state=absent
 
-- name: Set localtime to UTC
+- name: Set Localtime to UTC
   file: src=/usr/share/zoneinfo/{{ timezone | default("UTC") }} dest=/etc/localtime state=link owner=root group=root mode=0644
 
 - name: Reconfigure tzdata

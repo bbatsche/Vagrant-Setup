@@ -12,26 +12,26 @@
     - php5-imagick
     - php5-fpm
   notify:
-    - restart php-fpm
+    - Restart PHP-FPM
 
 - name: Install PHP Xdebug
   apt: package=php5-xdebug state=present
   when: php_debug
   notify:
-    - restart php-fpm
+    - Restart PHP-FPM
 
 # Ubuntu 13.10+ has a bug in where the mcrypt ini file is placed.
 # Work around those by copying the file to the proper location and enabling mcrypt.
-- name: Copy mcrypt ini to proper location and enable
+- name: Copy mcrypt Config to Proper Location and Enable
   shell: php5enmod mcrypt creates=/etc/php5/fpm/conf.d/20-mcrypt.ini
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '13.10'
   notify:
-    - restart php-fpm
+    - Restart PHP-FPM
 
 - name: Remove Default PHP-FPM Pool
   file: path=/etc/php5/fpm/pool.d/www.conf state=absent
   notify:
-    - restart php-fpm
+    - Restart PHP-FPM
 
 - name: Create PHP-FPM Log Directory
   file: path=/var/log/php-fpm state=directory owner=www-data
@@ -45,4 +45,4 @@
 - name: Modify php.ini Settings
   template: src=templates/php.ini.j2 dest=/etc/php5/fpm/php.ini
   notify:
-    - restart php-fpm
+    - Restart PHP-FPM

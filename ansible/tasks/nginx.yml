@@ -1,25 +1,25 @@
 ---
-- name: Install nginx
+- name: Install Nginx
   apt: package=nginx state=present
 
-- name: Disable nginx default site
+- name: Disable Nginx Default Site
   file: path=/etc/nginx/sites-enabled/default state=absent
 
-- name: Remove nginx default site config
+- name: Remove Nginx Default Site Config
   file: path=/etc/nginx/sites-available/default state=absent
 
-- name: Create nginx log directory
+- name: Create Nginx Log Directory
   file: path=/var/log/nginx state=directory mode=755
 
-- name: Create nginx includes directory
+- name: Create Nginx Includes Directory
   file: path=/etc/nginx/includes state=directory
 
-- name: Modify nginx configuration (main)
+- name: Modify Nginx Configuration (main)
   template: src=templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf
   notify:
-    - restart nginx
+    - Restart Nginx
 
-- name: Modify nginx configuration (location)
+- name: Modify Nginx Configuration (location)
   copy: src=templates/nginx.location.conf dest=/etc/nginx/includes/location.conf
   notify:
-    - restart nginx
+    - Restart Nginx

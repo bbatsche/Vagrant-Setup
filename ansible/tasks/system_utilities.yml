@@ -1,5 +1,5 @@
 ---
-- name: Install system utilties
+- name: Install System Utilties
   apt: package={{ item }} state=present
   with_items:
     - vim
@@ -7,3 +7,4 @@
     - curl
     - ansible
     - python-mysqldb
+    - mailutils

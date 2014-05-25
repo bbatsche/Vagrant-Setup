@@ -1,30 +1,30 @@
 ---
 # test mail with the following command:
-# echo "Mail test." | mail -s "Just Testing" mailtest123@mailinator.com
+# echo "Mail test." | mail -s "Just Testing" <some_email@address>
 
-- name: Set up postmail selections
+- name: Set up Postfix Selections (main mailer type)
   command: echo "postfix postfix/main_mailer_type select Internet Site" | debconf-set-selections
 
-- name: Set up postmail selections
+- name: Set up Postfix Selections (mailname)
   command: echo "postfix postfix/mailname string localhost" | debconf-set-selections
 
-- name: Set up postmail selections
+- name: Set up Postfix Selections (destinations)
   command: echo "postfix postfix/destinations string localhost.localdomain, localhost" | debconf-set-selections
 
-- name: Install postfix
+- name: Install Postfix
   apt: pkg=postfix state=present
 
-- name: Set postfix loopback-only
+- name: Set Postfix loopback-only
   lineinfile: dest=/etc/postfix/main.cf regexp="^inet_interfaces" line="inet_interfaces = loopback-only" state=present
   notify:
-    - restart postfix
+    - Restart Postfix
 
-- name: Set postfix hostname
+- name: Set Postfix Hostname
   lineinfile: dest=/etc/postfix/main.cf regexp="^myhostname" line="myhostname = {{ ansible_fqdn }}" state=present
   notify:
-    - restart postfix
+    - Restart Postfix
 
-- name: Create root email alias
+- name: Create root eMail Alias
   lineinfile: dest=/etc/aliases regexp="^root" line="root{{':'}} {{ admin_email }}" state=present
   notify:
-    - restart postfix
+    - Restart Postfix

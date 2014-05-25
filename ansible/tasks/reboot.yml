@@ -1,6 +1,5 @@
 ---
-
-- name: Reboot server
+- name: Reboot Server
   command: echo "Rebooting..."
   notify:
-    - restart server
+    - Restart Server

@@ -7,31 +7,31 @@
   - "vars/{{ inventory_hostname }}.yml"
 
   tasks:
-  - name: Create site directory
+  - name: Create Site Directory
     file: path={{ www_home }}/{{ domain }} state=directory owner={{ ansible_ssh_user }} group=www-data mode=0755
 
-  - name: Ensure directory permissions persit
+  - name: Ensure Directory Permissions Persit
     command: chmod -R ug+rws {{ www_home }}/{{ domain }}
 
-  - name: Deploy nginx site config
+  - name: Deploy Nginx Site Config
     template: src=templates/nginx-site.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}
     notify:
-      - restart nginx
+      - Restart Nginx
 
-  - name: Activate nginx site
+  - name: Activate Nginx Site
     file: src=/etc/nginx/sites-available/{{ domain }} dest=/etc/nginx/sites-enabled/{{ domain }} state=link
     notify:
-      - restart nginx
+      - Restart Nginx
 
-  - name: Deploy php-fpm pool config
+  - name: Deploy PHP-FPM Pool Config
     template: src=templates/php-fpm-pool.conf.j2 dest=/etc/php5/fpm/pool.d/{{ domain }}.conf
     notify:
-      - restart php-fpm
+      - Restart PHP-FPM
 
   - include: tasks/git_deploy.yml
     when: git_create
 
-  - name: Add entry to local hosts file
+  - name: Add Entry to Local Hosts File
     local_action: 'lineinfile dest=/etc/hosts line="{{ ansible_ssh_host }} {{ domain }}" regexp="{{ domain }}$"'
     when: append_host is defined and append_host
 
