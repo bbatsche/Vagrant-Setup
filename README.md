@@ -55,14 +55,16 @@ If you used the LAMP Setup Script provided you should have an SSH key generated 
 ### Editing Local Configs
 
 1. Edit your local SSH config file by running `subl ~/.ssh/config`. You should see something similar to the following already there:
-> Host github.com
-> User git
-> IdentityFile ~/.ssh/codeup_rsa
-
+```
+Host github.com
+    User git
+    IdentityFile ~/.ssh/codeup_rsa
+```
 1. Make sure to copy your droplet's IP address and add the following two lines to the file
-> Host <droplet IP address>
-> IdentityFile ~/.ssh/codeup_rsa
-
+```
+Host <droplet IP address>
+    IdentityFile ~/.ssh/codeup_rsa
+```
 1. Edit `ansible/hosts` and remove the `;` from the start of the line containing `digital_ocean`
 1. Replace the `xxx.xxx.xxx.xxx` with your droplet's IP address
 
