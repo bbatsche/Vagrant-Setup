@@ -16,7 +16,7 @@
   action: lineinfile dest=/etc/sudoers regexp="^{{ new_user }} ALL" line="{{ new_user }} ALL=(ALL) ALL" state=present validate="visudo -cf %s"
 
 - name: Ensure Public Key is in authorized_keys
-  authorized_key: user="{{ new_user }}" key="{{ lookup('file', '~/.ssh/codeup_rsa.pub') }}"
+  authorized_key: user="{{ new_user }}" key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
 - name: Install Bash Profile
   template: src=templates/bashrc.j2 dest=/home/{{ new_user }}/.bashrc
