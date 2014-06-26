@@ -27,19 +27,13 @@ sudo ansible-playbook ansible/site-create.yml -l vagrant -e "domain=<your new do
 
 We use DigitalOcean in part because their signup process is quite straight forward and easy to follow. Simply navigate to the [signup page](https://cloud.digitalocean.com/registrations/new) and follow the prompts.
 
-In order to manage the users on your new server, we need to install a Python library for Ansible to use. On your Mac, run the following command:
-
-```
-sudo easy_install passlib
-```
-
 ### Adding a Key
 
 If you used the LAMP Setup Script provided you should have an SSH key generated for you. You must add that key to your DigitalOcean account in order to connect to your server. In order to do so, follow these steps
 
 1. Navigate to the [SSH Keys section](https://cloud.digitalocean.com/ssh_keys) in your DigitalOcean account page.
 1. Click "Add SSH Key"
-1. Copy the contents of the file `~/.ssh/codeup_rsa.pub` (hint, you can do this easily by running `cat ~/.ssh/codeup_rsa.pub | pbcopy`)
+1. Copy the contents of the file `~/.ssh/id_rsa.pub` (hint, you can do this easily by running `cat ~/.ssh/id_rsa.pub | pbcopy`)
 1. Give your key a meaningful name (something like "Codeup SSH Key") and then paste your key data into the form.
 1. Now save your changes.
 
@@ -54,17 +48,6 @@ If you used the LAMP Setup Script provided you should have an SSH key generated 
 
 ### Editing Local Configs
 
-1. Edit your local SSH config file by running `subl ~/.ssh/config`. You should see something similar to the following already there:
-```
-Host github.com
-    User git
-    IdentityFile ~/.ssh/codeup_rsa
-```
-1. Make sure to copy your droplet's IP address and add the following two lines to the file
-```
-Host <droplet IP address>
-    IdentityFile ~/.ssh/codeup_rsa
-```
 1. Edit `ansible/hosts` and remove the `;` from the start of the line containing `digital_ocean`
 1. Replace the `xxx.xxx.xxx.xxx` with your droplet's IP address
 
