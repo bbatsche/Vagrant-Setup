@@ -2,11 +2,15 @@
 - name: Install Nginx
   apt: package=nginx state=present
 
-- name: Disable Nginx Default Site
-  file: path=/etc/nginx/sites-enabled/default state=absent
+- name: Set Nginx Default for Missing vhosts
+  copy: src=templates/nginx.default.conf dest=/etc/nginx/sites-available/default
+  notify:
+    - Restart Nginx
 
-- name: Remove Nginx Default Site Config
-  file: path=/etc/nginx/sites-available/default state=absent
+- name: Enable Nginx Default Site
+  file: src=/etc/nginx/sites-available/default dest=/etc/nginx/sites-enabled/default state=link
+  notify:
+    - Restart Nginx
 
 - name: Create Nginx Log Directory
   file: path=/var/log/nginx state=directory mode=755
