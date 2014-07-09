@@ -2,6 +2,7 @@
 - name: Site Create
   hosts: all
   sudo: yes
+  remote_user: codeup
 
   vars_files:
   - "vars/{{ inventory_hostname }}.yml"
