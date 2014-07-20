@@ -40,7 +40,7 @@ If you used the LAMP Setup Script provided you should have an SSH key generated 
 ### Creating a Droplet
 
 1. Click the [Create](https://cloud.digitalocean.com/droplets/new) button
-1. Give your server a meaningful hostname
+1. Give your server a meaningful hostname, such as "Codeup-Server"
 1. Pretty much all of the default options selected are appropriate for your first droplet (512MB / New York 2 / Ubuntu 14.04)
 1. **Make sure you select the option to add your SSH key to your new droplet!**
 1. Click create and then wait.
@@ -70,6 +70,7 @@ ansible-playbook ansible/site-create.yml -l digital_ocean -e "domain=<your new d
 ### Next Steps
 
 1. As the Ansible script runs, two messages with git commands should be outputted. Run those commands from within your application's root directory.
+1. The init script created a user called "codeup" in your droplet; you will use this user when SSH-ing into your new server.
 1. You must now SSH into your server and run the standard composer and artisan commands to initialize your application.
 
 ## Managing MySQL
