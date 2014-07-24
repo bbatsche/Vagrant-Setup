@@ -1,17 +1,14 @@
 ---
 - name: Initializing Server
   hosts: digital_ocean
-  user: root
+  remote_user: root
 
   vars_files:
   - "vars/{{ inventory_hostname }}.yml"
 
   vars_prompt:
-    - name: "new_user"
-      prompt: "New User Name"
-      private: no
     - name: "new_user_password"
-      prompt: "New User Password"
+      prompt: "Codeup User Password"
       private: yes
       confirm: yes
       encrypt: "md5_crypt"

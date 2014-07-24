@@ -1,6 +1,7 @@
 ---
 - name: Creating MySQL Database
   hosts: all
+  remote_user: codeup
 
   vars_prompt:
     - name: mysql_user

@@ -15,6 +15,10 @@ server {
 
   location / {
     try_files $uri $uri/ /index.php?$args;
+    {% if inventory_hostname == 'vagrant' -%}
+      autoindex on;
+    {%- endif %}
+
   }
 
   # pass all .php files to php-fpm

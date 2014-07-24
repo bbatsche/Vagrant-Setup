@@ -1,0 +1,14 @@
+---
+- name: Create Swap Space
+  command: fallocate -l 1G /swap
+  when: ansible_swaptotal_mb < 1
+
+- name: Make Swap
+  command: mkswap /swap
+  when: ansible_swaptotal_mb < 1
+
+- name: Add Swap to Fstab
+  action: lineinfile dest=/etc/fstab regexp="swap" line="/swap none swap sw 0 0" state=present
+
+- name: Turn on Swap
+  command: swapon -ae
