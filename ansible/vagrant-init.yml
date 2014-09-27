@@ -8,7 +8,6 @@
 
   tasks:
   - include: init-common.yml
-  - include: tasks/swap.yml
 
   - name: Install PHPUnit
     command: composer global require "phpunit/phpunit=4.1.*"

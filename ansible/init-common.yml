@@ -8,3 +8,4 @@
   - include: tasks/php.yml
   - include: tasks/php_composer.yml
   - include: tasks/bash_profile.yml
+  - include: tasks/swap.yml

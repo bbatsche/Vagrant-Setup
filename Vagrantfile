@@ -33,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     vb.customize ["modifyvm",             :id, "--natdnshostresolver1", "on"]
     vb.customize ["setextradata",         :id, "--VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
-    vb.customize ["guestproperty", "set", :id, "--timesync-threshold",  "10000"]
+    vb.customize ["guestproperty", "set", :id, "--timesync-threshold",  "1000"]
   end
 
   config.vm.provision :ansible do |ansible|
