@@ -1,0 +1,35 @@
+---
+- name: Site Destroy
+  hosts: all
+  sudo: yes
+  remote_user: codeup
+
+  vars_files:
+  - "vars/{{ inventory_hostname }}.yml"
+
+  tasks:
+  - name: Remove Active Site Link
+    file: path=/etc/nginx/sites-enabled/{{ domain }} state=absent
+    notify:
+      - Restart Nginx
+
+  - name: Remove Nginx Site Config
+    file: path=/etc/nginx/sites-available/{{ domain }} state=absent
+    notify:
+      - Restart Nginx
+
+  - name: Remove PHP-FPM Pool Config
+    file: path=/etc/php5/fpm/pool.d/{{ domain }}.conf state=absent
+    notify:
+      - Restart PHP-FPM
+
+  - name: Delete Site Directory
+    file: path={{ www_home }}/{{ domain }} state=absent
+    when: purge is defined and purge
+
+  - name: Remove Entry from Local Hosts File
+    local_action: 'lineinfile dest=/etc/hosts regexp="{{ domain }}$" state=absent'
+    when: purge_host is defined and purge_host
+
+  handlers:
+  - include: handlers.yml
