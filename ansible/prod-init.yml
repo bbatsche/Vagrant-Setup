@@ -1,6 +1,6 @@
 ---
 - name: Initializing Server
-  hosts: digital_ocean
+  hosts: production
   remote_user: root
 
   vars_files:
