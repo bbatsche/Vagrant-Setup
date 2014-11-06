@@ -25,9 +25,9 @@ rlimit_core = unlimited
 catch_workers_output = yes
 
 env[HOSTNAME] = $HOSTNAME
-env[TMP] = /tmp/php/{{ domain }}
-env[TMPDIR] = /tmp/php/{{ domain }}
-env[TEMP] = /tmp/php/{{ domain }}
+env[TMP] = /tmp
+env[TMPDIR] = /tmp
+env[TEMP] = /tmp
 {% if php_debug %}env[LARAVEL_ENV] = local{% endif %}
 
 
