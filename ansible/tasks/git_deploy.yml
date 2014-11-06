@@ -9,6 +9,7 @@
 
 - name: Create Git Post-Receive Hook
   template: src=templates/git-post-receive.j2 dest={{ git_home }}/{{ domain }}.git/hooks/post-receive mode=0755
+  sudo: no
 
 - name: Notes
   debug: msg="git remote add web ssh{{':'}}//{{ ansible_ssh_user }}@{{ ansible_ssh_host }}{{':'}}{{ ansible_ssh_port }}{{ git_home }}/{{ domain }}.git"

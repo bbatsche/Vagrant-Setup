@@ -27,6 +27,11 @@
     file: path={{ www_home }}/{{ domain }} state=absent
     when: purge is defined and purge
 
+  - name: Delete Remote Git Repository
+    file: path={{ git_home }}/{{ domain }}.git state=absent
+    sudo: yes
+    when: git_create and purge is defined and purge
+
   - name: Remove Entry from Local Hosts File
     local_action: 'lineinfile dest=/etc/hosts regexp="{{ domain }}$" state=absent'
     when: purge_host is defined and purge_host

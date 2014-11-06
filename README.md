@@ -7,7 +7,7 @@ This repository contains files and scripts intended for [Codeup](http://www.code
 
 ## Installation & Setup
 
-Ideally this repository should be downloaded and configured using the LAMP Setup Script hosted [here](https://github.com/bbatsche/LAMP-Setup-Script). In addition to installing the necessary tools and utilities, it will also create a new SSH key the Ansible scripts will setup for use with the DigitalOcean droplet.
+Ideally this repository should be downloaded and configured using the LAMP Setup Script hosted [here](https://github.com/gocodeup/LAMP-Setup-Script). In addition to installing the necessary tools and utilities, it will also create a new SSH key the Ansible scripts will setup for use with the DigitalOcean droplet.
 
 ## Creating a Site in Vagrant
 
@@ -48,7 +48,7 @@ If you used the LAMP Setup Script provided you should have an SSH key generated 
 
 ### Editing Local Configs
 
-1. Edit `ansible/hosts` and remove the `;` from the start of the line containing `digital_ocean`
+1. Edit `ansible/hosts` and remove the `;` from the start of the line containing `production`
 1. Replace the `xxx.xxx.xxx.xxx` with your droplet's IP address
 
 ### Provisioning the Server
@@ -56,7 +56,7 @@ If you used the LAMP Setup Script provided you should have an SSH key generated 
 Run the following command to initialize your server
 
 ```
-ansible-playbook ansible/do-init.yml
+ansible-playbook ansible/prod-init.yml
 ```
 
 ## Adding a Site to Digital Ocean
@@ -64,7 +64,7 @@ ansible-playbook ansible/do-init.yml
 Adding a site to your DigitalOcean droplet is similar to adding one to your Vagrant box, although we need to tell Ansible to ask for your password first:
 
 ```
-ansible-playbook ansible/site-create.yml -l digital_ocean -e "domain=<your new domain>"  --ask-sudo-pass
+ansible-playbook ansible/site-create.yml -l production -e "domain=<your new domain>"  --ask-sudo-pass
 ```
 
 ### Next Steps
@@ -73,16 +73,53 @@ ansible-playbook ansible/site-create.yml -l digital_ocean -e "domain=<your new d
 1. The init script created a user called "codeup" in your droplet; you will use this user when SSH-ing into your new server.
 1. You must now SSH into your server and run the standard composer and artisan commands to initialize your application.
 
+
+### Removing a Site
+
+If you wish to remove a site from either your Vagrant box or Digital Ocean server, you can do so using the following ansible command
+
+```
+ansible-playbook ansible/site-destroy.yml -l <vagrant|production> -e "domain=<domain to remove>"
+```
+
+This command will only remove the configuration files for your site, it will in no way delete any of your files on the server or remove any entries to your hosts file. If you would like to delete the actual files in your site, add the option `-e "purge=true"`. **Be extremely careful with this option! It really will completely wipe your site from the server!** If you wish to delete the site record in your hosts file, run the command with `sudo` and add `-e "purge_host=true"`.
+
+**Note: If you're deleting a site from your Digital Ocean server, you will need to add `--ask-sudo-pass` to the end of these commands**
+
 ## Managing MySQL
 
 Included with these files is also a script to aide in setting up MySQL users & databases. In order to create a MySQL administrator, use the following command
 
 ```
-ansible-playbook ansible/mysql-user-db.yml -l <vagrant|digital_ocean> -e "mysql_admin=true"
+ansible-playbook ansible/mysql-user-db.yml -l <vagrant|production> -e "mysql_admin=true"
 ```
 
-To make a new database & user for your application use the following:
+To make a new database & user for your application, use the following:
 
 ```
-ansible-playbook ansible/mysql-user-db.yml -l <vagrant|digital_ocean> -e "db_name=<databse name>"
+ansible-playbook ansible/mysql-user-db.yml -l <vagrant|production> -e "db_name=<databse name>"
 ```
+
+## Bash Addons
+
+We've created a handful of shortcuts and helpful addons for bash. You can use these functions to make running your ansible commands a bit easier and more intuitive. If you'd like to take advantage of these features do the following:
+
+1. Create/edit a file in your home directory called `.bash_profile` (Hint: `subl ~/.bash_profile`)
+1. In that file add the following line:
+
+    ```
+    source $HOME/vagrant-lamp/addons.bash
+    ```
+
+1. Save and close the file. Close your terminal tab and open a new one to reload your configuration.
+
+The additional functions are:
+
+- `vagrant-create-site` &mdash; Create a new site in your vagrant box
+- `prod-create-site` &mdash; Create a new site in your production environment
+- `vagrant-create-mysql-admin` &mdash; Create a new MySQL admin user in your vagrant box
+- `prod-create-mysql-admin` &mdash; Create a new MySQL admin user in your production environment
+- `vagrant-create-mysql-db` &mdash; Create a new MySQL database & user in your vagrant box
+- `prod-create-mysql-db` &mdash; Create a new MySQL database & user in your production environment
+- `ll` &mdash; Display files in a list format
+- `la` &mdash; Display files in a list format, including hidden files
