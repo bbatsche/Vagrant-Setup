@@ -23,9 +23,6 @@
   notify:
     - Restart PHP-FPM
 
-- include: git_deploy.yml
-  when: git_create
-
 - name: Add Entry to Local Hosts File
   local_action: 'lineinfile dest=/etc/hosts line="{{ ansible_ssh_host }} {{ domain }}" regexp="{{ domain }}$"'
   when: append_host is defined and append_host
