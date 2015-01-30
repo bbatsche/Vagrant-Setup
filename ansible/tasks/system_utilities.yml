@@ -1,6 +1,7 @@
 ---
 - name: Install System Utilties
   apt: package={{ item }} state=present
+  sudo: yes
   with_items:
     - vim
     - git

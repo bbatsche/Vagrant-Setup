@@ -1,0 +1,22 @@
+---
+- name: Create MySQL Database in Vagrant
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars_prompt:
+    - name: db_name
+      prompt: "MySQL Database Name (e.g. something_db)"
+      private: no
+    - name: mysql_user
+      prompt: "MySQL User for Database (e.g. something_user)"
+      private: no
+    - name: mysql_pass
+      prompt: "MySQL User Password"
+      private: yes
+      confirm: yes
+
+  tasks:
+  - include: tasks/mysql_db.yml
+
+  handlers:
+  - include: handlers/main.yml

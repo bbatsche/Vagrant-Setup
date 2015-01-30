@@ -17,8 +17,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = box
 
   config.vm.hostname = hostname
-  config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.network :private_network, ip: ip
+
+  config.ssh.insert_key = false
 
   config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
       owner: "vagrant",
@@ -40,12 +41,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.inventory_path = "ansible/hosts"
     ansible.limit          = "vagrant"
     ansible.playbook       = "ansible/vagrant-init.yml"
-  end
-
-  config.vm.provision :ansible do |ansible|
-    ansible.inventory_path = "ansible/hosts"
-    ansible.limit          = "vagrant"
-    ansible.playbook       = "ansible/site-create.yml"
     ansible.extra_vars     = { domain: domain }
   end
 end

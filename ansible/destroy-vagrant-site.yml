@@ -1,0 +1,15 @@
+---
+- name: Destroy Vagrant Site
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars_prompt:
+    - name: domain
+      prompt: "Domain to Remove (e.g. codeup.dev)"
+      private: no
+
+  tasks:
+  - include: tasks/site-destroy.yml
+
+  handlers:
+  - include: handlers/main.yml

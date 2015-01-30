@@ -1,17 +1,14 @@
 ---
-- name: Initializing Server
+- name: Initializing Vagrant Box
   hosts: vagrant
-  sudo: yes
-
-  vars_files:
-  - "vars/{{ inventory_hostname }}.yml"
+  remote_user: vagrant
 
   tasks:
-  - include: init-common.yml
+  - include: tasks/init-common.yml
+  - include: tasks/site-create.yml
 
   - name: Install PHPUnit
-    command: composer global require "phpunit/phpunit=4.1.*"
-    sudo: no
+    command: composer global require "phpunit/phpunit=4.4.*" creates=/home/vagrant/.composer/vendor/bin/phpunit
 
   handlers:
-  - include: handlers.yml
+  - include: handlers/main.yml

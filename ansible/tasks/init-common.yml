@@ -1,0 +1,11 @@
+---
+  - include: timezone.yml
+  - include: sysctl.yml
+  - include: system_updates.yml
+  - include: system_utilities.yml
+  - include: mysql.yml
+  - include: nginx.yml
+  - include: php.yml
+  - include: php_composer.yml
+  - include: bash_profile.yml
+  - include: swap.yml

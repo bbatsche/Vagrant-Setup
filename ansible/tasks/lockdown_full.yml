@@ -19,7 +19,7 @@
   authorized_key: user="{{ new_user }}" key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
 - name: Install Bash Profile
-  template: src=templates/bashrc.j2 dest=/home/{{ new_user }}/.bashrc
+  template: src=bashrc.j2 dest=/home/{{ new_user }}/.bashrc
 
 - name: Update SSH Parameters
   lineinfile:

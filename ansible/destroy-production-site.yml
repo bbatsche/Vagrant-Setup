@@ -1,0 +1,15 @@
+---
+- name: Destroy Production Site
+  hosts: production
+  remote_user: codeup
+
+  vars_prompt:
+    - name: domain
+      prompt: "Domain to Remove (e.g. myproductionsite.com)"
+      private: no
+
+  tasks:
+  - include: tasks/site-destroy.yml
+
+  handlers:
+  - include: handlers/main.yml

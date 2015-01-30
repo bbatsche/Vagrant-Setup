@@ -1,0 +1,19 @@
+---
+- name: Create MySQL Admin in Production
+  hosts: production
+  remote_user: codeup
+
+  vars_prompt:
+    - name: mysql_user
+      prompt: "New MySQL Username"
+      private: no
+    - name: mysql_pass
+      prompt: "MySQL User Password (MAKE IT SECURE!)"
+      private: yes
+      confirm: yes
+
+  tasks:
+  - include: tasks/mysql_db.yml mysql_admin=yes
+
+  handlers:
+  - include: handlers/main.yml

@@ -1,0 +1,15 @@
+---
+- name: Create Vagrant Site
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars_prompt:
+    - name: domain
+      prompt: "New Domain Name (e.g. codeup.dev)"
+      private: no
+
+  tasks:
+  - include: tasks/site-create.yml
+
+  handlers:
+  - include: handlers/main.yml

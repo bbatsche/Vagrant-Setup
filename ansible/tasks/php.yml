@@ -1,6 +1,7 @@
 ---
 - name: Install PHP
   apt: package={{ item }} state=present
+  sudo: yes
   with_items:
     - php5
     - php5-cli
@@ -17,6 +18,7 @@
 - name: Install PHP Xdebug
   apt: package=php5-xdebug state=present
   when: php_debug
+  sudo: yes
   notify:
     - Restart PHP-FPM
 
@@ -25,24 +27,30 @@
 - name: Copy mcrypt Config to Proper Location and Enable
   shell: php5enmod mcrypt creates=/etc/php5/fpm/conf.d/20-mcrypt.ini
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '13.10'
+  sudo: yes
   notify:
     - Restart PHP-FPM
 
 - name: Remove Default PHP-FPM Pool
   file: path=/etc/php5/fpm/pool.d/www.conf state=absent
+  sudo: yes
   notify:
     - Restart PHP-FPM
 
 - name: Create PHP-FPM Log Directory
   file: path=/var/log/php-fpm state=directory owner=www-data
+  sudo: yes
 
 - name: Create PHP Log Directory
   file: path=/var/log/php state=directory owner=www-data
+  sudo: yes
 
 - name: Create PHP Session Directory
   file: path=/var/lib/php/session state=directory owner=www-data
+  sudo: yes
 
 - name: Modify php.ini Settings
-  template: src=templates/php.ini.j2 dest=/etc/php5/fpm/php.ini
+  template: src=php.ini.j2 dest=/etc/php5/fpm/php.ini
+  sudo: yes
   notify:
     - Restart PHP-FPM

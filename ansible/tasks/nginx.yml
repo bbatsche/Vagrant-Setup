@@ -1,29 +1,36 @@
 ---
 - name: Install Nginx
   apt: package=nginx state=present
+  sudo: yes
 
 - name: Set Nginx Default for Missing vhosts
-  copy: src=templates/nginx.default.conf dest=/etc/nginx/sites-available/default
+  copy: src=nginx.default.conf dest=/etc/nginx/sites-available/default
+  sudo: yes
   notify:
     - Restart Nginx
 
 - name: Enable Nginx Default Site
   file: src=/etc/nginx/sites-available/default dest=/etc/nginx/sites-enabled/default state=link
+  sudo: yes
   notify:
     - Restart Nginx
 
 - name: Create Nginx Log Directory
   file: path=/var/log/nginx state=directory mode=755
+  sudo: yes
 
 - name: Create Nginx Includes Directory
   file: path=/etc/nginx/includes state=directory
+  sudo: yes
 
 - name: Modify Nginx Configuration (main)
-  template: src=templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  sudo: yes
   notify:
     - Restart Nginx
 
 - name: Modify Nginx Configuration (location)
-  copy: src=templates/nginx.location.conf dest=/etc/nginx/includes/location.conf
+  copy: src=nginx.location.conf dest=/etc/nginx/includes/location.conf
+  sudo: yes
   notify:
     - Restart Nginx

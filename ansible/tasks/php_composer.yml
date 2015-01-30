@@ -1,3 +1,6 @@
 ---
 - name: Install Composer
-  shell: /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php && /bin/mv -f ./composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+  sudo: yes
+  shell: >
+    /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php && /bin/mv -f ./composer.phar /usr/local/bin/composer
+    creates=/usr/local/bin/composer

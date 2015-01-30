@@ -1,0 +1,15 @@
+---
+- name: Create Production Site
+  hosts: production
+  remote_user: codeup
+
+  vars_prompt:
+    - name: domain
+      prompt: "New Domain Name (e.g. myproductionsite.com)"
+      private: no
+
+  tasks:
+  - include: tasks/site-create.yml
+
+  handlers:
+  - include: handlers/main.yml
