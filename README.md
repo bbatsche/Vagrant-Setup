@@ -14,13 +14,13 @@ Ideally this repository should be downloaded and configured using the LAMP Setup
 When you first run `vagrant up` inside this directory, Vagrant will automatically run the necessary Ansible scripts to configure your test server and setup your first site. Later on in the course if you need to create additional sites you can do so by running:
 
 ```
-ansible-playbook ansible/site-create.yml -l vagrant -e "domain=<your new domain>"
+ansible-playbook ansible/create-vagrant-site.yml
 ```
 
-The `site-create.yml` script can also optionally add your new domain to your local hosts file, facilitating the local deployment process. In order to do so however, you must have administer rights and run the script in the following manner:
+The `create-vagrant-site.yml` script can also optionally add your new domain to your local hosts file, facilitating the local deployment process. In order to do so however, you must have administer rights and run the script in the following manner:
 
 ```
-sudo ansible-playbook ansible/site-create.yml -l vagrant -e "domain=<your new domain>" -e "append_host=true"
+sudo ansible-playbook ansible/create-vagrant-site.yml -e "append_host=true"
 ```
 
 ## Setting up a Digital Ocean Server
@@ -59,12 +59,21 @@ Run the following command to initialize your server
 ansible-playbook ansible/prod-init.yml
 ```
 
+This will guide you through the process of setting up the site, as well as initializing a site on your server. You will need to provide it:
+
+- A password for the default console or shell user, "codeup"
+- An eMail address to receive notifications from the server
+- A username and password for a default MySQL administrator
+- A domain name for your site
+- A database name for your application
+- A database username and password for your application to use
+
 ## Adding a Site to Digital Ocean
 
 Adding a site to your DigitalOcean droplet is similar to adding one to your Vagrant box, although we need to tell Ansible to ask for your password first:
 
 ```
-ansible-playbook ansible/site-create.yml -l production -e "domain=<your new domain>"  --ask-sudo-pass
+ansible-playbook ansible/create-production-site.yml --ask-sudo-pass
 ```
 
 ### Next Steps
@@ -76,10 +85,12 @@ ansible-playbook ansible/site-create.yml -l production -e "domain=<your new doma
 
 ### Removing a Site
 
-If you wish to remove a site from either your Vagrant box or Digital Ocean server, you can do so using the following ansible command
+If you wish to remove a site from either your Vagrant box or Digital Ocean server, you can do so using the following ansible commands
 
-```
-ansible-playbook ansible/site-destroy.yml -l <vagrant|production> -e "domain=<domain to remove>"
+```bash
+ansible-playbook ansible/destroy-vagrant-site.yml
+# or
+ansible-playbook ansible/destroy-production-site.yml --ask-sudo-pass
 ```
 
 This command will only remove the configuration files for your site, it will in no way delete any of your files on the server or remove any entries to your hosts file. If you would like to delete the actual files in your site, add the option `-e "purge=true"`. **Be extremely careful with this option! It really will completely wipe your site from the server!** If you wish to delete the site record in your hosts file, run the command with `sudo` and add `-e "purge_host=true"`.
@@ -90,36 +101,16 @@ This command will only remove the configuration files for your site, it will in 
 
 Included with these files is also a script to aide in setting up MySQL users & databases. In order to create a MySQL administrator, use the following command
 
-```
-ansible-playbook ansible/mysql-user-db.yml -l <vagrant|production> -e "mysql_admin=true"
+```bash
+ansible-playbook ansible/create-vagrant-mysql-admin.yml
+# or
+ansible-playbook ansible/create-production-mysql-admin.yml
 ```
 
 To make a new database & user for your application, use the following:
 
 ```
-ansible-playbook ansible/mysql-user-db.yml -l <vagrant|production> -e "db_name=<databse name>"
+ansible-playbook ansible/create-vagrant-mysql-db.yml
+# or
+ansible-playbook ansible/create-production-mysql-db.yml
 ```
-
-## Bash Addons
-
-We've created a handful of shortcuts and helpful addons for bash. You can use these functions to make running your ansible commands a bit easier and more intuitive. If you'd like to take advantage of these features do the following:
-
-1. Create/edit a file in your home directory called `.bash_profile` (Hint: `subl ~/.bash_profile`)
-1. In that file add the following line:
-
-    ```
-    source $HOME/vagrant-lamp/addons.bash
-    ```
-
-1. Save and close the file. Close your terminal tab and open a new one to reload your configuration.
-
-The additional functions are:
-
-- `vagrant-create-site` &mdash; Create a new site in your vagrant box
-- `prod-create-site` &mdash; Create a new site in your production environment
-- `vagrant-create-mysql-admin` &mdash; Create a new MySQL admin user in your vagrant box
-- `prod-create-mysql-admin` &mdash; Create a new MySQL admin user in your production environment
-- `vagrant-create-mysql-db` &mdash; Create a new MySQL database & user in your vagrant box
-- `prod-create-mysql-db` &mdash; Create a new MySQL database & user in your production environment
-- `ll` &mdash; Display files in a list format
-- `la` &mdash; Display files in a list format, including hidden files
