@@ -1,5 +1,5 @@
 # Put your Digital Ocean IP Address Here
-production ansible_ssh_host=104.131.92.188
+; production ansible_ssh_host=xxx.xxx.xxx.xxx
 
 # Definition for our vagrant  host, do not modify modify this line
 
