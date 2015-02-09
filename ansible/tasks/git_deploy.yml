@@ -12,7 +12,7 @@
   sudo: no
 
 - name: Notes
-  debug: msg="git remote add web ssh://{{ ansible_ssh_user }}@{{ ansible_ssh_host }}:{{ ansible_ssh_port }}{{ git_home }}/{{ domain }}.git"
+  debug: msg="git remote add {{ git_remote }} ssh://{{ ansible_ssh_user }}@{{ ansible_ssh_host }}:{{ ansible_ssh_port }}{{ git_home }}/{{ domain }}.git"
 
 - name: Notes
-  debug: msg="git push web +master:refs/heads/master"
+  debug: msg="git push {{ git_remote }} master"

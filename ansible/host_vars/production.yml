@@ -7,6 +7,7 @@
 #
 console_user: codeup
 mysql_admin: codeup
+git_remote: web
 www_home: /srv/www
 git_home: /var/git
 
@@ -18,6 +19,7 @@ git_home: /var/git
 #
 #console_user: warpspeed
 #mysql_admin: warpspeed
+#git_remote: warpspeed
 #www_home: /home/warpspeed/sites
 #git_home: /home/warpspeed/repos
 

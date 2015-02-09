@@ -2,3 +2,10 @@
 GIT_WORK_TREE={{ www_home }}/{{ domain }}/
 export GIT_WORK_TREE
 git checkout -f
+
+# If a user defined post-receive script exists, run it.
+if [ -f "{{ www_home }}/{{ domain }}/post-receive.sh" ]; then
+    cd "{{ www_home }}/{{ domain }}"
+    echo "Executing user-defined post-receive script..."
+    bash post-receive.sh
+fi
