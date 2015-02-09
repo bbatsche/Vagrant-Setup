@@ -1,0 +1,45 @@
+---
+- name: Deploy Laravel Application to Production
+  hosts: production
+  remote_user: "{{ console_user }}"
+
+  vars:
+    ##### Local Repository Directory #####
+    # Set this to the local directory where your Laravel application is installed
+    # Should look like "local_directory: ~/vagrant-lamp/sites/blog.dev"
+    local_directory: ## FILL ME IN ##
+
+    ##### Production Domain Name #####
+    # Set this to your application domain name
+    # Should look like "production_domain: example.com"
+    production_domain: ## FILL ME IN ##
+
+  tasks:
+    - name: Add Remote to Repository
+      local_action: command git -C {{ local_directory }} remote add web ssh://{{ console_user }}@{{ ansible_ssh_host }}:{{ ansible_ssh_port }}{{ git_home }}/{{ production_domain }}.git
+      register: git_result
+      failed_when: git_result.rc != 0 and ("remote web already exists" not in git_result.stderr)
+      changed_when: git_result.rc == 0
+
+    - name: Push Repository using Git
+      local_action: command git -C {{ local_directory }} push web +master:refs/heads/master
+      register: git_push_result
+      changed_when: '"Everything up-to-date" not in git_push_result.stderr'
+
+    - name: Copy .env.php File
+      copy: src={{ local_directory }}/.env.php dest={{ www_home }}/{{ production_domain }}/.env.php owner={{ ansible_ssh_user }} mode=0644
+      register: env_result
+
+    - name: Install Dependencies
+      command: /usr/local/bin/composer install --no-dev --no-interaction chdir={{ www_home }}/{{ production_domain }}
+      register: composer_result
+      changed_when: '"Nothing to install or update" not in composer_result.stdout'
+      when: git_push_result.changed or env_result.changed
+
+    - name: Migrate Databases
+      command: /usr/bin/php {{ www_home }}/{{ production_domain }}/artisan migrate --force
+      register: migrate_result
+      changed_when: '"Nothing to migrate." not in migrate_result.stdout'
+
+  handlers:
+  - include: handlers/main.yml
