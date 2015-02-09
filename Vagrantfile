@@ -21,10 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.ssh.insert_key = false
 
-  config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
-      owner: "vagrant",
-      group: "www-data",
-      mount_options: ["dmode=775,fmode=664"]
+  config.vm.synced_folder "./", "/vagrant", id: "vagrant-root", type: "nfs"
 
   config.vm.provider :virtualbox do |vb|
     vb.name = hostname

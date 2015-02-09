@@ -1,7 +1,6 @@
 ---
 - name: Create Site Directory
-  file: path={{ www_home }}/{{ domain }}/public state=directory owner={{ ansible_ssh_user }} group=www-data mode=0755
-  sudo: yes
+  file: path={{ www_home }}/{{ domain }}/public state=directory group=www-data mode=0755
 
 - name: Ensure Directory Permissions Persit
   command: chmod -R ug+rws {{ www_home }}/{{ domain }}
