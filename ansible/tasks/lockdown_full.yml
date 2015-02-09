@@ -9,10 +9,10 @@
 - name: Remove sudo Group Rights
   lineinfile: dest=/etc/sudoers regexp="^%sudo" state=absent validate='visudo -cf %s'
 
-- name: Create {{ new_user }} User Account
+- name: Create codeup User Account
   user: name={{ new_user }} password={{ new_user_password }} shell=/bin/bash state=present
 
-- name: Add User {{ new_user }} to Sudoers
+- name: Add User codeup to Sudoers
   action: lineinfile dest=/etc/sudoers regexp="^{{ new_user }} ALL" line="{{ new_user }} ALL=(ALL) ALL" state=present validate="visudo -cf %s"
 
 - name: Ensure Public Key is in authorized_keys

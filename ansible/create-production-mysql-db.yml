@@ -4,19 +4,22 @@
   remote_user: codeup
 
   vars_prompt:
+    - name: mysql_pass
+      prompt: "MySQL Admin Password"
+      private: yes
     - name: db_name
       prompt: "MySQL Database Name (e.g. something_db)"
       private: no
-    - name: mysql_user
-      prompt: "MySQL User for Database (e.g. something_user)"
+    - name: new_mysql_user
+      prompt: "New MySQL Username for Database (e.g. something_user)"
       private: no
-    - name: mysql_pass
-      prompt: "MySQL User Password"
+    - name: new_mysql_pass
+      prompt: "New MySQL User Password"
       private: yes
       confirm: yes
 
   tasks:
-  - include: tasks/mysql_db.yml
+  - include: tasks/mysql-db.yml
 
   handlers:
   - include: handlers/main.yml

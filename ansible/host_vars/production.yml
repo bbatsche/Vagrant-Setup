@@ -5,3 +5,4 @@ git_create: yes
 ansible_ssh_port: 22
 php_debug: no
 new_user: codeup
+mysql_admin: codeup

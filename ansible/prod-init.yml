@@ -5,7 +5,7 @@
 
   vars_prompt:
     - name: new_user_password
-      prompt: "Password for codeup User (MAKE THIS SECURE!)"
+      prompt: "Password for Console User (MAKE THIS SECURE!)"
       private: yes
       confirm: yes
       encrypt: md5_crypt
@@ -13,24 +13,8 @@
     - name: admin_email
       prompt: "eMail Address for Notifications"
       private: no
-    - name: mysql_admin_user
-      prompt: "Username for MySQL Admin (e.g. codeup)"
-      private: no
-    - name: mysql_admin_pass
-      prompt: "Password for MySQL Admin (MAKE THIS SECURE!)"
-      private: yes
-      confirm: yes
-    - name: domain
-      prompt: "Site Domain Name (e.g. myproductionsite.com)"
-      private: no
-    - name: db_name
-      prompt: "MySQL Database Name (e.g. something_db)"
-      private: no
-    - name: mysql_user
-      prompt: "MySQL User for Database (e.g. something_user)"
-      private: no
     - name: mysql_pass
-      prompt: "MySQL User Password"
+      prompt: "Password for MySQL Admin (MAKE THIS SECURE!)"
       private: yes
       confirm: yes
 
@@ -40,10 +24,6 @@
   - include: tasks/fail2ban.yml
   - include: tasks/ufw.yml
   - include: tasks/postfix.yml
-  - { include: tasks/mysql_db.yml, mysql_admin: yes, mysql_user: "{{ mysql_admin_user }}", mysql_pass: "{{ mysql_admin_pass }}" }
-  - include: tasks/site-create.yml
-  - include: tasks/mysql_db.yml
-  - include: tasks/git_deploy.yml
 
   handlers:
   - include: handlers/main.yml

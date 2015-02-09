@@ -1,9 +1,15 @@
 ---
-- name: Create MySQL Database in Vagrant
-  hosts: vagrant
-  remote_user: vagrant
+- name: Create a Laravel Application in Production
+  hosts: production
+  remote_user: codeup
 
   vars_prompt:
+    - name: mysql_pass
+      prompt: "MySQL Admin Password"
+      private: yes
+    - name: domain
+      prompt: "Site Domain Name (e.g. myproductionsite.com)"
+      private: no
     - name: db_name
       prompt: "MySQL Database Name (e.g. something_db)"
       private: no
@@ -16,7 +22,9 @@
       confirm: yes
 
   tasks:
+  - include: tasks/site-create.yml
   - include: tasks/mysql-db.yml
+  - include: tasks/git_deploy.yml
 
   handlers:
   - include: handlers/main.yml

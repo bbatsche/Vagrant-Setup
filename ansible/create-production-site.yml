@@ -10,6 +10,7 @@
 
   tasks:
   - include: tasks/site-create.yml
+  - include: tasks/git_deploy.yml
 
   handlers:
   - include: handlers/main.yml
