@@ -1,8 +1,32 @@
 ---
+####################################################################
+#                         Codeup Defaults                          #
+####################################################################
+#
+# Comment out the following four lines if you are using Warpspeed.io
+#
 console_user: codeup
 mysql_admin: codeup
 www_home: /srv/www
 git_home: /var/git
 
+####################################################################
+#                        Warpspeed Defaults                        #
+####################################################################
+#
+# Uncomment the following four lines if you are using Warpspeed.io
+#
+#console_user: warpspeed
+#mysql_admin: warpspeed
+#www_home: /home/warpspeed/sites
+#git_home: /home/warpspeed/repos
+
+
+####################################################################
+#                          Other Defaults                          #
+####################################################################
+#
+# Do not modify anything below
+#
 php_debug: no
 ansible_ssh_port: 22
