@@ -1,7 +1,7 @@
 ---
 - name: Create MySQL Database in Production
   hosts: production
-  remote_user: codeup
+  remote_user: "{{ console_user }}"
 
   vars_prompt:
     - name: mysql_pass

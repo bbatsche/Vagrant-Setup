@@ -1,7 +1,7 @@
 ---
 - name: Destroy Production Site
   hosts: production
-  remote_user: codeup
+  remote_user: "{{ console_user }}"
 
   vars_prompt:
     - name: domain

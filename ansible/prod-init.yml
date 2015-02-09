@@ -4,7 +4,7 @@
   remote_user: root
 
   vars_prompt:
-    - name: new_user_password
+    - name: console_user_password
       prompt: "Password for Console User (MAKE THIS SECURE!)"
       private: yes
       confirm: yes

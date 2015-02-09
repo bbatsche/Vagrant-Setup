@@ -9,17 +9,17 @@
 - name: Remove sudo Group Rights
   lineinfile: dest=/etc/sudoers regexp="^%sudo" state=absent validate='visudo -cf %s'
 
-- name: Create codeup User Account
-  user: name={{ new_user }} password={{ new_user_password }} shell=/bin/bash state=present
+- name: Create Console User Account
+  user: name={{ console_user }} password={{ console_user_password }} shell=/bin/bash state=present
 
-- name: Add User codeup to Sudoers
-  action: lineinfile dest=/etc/sudoers regexp="^{{ new_user }} ALL" line="{{ new_user }} ALL=(ALL) ALL" state=present validate="visudo -cf %s"
+- name: Add Console User to Sudoers
+  action: lineinfile dest=/etc/sudoers regexp="^{{ console_user }} ALL" line="{{ console_user }} ALL=(ALL) ALL" state=present validate="visudo -cf %s"
 
 - name: Ensure Public Key is in authorized_keys
-  authorized_key: user="{{ new_user }}" key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  authorized_key: user="{{ console_user }}" key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
 - name: Install Bash Profile
-  template: src=bashrc.j2 dest=/home/{{ new_user }}/.bashrc
+  template: src=bashrc.j2 dest=/home/{{ console_user }}/.bashrc
 
 - name: Update SSH Parameters
   lineinfile:
@@ -33,6 +33,6 @@
     - { key: 'PasswordAuthentication', value: 'no' }
     - { key: 'LoginGraceTime', value: '20' }
     - { key: 'X11Forwarding', value: 'no' }
-    - { key: 'AllowUsers', value: '{{ new_user }}' }
+    - { key: 'AllowUsers', value: '{{ console_user }}' }
   notify:
     - Restart SSH
