@@ -1,6 +1,5 @@
 ---
 www_home: /vagrant/sites
-git_create: no
 php_debug: yes
 mysql_admin: vagrant
 mysql_pass: vagrant
