@@ -27,3 +27,7 @@
 
   handlers:
   - include: handlers/main.yml
+
+  - name: Restart Server
+    command: /sbin/reboot
+    sudo: yes

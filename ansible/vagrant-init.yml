@@ -6,9 +6,10 @@
   tasks:
   - include: tasks/init-common.yml
   - include: tasks/site-create.yml
-
-  - name: Install PHPUnit
-    command: composer global require "phpunit/phpunit=4.4.*" creates=/home/vagrant/.composer/vendor/bin/phpunit
+  - include: tasks/phpunit.yml
 
   handlers:
   - include: handlers/main.yml
+
+  - name: Restart Server
+    debug: msg="Run 'vagrant reload' after provisioning completes"
