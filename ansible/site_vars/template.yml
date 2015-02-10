@@ -1,0 +1,10 @@
+---
+##### Local Repository Directory #####
+# Set this to the local directory where your Laravel application is installed
+# It should look like "local_directory: blog.dev"
+local_domain: ## FILL ME IN ##
+
+##### Production Domain Name #####
+# Set this to your application domain name
+# It should look like "production_domain: example.com"
+production_domain: ## FILL ME IN ##

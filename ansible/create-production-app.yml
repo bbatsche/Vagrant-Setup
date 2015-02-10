@@ -22,6 +22,7 @@
       confirm: yes
 
   tasks:
+  - include: tasks/warpspeed-env.yml
   - include: tasks/site-create.yml
   - include: tasks/mysql-db.yml
   - include: tasks/git_deploy.yml

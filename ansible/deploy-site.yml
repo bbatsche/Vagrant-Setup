@@ -3,31 +3,35 @@
   hosts: production
   remote_user: "{{ console_user }}"
 
-  vars:
-    ##### Local Repository Directory #####
-    # Set this to the local directory where your Laravel application is installed
-    # It should look like "local_directory: ~/vagrant-lamp/sites/blog.dev"
-    local_directory: ## FILL ME IN ##
-
-    ##### Production Domain Name #####
-    # Set this to your application domain name
-    # It should look like "production_domain: example.com"
-    production_domain: ## FILL ME IN ##
+  vars_prompt:
+    - name: site_vars
+      prompt: Name of site to deploy (omit '.yml')
+      private: no
 
   tasks:
+    - name: Load Site Parameters
+      include_vars: site_vars/{{ site_vars }}.yml
+
+    - name: Get Local Working Directory
+      local_action: command pwd
+      register: working_dir
+
+    - name: Local Domain
+      set_fact: site_dir={{ working_dir.stdout }}/../sites/{{ local_domain }}
+
     - name: Add Remote to Repository
-      local_action: command git -C {{ local_directory }} remote add {{ git_remote }} ssh://{{ console_user }}@{{ ansible_ssh_host }}:{{ ansible_ssh_port }}{{ git_home }}/{{ production_domain }}.git
+      local_action: command git -C {{ site_dir }} remote add {{ git_remote }} ssh://{{ console_user }}@{{ ansible_ssh_host }}:{{ ansible_ssh_port }}{{ git_home }}/{{ production_domain }}.git
       register: git_result
       failed_when: git_result.rc != 0 and ("remote {{ git_remote }} already exists" not in git_result.stderr)
       changed_when: git_result.rc == 0
 
     - name: Push Repository using Git
-      local_action: command git -C {{ local_directory }} push {{ git_remote }} master
+      local_action: command git -C {{ site_dir }} push {{ git_remote }} master
       register: git_push_result
       changed_when: '"Everything up-to-date" not in git_push_result.stderr'
 
     - name: Copy .env.php File
-      copy: src={{ local_directory }}/.env.php dest={{ www_home }}/{{ production_domain }}/.env.php owner={{ ansible_ssh_user }} mode=0644
+      copy: src={{ site_dir }}/.env.php dest={{ www_home }}/{{ production_domain }}/.env.php owner={{ ansible_ssh_user }} mode=0644
       register: env_result
 
     - name: Install Dependencies
@@ -40,6 +44,7 @@
       command: /usr/bin/php {{ www_home }}/{{ production_domain }}/artisan migrate --force
       register: migrate_result
       changed_when: '"Nothing to migrate." not in migrate_result.stdout'
+      when: git_push_result.changed or env_result.changed
 
   handlers:
   - include: handlers/main.yml
