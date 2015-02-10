@@ -8,7 +8,7 @@ server {
   server_name {{ domain }};
   root {{ www_home }}/{{ domain }}/public;
 
-  {%- if warpspeed_root is defined and warpspeed_root != "" %}
+  {% if warpspeed_root is defined and warpspeed_root != "" %}
       # WarpSpeed.io auto-manages the following section.
       # Editing or moving any of these lines will break functionality.
 
@@ -26,7 +26,7 @@ server {
       ############################
       # END DO-NOT-EDIT-BLOCK
       ############################
-  {% endif -%}
+  {% endif %}
 
   access_log  /var/log/nginx/{{ domain }}-access.log;
   error_log  /var/log/nginx/{{ domain }}-error.log;

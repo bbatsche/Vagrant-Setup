@@ -4,6 +4,7 @@
   remote_user: warpspeed
 
   tasks:
+  - include: tasks/warpspeed-env.yml
   - include: tasks/nginx.yml
   - include: tasks/system_utilities.yml
   - include: tasks/php.yml

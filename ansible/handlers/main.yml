@@ -25,7 +25,7 @@
 
 - name: Restart Warpspeed PHP-FPM
   service: name=php5-fpm-{{ domain }} state=restarted
-  when: warpspeed_root is defined and warpspeed_root != ""
+  when: warpspeed_root is defined and warpspeed_root != "" and domain is defined
   sudo: yes
 
 - name: Restart PHP-FPM
