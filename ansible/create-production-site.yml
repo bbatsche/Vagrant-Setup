@@ -9,6 +9,7 @@
       private: no
 
   tasks:
+  - include: tasks/warpspeed-env.yml
   - include: tasks/site-create.yml
   - include: tasks/git_deploy.yml
 

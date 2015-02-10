@@ -14,6 +14,7 @@
     - php5-fpm
   notify:
     - Restart PHP-FPM
+    - Restart Warpspeed PHP-FPM
 
 - name: Install PHP Xdebug
   apt: package=php5-xdebug state=present
@@ -21,6 +22,7 @@
   sudo: yes
   notify:
     - Restart PHP-FPM
+    - Restart Warpspeed PHP-FPM
 
 # Ubuntu 13.10+ has a bug in where the mcrypt ini file is placed.
 # Work around those by copying the file to the proper location and enabling mcrypt.
@@ -30,12 +32,14 @@
   sudo: yes
   notify:
     - Restart PHP-FPM
+    - Restart Warpspeed PHP-FPM
 
 - name: Remove Default PHP-FPM Pool
   file: path=/etc/php5/fpm/pool.d/www.conf state=absent
   sudo: yes
   notify:
     - Restart PHP-FPM
+    - Restart Warpspeed PHP-FPM
 
 - name: Create PHP-FPM Log Directory
   file: path=/var/log/php-fpm state=directory owner=www-data
@@ -54,3 +58,4 @@
   sudo: yes
   notify:
     - Restart PHP-FPM
+    - Restart Warpspeed PHP-FPM

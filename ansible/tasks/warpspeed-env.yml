@@ -1,0 +1,9 @@
+---
+- name: Detect Warpspeed Environment
+  shell: . ~/.bash_profile && echo $WARPSPEED_ROOT
+  register: detect_warpspeed
+  failed_when: detect_warpspeed.rc != 0 and "Can't open {{ ansible_env.HOME }}/.bash_profile" not in detect_warpspeed.stderr
+  changed_when: no
+
+- name: Set Warpspeed Root
+  set_fact: warpspeed_root="{{ detect_warpspeed.stdout }}"

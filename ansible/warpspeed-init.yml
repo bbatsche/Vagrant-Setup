@@ -1,0 +1,16 @@
+---
+- name: Add Ansible Support to Warpspeed Server
+  hosts: production
+  remote_user: warpspeed
+
+  tasks:
+  - include: tasks/nginx.yml
+  - include: tasks/system_utilities.yml
+  - include: tasks/php.yml
+
+  handlers:
+  - include: handlers/main.yml
+
+  - name: Restart Server
+    command: /sbin/reboot
+    sudo: yes

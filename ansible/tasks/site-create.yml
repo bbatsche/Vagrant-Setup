@@ -18,12 +18,25 @@
   notify:
     - Restart Nginx
 
+- name: Create Warpspeed PHP-FPM Init Script
+  template: src=warpspeed-php5-fpm-init.conf.j2 dest=/etc/init/php5-fpm-{{ domain }}.conf
+  when: warpspeed_root is defined and warpspeed_root != ""
+  sudo: yes
+  notify:
+    - Reload Init Config
+
 - name: Deploy PHP-FPM Pool Config
   template: src=php-fpm-pool.conf.j2 dest=/etc/php5/fpm/pool.d/{{ domain }}.conf
   sudo: yes
   notify:
     - Restart PHP-FPM
+    - Restart Warpspeed PHP-FPM
 
 - name: Add Entry to Local Hosts File
   local_action: 'lineinfile dest=/etc/hosts line="{{ ansible_ssh_host }} {{ domain }}" regexp="{{ domain }}$"'
   when: append_host is defined and append_host
+
+- name: Add Entry to Warpspeed Config
+  lineinfile: dest={{ warpspeed_root }}/warpspeed.conf line="{{ domain }}:SITE_TYPE=php"
+  when: warpspeed_root is defined and warpspeed_root != ""
+  sudo: yes
