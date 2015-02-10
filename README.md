@@ -18,7 +18,8 @@ Included with this repository is a set of scripts for managing either your vagra
 - `prod-init.yml`
   - Set up a production environment. It will create a new commandline (console) user and a new MySQL administrator, both called `codeup`. You will be prompted to provide a new password for both. These are the passwords you will use in subsequent `sudo` or database admin tasks.
 - `warpspeed-init.yml`
-  - If you have created a production server using Warpspeed, this script will add a couple of additional utilities and config files so that ansible can also manage that server. Requires the `--ask-sudo-pass` flag.
+  - If you have created a production server using Warpspeed, this script will add a couple of additional utilities and config files so that ansible can also manage that server.
+  - Requires the `--ask-sudo-pass` flag.
 - `create-vagrant-site.yml`
   - Create a new site within the Vagrant environment.
 - `create-vagrant-mysql-admin.yml`
@@ -28,17 +29,20 @@ Included with this repository is a set of scripts for managing either your vagra
 - `destroy-vagrant-site.yml`
   - Disable a site in the Vagrant environment. Will not delete any user files unless a `purge` flag is passed.
 - `create-production-site.yml`
-  - Create a new site within the production environment. Will setup git hooks so that you can push your site to production using `git`. Requires the `--ask-sudo-pass` flag.
+  - Create a new site within the production environment. Will setup git hooks so that you can push your site to production using `git`.
+  - Requires the `--ask-sudo-pass` flag.
 - `create-production-mysql-admin.yml`
   - Create a new MySQL user in the production environment with database wide admin privileges.
 - `create-production-mysql-db.yml`
   - Create a new MySQL database in the production environment and a dedicated user for it. This user will have full privileges for the database but no access to any others.
 - `create-production-app.yml`
-  - Combination of the `create-production-site.yml` and `create-production-mysql-db.yml` scripts, for setting up a new site and a dedicated database & user for it. Just like above, it will create git hooks for push deployment. Requires the `--ask-sudo-pass` flag.
+  - Combination of the `create-production-site.yml` and `create-production-mysql-db.yml` scripts, for setting up a new site and a dedicated database & user for it. Just like above, it will create git hooks for push deployment.
+  - Requires the `--ask-sudo-pass` flag.
 - `deploy-site.yml`
-  - Push a local site to production using git. You will be prompted for a site to deploy; this is the name of a config file inside `ansible/sites` you need to create first. Look at the file `template.yml` for some instructions.
+  - Push a local site to production using git. It will prompt you for the site you wish to deploy, see below for more information on how to set this up.
 - `destroy-production-site.yml`
-  - Disable a site in the production environment. Will not delete any user files unless a `purge` flag is passed. Requires the `--ask-sudo-pass` flag.
+  - Disable a site in the production environment. Will not delete any user files unless a `purge` flag is passed.
+  - Requires the `--ask-sudo-pass` flag.
 
 ## Creating a Site in Vagrant
 
