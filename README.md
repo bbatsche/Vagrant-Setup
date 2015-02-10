@@ -98,10 +98,7 @@ This will guide you through the process of setting up the site, as well as initi
 
 - A password for the default console or shell user, "codeup"
 - An eMail address to receive notifications from the server
-- A username and password for a default MySQL administrator
-- A domain name for your site
-- A database name for your application
-- A database username and password for your application to use
+- A password for the default MySQL administrator, also called "codeup"
 
 ## Adding a Site to Digital Ocean
 
@@ -117,6 +114,50 @@ ansible-playbook ansible/create-production-site.yml --ask-sudo-pass
 1. The init script created a user called "codeup" in your droplet; you will use this user when SSH-ing into your new server.
 1. You must now SSH into your server and run the standard composer and artisan commands to initialize your application.
 
+## Creating a Production Application
+
+Most web applications require a combination of domain name and database. Thankfully, ansible can set this up using a single command. Use:
+
+```bash
+ansible-playbook ansible/create-production-app.yml --ask-sudo-pass
+```
+
+You will be prompted for the following:
+
+- Your sudo password &mdash; this is the password for the command line user `codeup`
+- Your MySQL admin password &mdash; this is the password for the database user `codeup`
+- Site domain name &mdash; what is the domain name for your new site?
+- MySQL database name &mdash; the name of the database your application will use
+- MySQL user name &mdash; the user your application will connect to MySQL as
+- MySQL password &mdash; the password your application will use when connecting to MySQL
+
+## Deploying Laravel Applications
+
+Ansible can automatically deploy your local dev sites to production using git. First, you must create the application in production using the above steps. Second, you need to create a new config file in `ansible/site_vars`. Take the `template.yml` file and copy it to a new filename (for example, "blog.yml"). Fill in the two parameters in your new file. The `local_domain` should be your local site's domain name, under the `sites` directory next to this README. The `production_domain` is your sites new domain name you specified when running `create-production-site.yml` or `create-production-app.yml`. Save your new vars file and then run:
+
+```bash
+ansible-playbook ansible/deploy-site.yml
+```
+
+You will be prompted for the name of your site to deploy. This is the file name you created just moments ago, without the `.yml` extension. So, if you created `blog.yml` in `ansible/site_vars`, the name of your site is just `blog`. The script will then do the following:
+
+- Ensure a proper git remote is set in your local repository
+- Push your site to production using git
+- Copy the `.env.php` file to production (**Make sure this file exists first**)
+- Run `composer install` for your application
+- Run any new migrations for your application
+
+_**Note:** The deploy script will not do any seeding! This is intentional._
+
+## Managing a Warpspeed Server
+
+If you have provisioned a server using [Warpspeed](http://warpspeed.io) our ansible scripts can still work with it! You will need to adjust a config file, and run a simple init script, and then the rest of the production ansible script will work just like before. Open `ansible/host_vars/production.yml` in your favorite editor. There are three sections of variables. The first are the default production parameters. Add a `#` to the beginning of lines 8 - 12 to comment them out. The second section are parameters for a Warpspeed server. Remove the `#` from lines 20 - 24 to enable those settings. Once this is done and saved, we need to add just a couple of config files to your server. This is done by running:
+
+```bash
+ansible-playbook ansible/warpspeed-init.yml --ask-sudo-pass
+```
+
+Once you've run this script, all our existing "production" commands work just like before! The only catch being that the Warpspeed users are `warpspeed` for both the command line and database, instead of `codeup`. Ansible is setup to make this switch seamlessly, but beware when this documentation discusses ssh-ing as `codeup`.
 
 ### Removing a Site
 
