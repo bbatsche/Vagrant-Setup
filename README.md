@@ -171,8 +171,6 @@ ansible-playbook ansible/destroy-production-site.yml --ask-sudo-pass
 
 This command will only remove the configuration files for your site, it will in no way delete any of your files on the server or remove any entries to your hosts file. If you would like to delete the actual files in your site, add the option `-e "purge=true"`. **Be extremely careful with this option! It really will completely wipe your site from the server!** If you wish to delete the site record in your hosts file, run the command with `sudo` and add `-e "purge_host=true"`.
 
-**Note: If you're deleting a site from your Digital Ocean server, you will need to add `--ask-sudo-pass` to the end of these commands**
-
 ## Managing MySQL
 
 Included with these files is also a script to aide in setting up MySQL users & databases. In order to create a MySQL administrator, use the following command
