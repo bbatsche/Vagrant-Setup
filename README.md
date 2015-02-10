@@ -9,17 +9,37 @@ This repository contains files and scripts intended for [Codeup](http://www.code
 
 Ideally this repository should be downloaded and configured using the LAMP Setup Script hosted [here](https://github.com/gocodeup/LAMP-Setup-Script). In addition to installing the necessary tools and utilities, it will also create a new SSH key the Ansible scripts will setup for use with the DigitalOcean droplet.
 
+## Ansible Scripts
+
+Included with this repository is a set of scripts for managing either your vagrant or production environments. You can run these scripts from directly on your Mac and Ansible will go into either your Vagrant or production server and perform whatever the required tasks are. We will go into more detail on how to use many of these scripts, but the following is an overview of the included items.
+
+| Script Name | Description | Requires Sudo Password | Requires DB Admin Password |
+|-------------|-------------|------------------------|----------------------------|
+| `vagrant-init.yml` | Set up the vagrant environment. You should **not** run this script directly; `vagrant up` or `vagrant provision` will run it for you. | no | no |
+| `prod-init.yml` | Set up a production environment. It will create a new commandline (console) user and a new MySQL administrator, both called `codeup`. You will be prompted to provide a new password for both. These are the passwords you will use in subsequent `sudo` or database admin tasks. | no | no |
+| `warpspeed-init.yml` | If you have created a production server using Warpspeed, this script will add a couple of additional utilities and config files so that ansible can also manage that server. | yes | no |
+| `create-vagrant-site.yml` | Create a new site within the Vagrant environment. | no | no |
+| `create-vagrant-mysql-admin.yml` | Create a new MySQL user in the Vagrant environment with database wide admin privileges. | no | no |
+| `create-vagrant-mysql-db.yml` | Create a new MySQL database in the Vagrant environment and a dedicated user for it. This user will have full privileges for the database but no access to any others. | no | no |
+| `destroy-vagrant-site.yml` | Disable a site in the Vagrant environment. Will not delete any user files unless a `purge` flag is passed. | no | no |
+| `create-production-site.yml` | Create a new site within the production environment. Will setup git hooks so that you can push your site to production using `git`. | yes | no |
+| `create-production-mysql-admin.yml` | Create a new MySQL user in the production environment with database wide admin privileges. | no | yes |
+| `create-production-mysql-db.yml` | Create a new MySQL database in the production environment and a dedicated user for it. This user will have full privileges for the database but no access to any others. | no | yes |
+| `create-production-app.yml` | Combination of the `create-production-site.yml` and `create-production-mysql-db.yml` scripts, for setting up a new site and a dedicated database & user for it. Just like above, it will create git hooks for push deployment. | yes | yes |
+| `deploy-site.yml` | Push a local site to production using git. You will be prompted for a site; this is the name of a config file inside `ansible/sites` you need to create first. Look at the file `template.yml` for some instructions. | no | no |
+| `destroy-production-site.yml` | Disable a site in the production environment. Will not delete any user files unless a `purge` flag is passed. | yes | no |
+
 ## Creating a Site in Vagrant
 
 When you first run `vagrant up` inside this directory, Vagrant will automatically run the necessary Ansible scripts to configure your test server and setup your first site. Later on in the course if you need to create additional sites you can do so by running:
 
-```
+```bash
 ansible-playbook ansible/create-vagrant-site.yml
 ```
 
 The `create-vagrant-site.yml` script can also optionally add your new domain to your local hosts file, facilitating the local deployment process. In order to do so however, you must have administer rights and run the script in the following manner:
 
-```
+```bash
 sudo ansible-playbook ansible/create-vagrant-site.yml -e "append_host=true"
 ```
 
@@ -55,7 +75,7 @@ If you used the LAMP Setup Script provided you should have an SSH key generated 
 
 Run the following command to initialize your server
 
-```
+```bash
 ansible-playbook ansible/prod-init.yml
 ```
 
@@ -72,7 +92,7 @@ This will guide you through the process of setting up the site, as well as initi
 
 Adding a site to your DigitalOcean droplet is similar to adding one to your Vagrant box, although we need to tell Ansible to ask for your password first:
 
-```
+```bash
 ansible-playbook ansible/create-production-site.yml --ask-sudo-pass
 ```
 
@@ -109,7 +129,7 @@ ansible-playbook ansible/create-production-mysql-admin.yml
 
 To make a new database & user for your application, use the following:
 
-```
+```bash
 ansible-playbook ansible/create-vagrant-mysql-db.yml
 # or
 ansible-playbook ansible/create-production-mysql-db.yml
