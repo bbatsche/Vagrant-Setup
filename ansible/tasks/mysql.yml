@@ -1,7 +1,10 @@
 ---
 - name: Install MySQL
-  apt: package=mysql-server state=present
+  apt: package={{ item }} state=present
   sudo: yes
+  with_items:
+    - mysql-server
+    - percona-toolkit
 
 - name: Create MySQL Configuration File
   template: src=mysql.cnf.j2 dest=/etc/my.cnf
