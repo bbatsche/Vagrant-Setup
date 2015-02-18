@@ -1,0 +1,24 @@
+---
+- name: Re-enable Root User in Production
+  hosts: production
+  remote_user: "{{ console_user }}"
+
+  tasks:
+    - name: Enable root User
+      command: passwd -u root
+      sudo: yes
+
+    - name: Allow root SSH Login
+      lineinfile:
+        dest:   /etc/ssh/sshd_config
+        state:  present
+        regexp: "^{{ item.key }}"
+        line:   "{{ item.key }} {{ item.value }}"
+      with_items:
+        - { key: 'PermitRootLogin',        value: 'yes' }
+        - { key: 'AllowUsers',             value: '{{ console_user }} root' }
+      notify: Restart SSH
+      sudo: yes
+
+  handlers:
+    - include: handlers/main.yml

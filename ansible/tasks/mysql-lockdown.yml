@@ -1,9 +1,21 @@
 ---
 - name: Create MySQL Administrator
-  mysql_user: name={{ mysql_admin }} password={{ mysql_pass }} priv=*.*:ALL,GRANT state=present
+  mysql_user:
+    name:     "{{ mysql_admin }}"
+    password: "{{ mysql_pass }}"
+    priv:     "*.*:ALL,GRANT"
+    state:    present
+  register: mysql_user_result
+  failed_when: >
+    "unable to connect to database, check login_user and login_password are correct" not in mysql_user_result.msg
 
 - name: Remove MySQL Root User
-  mysql_user: name=root host={{ item }} login_user={{ mysql_admin }} login_password={{ mysql_pass }} state=absent
+  mysql_user:
+    name:           root
+    host:           "{{ item }}"
+    login_user:     "{{ mysql_admin }}"
+    login_password: "{{ mysql_pass }}"
+    state:          absent
   when: inventory_hostname == "production"
   with_items:
     - localhost
