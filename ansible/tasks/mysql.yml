@@ -7,7 +7,6 @@
     - percona-toolkit
 
 - name: Create MySQL Configuration File
-  template: src=mysql.cnf.j2 dest=/etc/my.cnf
+  copy: src=my.cnf dest=/etc/mysql/my.cnf
   sudo: yes
-  notify:
-    - Restart MySQL
+  notify: Restart MySQL
