@@ -20,9 +20,11 @@
       set_fact: site_dir={{ working_dir.stdout }}/../sites/{{ local_domain }}
 
     - name: Add Remote to Repository
-      local_action: command git -C {{ site_dir }} remote add {{ git_remote }} ssh://{{ console_user }}@{{ ansible_ssh_host }}:{{ ansible_ssh_port }}{{ git_home }}/{{ production_domain }}.git
+      local_action: >
+        command git -C {{ site_dir }} remote add {{ git_remote }}
+        ssh://{{ console_user }}@{{ ansible_ssh_host }}:{{ ansible_ssh_port }}{{ git_home }}/{{ production_domain }}.git
       register: git_result
-      failed_when: git_result.rc != 0 and ("remote {{ git_remote }} already exists" not in git_result.stderr)
+      failed_when: 'git_result.rc != 0 and ("remote {{ git_remote }} already exists" not in git_result.stderr)'
       changed_when: git_result.rc == 0
 
     - name: Push Repository using Git
@@ -31,11 +33,18 @@
       changed_when: '"Everything up-to-date" not in git_push_result.stderr'
 
     - name: Copy .env.php File
-      copy: src={{ site_dir }}/.env.php dest={{ www_home }}/{{ production_domain }}/.env.php owner={{ ansible_ssh_user }} mode=0644
+      copy:
+        src:   "{{ site_dir }}/.env.php"
+        dest:  "{{ www_home }}/{{ production_domain }}/.env.php"
+        owner: "{{ console_user }}"
+        group: www-data
+        mode:  0640
       register: env_result
 
     - name: Install Dependencies
-      command: /usr/local/bin/composer install --no-dev --no-interaction chdir={{ www_home }}/{{ production_domain }}
+      command: /usr/local/bin/composer install --no-dev --no-interaction
+      args:
+        chdir: "{{ www_home }}/{{ production_domain }}"
       register: composer_result
       changed_when: '"Nothing to install or update" not in composer_result.stdout'
       when: git_push_result.changed or env_result.changed
