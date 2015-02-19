@@ -10,7 +10,11 @@
   when: ansible_swaptotal_mb < 1
 
 - name: Add Swap to Fstab
-  action: lineinfile dest=/etc/fstab regexp="swap" line="/swap none swap sw 0 0" state=present
+  lineinfile:
+    dest:   /etc/fstab
+    regexp: "swap"
+    line:   "/swap none swap sw 0 0"
+    state:  present
   sudo: yes
 
 - name: Turn on Swap

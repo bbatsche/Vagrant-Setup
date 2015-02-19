@@ -1,3 +1,9 @@
 ---
 - name: Create MySQL Administrator
-  mysql_user: name={{ new_mysql_user }} password={{ new_mysql_pass }} login_user={{ mysql_admin }} login_password={{ mysql_pass }} priv=*.*:ALL,GRANT state=present
+  mysql_user:
+    name:           "{{ new_mysql_user }}"
+    password:       "{{ new_mysql_pass }}"
+    login_user:     "{{ mysql_admin }}"
+    login_password: "{{ mysql_pass }}"
+    priv:           "*.*:ALL,GRANT"
+    state:          present

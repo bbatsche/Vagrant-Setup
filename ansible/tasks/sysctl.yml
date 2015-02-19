@@ -1,7 +1,12 @@
 ---
 # Sysctl options from http://www.cyberciti.biz/faq/linux-kernel-etcsysctl-conf-security-hardening/
 - name: Harden TCP/IP Stack & Kernel
-  sysctl: name={{ item.name }} value={{ item.value }} sysctl_set=yes state=present reload=yes
+  sysctl:
+    name:       "{{ item.name }}"
+    value:      "{{ item.value }}"
+    sysctl_set: yes
+    state:      present
+    reload:     yes
   sudo: yes
   notify: Restart Server
   with_items:
