@@ -30,5 +30,8 @@ git_home: /var/git
 #
 # Do not modify anything below
 #
-php_debug: no
 ansible_ssh_port: 22
+
+php_dev:   no
+mysql_dev: no
+nginx_dev: no

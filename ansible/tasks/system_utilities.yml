@@ -6,6 +6,5 @@
     - vim
     - git
     - curl
-    - ansible
     - python-mysqldb
     - mailutils

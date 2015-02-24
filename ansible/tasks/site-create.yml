@@ -38,6 +38,14 @@
   sudo: yes
   notify: Restart Nginx
 
+- name: Create Site Log Directory
+  file:
+    path:  /var/log/nginx/{{ domain }}
+    state: directory
+    owner: www-data
+    mode:  0755
+  sudo: yes
+
 - name: Create Warpspeed PHP-FPM Init Script
   template: src=warpspeed-php5-fpm-init.conf.j2 dest=/etc/init/php5-fpm-{{ domain }}.conf
   when: warpspeed_root is defined and warpspeed_root != ""

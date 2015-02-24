@@ -103,7 +103,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-{% if php_debug %}export LARAVEL_ENV="local"{% endif %}
+{% if php_dev %}export LARAVEL_ENV="local"{% endif %}
 
 {% if inventory_hostname == 'vagrant' -%}
     cd /vagrant

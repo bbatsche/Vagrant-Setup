@@ -1,44 +1,55 @@
-# redirect www to non-www
+# www to non-www redirect -- duplicate content is BAD:
+# https://github.com/h5bp/html5-boilerplate/blob/5370479476dceae7cc3ea105946536d6bc0ee468/.htaccess#L362
+# Choose between www and non-www, listen on the *wrong* one and redirect to
+# the right one -- http://wiki.nginx.org/Pitfalls#Server_Name
 server {
+  # don't forget to tell on which port this server listens
+  listen [::]:80;
+  listen 80;
+
+  # listen on the www host
   server_name www.{{ domain }};
+
+  # and redirect to the non-www host (declared below)
   return 301 $scheme://{{ domain }}$request_uri;
 }
 
 server {
+  listen [::]:80;
+  listen 80;
+
+  # The host name to respond to
   server_name {{ domain }};
+
+  # Path for static files
   root {{ www_home }}/{{ domain }}/public;
 
-  {% if warpspeed_root is defined and warpspeed_root != "" %}
-      # WarpSpeed.io auto-manages the following section.
-      # Editing or moving any of these lines will break functionality.
+  # Logs for local domain
+  access_log  /var/log/nginx/{{ domain }}/access.log;
+  error_log  /var/log/nginx/{{ domain }}/error.log;
 
-      ############################
-      # START DO-NOT-EDIT-BLOCK
-      ############################
+  # Set this for static access logs later on
+  set $log_path var/log/nginx/{{ domain }};
 
-      listen 80; # LISTEN PORT MARKER
+  # Skip access log and not found logging for favicons and robots.txt
+  location = /favicon.ico {
+    access_log off;
+    log_not_found off;
+  }
 
-      # SSL PLACEHOLDERS
-      # ssl on;
-      # ssl_certificate certificate-path;
-      # ssl_certificate_key key-path;
+  location = /robots.txt {
+    allow all;
+    access_log off;
+    log_not_found off;
+  }
 
-      ############################
-      # END DO-NOT-EDIT-BLOCK
-      ############################
-  {% endif %}
-
-  access_log  /var/log/nginx/{{ domain }}-access.log;
-  error_log  /var/log/nginx/{{ domain }}-error.log;
-
-  include /etc/nginx/includes/location.conf;
+  index index.php index.html index.htm;
 
   location / {
     try_files $uri $uri/ /index.php?$args;
-    {% if inventory_hostname == 'vagrant' -%}
+    {% if nginx_dev %}
       autoindex on;
-    {%- endif %}
-
+    {% endif %}
   }
 
   # pass all .php files to php-fpm
@@ -49,4 +60,7 @@ server {
     fastcgi_index index.php;
     fastcgi_pass unix:/var/run/php5-fpm-{{ domain }}.sock;
   }
+
+  # Include the basic h5bp config set
+  include h5bp/basic.conf;
 }
