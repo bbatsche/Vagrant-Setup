@@ -54,8 +54,11 @@
   sudo: yes
 
 - name: Modify php.ini Settings
-  template: src=php.ini.j2 dest=/etc/php5/fpm/php.ini
+  template: src=php.ini.j2 dest={{ item }}
   sudo: yes
+  with_items:
+    - /etc/php5/fpm/php.ini
+    - /etc/php5/cli/php.ini
   notify:
     - Restart PHP-FPM
     - Restart Warpspeed PHP-FPM
