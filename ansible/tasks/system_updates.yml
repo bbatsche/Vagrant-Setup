@@ -1,7 +1,9 @@
 ---
 - name: Update apt Keys
-  command: apt-key update
+  script: update-apt-keys.pl
   sudo: yes
+  register: apt_key_result
+  changed_when: apt_key_result.stdout != "0"
 
 - name: Update apt Cache
   apt: update_cache=yes
@@ -10,6 +12,7 @@
 - name: Run apt Upgrade
   apt: upgrade=yes
   sudo: yes
+  notify: Restart Server
 
 - name: Install unattended-upgrades
   apt: pkg=unattended-upgrades state=present
