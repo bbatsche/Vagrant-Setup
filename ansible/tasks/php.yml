@@ -49,6 +49,25 @@
   file: path=/var/log/php state=directory owner=www-data
   sudo: yes
 
+- name: Set PHP-FPM Error Log Path
+  lineinfile:
+    dest:   /etc/php5/fpm/php-fpm.conf
+    state:  present
+    regexp: ^error_log\s?=
+    line:   error_log = /var/log/php-fpm/error.log
+  sudo: yes
+  notify:
+    - Restart PHP-FPM
+    - Restart Warpspeed PHP-FPM
+
+- name: Delete old PHP-FPM Log
+  file: path=/var/log/php5-fpm.log state=absent
+  sudo: yes
+
+- name: Set PHP-FPM Log Permissions
+  file: path=/var/log/php-fpm/error.log owner=www-data mode=0644
+  sudo: yes
+
 - name: Create PHP Session Directory
   file: path=/var/lib/php/session state=directory owner=www-data
   sudo: yes
