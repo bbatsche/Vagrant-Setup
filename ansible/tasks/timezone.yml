@@ -1,27 +1,21 @@
 ---
 - name: Set Timezone
-  sudo: yes
   copy:
-    content: '{{ timezone | default("UTC") }}'
+    content: '{{ timezone | default("Etc/UTC") }}\n'
     dest:    /etc/timezone
     owner:   root
     group:   root
     mode:    0644
-
-- name: Remove Existing Localtime Config
-  file: path=/etc/localtime state=absent
   sudo: yes
+  notify: Update Timezone
 
-- name: Set Localtime to UTC
-  file:
-    src:   /usr/share/zoneinfo/{{ timezone | default("UTC") }}
-    dest:  /etc/localtime
-    state: link
-    owner: root
-    group: root
-    mode:  0644
-  sudo: yes
+- name: Check Localtime
+  command: diff /etc/localtime /usr/share/zoneinfo/{{ timezone | default("Etc/UTC") }}
+  register: localtime_diff
+  changed_when: localtime_diff.stdout != ""
 
-- name: Reconfigure tzdata
-  command: dpkg-reconfigure -f noninteractive tzdata
+- name: Set Local Time
+  command: mv /usr/share/zoneinfo/{{ timezone | default("Etc/UTC") }} /etc/localtime
   sudo: yes
+  notify: Update Timezone
+  when: localtime_diff.stdout != ""

@@ -3,11 +3,13 @@
   command: fallocate -l 1G /swap
   sudo: yes
   when: ansible_swaptotal_mb < 1
+  notify: Turn on Swap
 
 - name: Make Swap
   command: mkswap /swap
   sudo: yes
   when: ansible_swaptotal_mb < 1
+  notify: Turn on Swap
 
 - name: Add Swap to Fstab
   lineinfile:
@@ -16,7 +18,4 @@
     line:   "/swap none swap sw 0 0"
     state:  present
   sudo: yes
-
-- name: Turn on Swap
-  command: swapon -ae
-  sudo: yes
+  notify: Turn on Swap
