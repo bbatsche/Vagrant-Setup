@@ -13,6 +13,9 @@
   command: diff /etc/localtime /usr/share/zoneinfo/{{ timezone | default("Etc/UTC") }}
   register: localtime_diff
   changed_when: localtime_diff.stdout != ""
+  failed_when: >
+    localtime_diff.rc == 2 and
+    localtime_diff.stdout != "Binary files /etc/localtime and /usr/share/zoneinfo/{{ timezone | default("Etc/UTC") }} differ"
 
 - name: Set Local Time
   command: mv /usr/share/zoneinfo/{{ timezone | default("Etc/UTC") }} /etc/localtime
