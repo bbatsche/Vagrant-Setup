@@ -15,6 +15,7 @@
     - name: Get Local Working Directory
       local_action: command pwd
       register: working_dir
+      changed_when: false
 
     - name: Local Domain
       set_fact: site_dir={{ working_dir.stdout }}/../sites/{{ local_domain }}
@@ -31,6 +32,9 @@
       local_action: command git -C {{ site_dir }} push {{ git_remote }} master
       register: git_push_result
       changed_when: '"Everything up-to-date" not in git_push_result.stderr'
+      notify:
+        - Install Dependencies
+        - Migrate Databases
 
     - name: Copy .env.php File
       copy:
@@ -39,21 +43,17 @@
         owner: "{{ console_user }}"
         group: www-data
         mode:  0640
-      register: env_result
+      notify:
+        - Install Dependencies
+        - Migrate Databases
+
+  handlers:
+    - include: handlers/main.yml
 
     - name: Install Dependencies
-      command: /usr/local/bin/composer install --no-dev --no-interaction
-      args:
-        chdir: "{{ www_home }}/{{ production_domain }}"
-      register: composer_result
-      changed_when: '"Nothing to install or update" not in composer_result.stdout'
-      when: git_push_result.changed or env_result.changed
+      composer: working_dir={{ www_home }}/{{ production_domain }}
 
     - name: Migrate Databases
       command: /usr/bin/php {{ www_home }}/{{ production_domain }}/artisan migrate --force
       register: migrate_result
       changed_when: '"Nothing to migrate." not in migrate_result.stdout'
-      when: git_push_result.changed or env_result.changed
-
-  handlers:
-  - include: handlers/main.yml
