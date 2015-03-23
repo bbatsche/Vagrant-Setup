@@ -22,6 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.insert_key = false
 
   config.vm.synced_folder "./", "/vagrant", id: "vagrant-root", type: "nfs"
+
   ## VirtualBox's builtin shared folder technology
   ## Slower than NFS, but does not require admin password
   # config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
@@ -45,5 +46,25 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.limit          = "vagrant"
     ansible.playbook       = "ansible/vagrant-init.yml"
     ansible.extra_vars     = { domain: domain }
+  end
+
+  # Plugin specific options. Helpful for development but most likely not necessary for class
+  if Vagrant.has_plugin? "vagrant-dns"
+    config.dns.tld      = "dev"
+    config.dns.patterns = [/^.*\.dev$/]
+  end
+  if Vagrant.has_plugin? "vagrant-cachier"
+    config.cache.scope = :box
+    config.cache.synced_folder_opts = {
+      type: :nfs,
+      # The nolock option can be useful for an NFSv3 client that wants to avoid the
+      # NLM sideband protocol. Without this option, apt-get might hang if it tries
+      # to lock files needed for /var/cache/* operations. All of this can be avoided
+      # by using NFSv4 everywhere. Please note that the tcp option is not the default.
+      mount_options: ['rw', 'vers=3', 'nolock']
+    }
+  end
+  if Vagrant.has_plugin? "vagrant-reload"
+    config.vm.provision :reload
   end
 end
