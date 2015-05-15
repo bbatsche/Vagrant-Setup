@@ -1,17 +1,19 @@
-# Codeup Vagrant Box & Ansible Scripts
+# Vagrant Box & Ansible Scripts
 
-This repository contains files and scripts intended for [Codeup](http://www.codeup.com) students to use throughout their class. It contains:
+This repository contains files, scripts, and Ansible playbooks for setting up a PHP development and production environments It's primary purpose is for my own development, but also to experiment with the environment itself before pushing it to [gocoeup/Codeup-Vagrant-Setup](https://github.com/gocodeup/Codeup-Vagrant-Setup). It contains:
 
 1. A Vagrantfile definition for local development and testing of LAMP based applications
-1. Ansible scripts for deploying those same applications to a production server, in particular those hosted by [DigitalOcean](https://www.digitalocean.com)
+1. Ansible playbooks and tasks for deploying those same applications to a production server, in particular those hosted by [DigitalOcean](https://www.digitalocean.com)
 
 ## Installation & Setup
 
-Ideally this repository should be downloaded and configured using the LAMP Setup Script hosted [here](https://github.com/gocodeup/LAMP-Setup-Script). In addition to installing the necessary tools and utilities, it will also create a new SSH key the Ansible scripts will setup for use with the DigitalOcean droplet.
+1. Install [Vagrant](https://www.vagrantup.com), [VirtualBox](https://www.virtualbox.org), and [Ansible](http://www.ansible.com/home). These can gotten with [Homebrew](http://brew.sh) and [Homebrew Cask](http://caskroom.io).
+1. Clone repository
+1. Run `vagrant up`.
 
-## Ansible Scripts
+## Ansible Playbooks
 
-Included with this repository is a set of scripts for managing either your vagrant or production environments. You can run these scripts from directly on your Mac and Ansible will go into either your Vagrant or production server and perform whatever the required tasks are. We will go into more detail on how to use many of these scripts, but the following is an overview of the included items.
+Included with this repository is a set of playbooks for managing either your vagrant or production environments. You can run these plays from directly on your Mac and Ansible will go into either your Vagrant or production server and perform whatever the required tasks are. We will go into more detail on how to use many of these scripts, but the following is an overview of the included items.
 
 - `vagrant-init.yml`
   - Set up the vagrant environment. You should **not** run this script directly; `vagrant up` or `vagrant provision` will run it for you.
@@ -46,7 +48,7 @@ Included with this repository is a set of scripts for managing either your vagra
 
 ## Creating a Site in Vagrant
 
-When you first run `vagrant up` inside this directory, Vagrant will automatically run the necessary Ansible scripts to configure your test server and setup your first site. Later on in the course if you need to create additional sites you can do so by running:
+When you first run `vagrant up` inside this directory, Vagrant will automatically run the necessary Ansible plays to configure your test server and setup your first site. Later on in the course if you need to create additional sites you can do so by running:
 
 ```bash
 ansible-playbook ansible/create-vagrant-site.yml
