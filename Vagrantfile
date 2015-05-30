@@ -51,6 +51,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   if Vagrant.has_plugin? "vagrant-cachier"
     config.cache.scope = :box
+
+    config.cache.enable :apt
+    config.cache.enable :apt_lists
+    config.cache.enable :composer
+    config.cache.enable :bower
+    config.cache.enable :npm
+    config.cache.enable :gem
+
     config.cache.synced_folder_opts = {
       type: :nfs,
       # The nolock option can be useful for an NFSv3 client that wants to avoid the
