@@ -1,0 +1,28 @@
+---
+- name: Initializing Vagrant Box
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars:
+    ansible_dir: ../../ansible
+  vars_files:
+    - "{{ ansible_dir }}/host_vars/vagrant.yml"
+
+  tasks:
+    - include: "{{ ansible_dir }}/tasks/timezone.yml"
+    - include: "{{ ansible_dir }}/tasks/sysctl.yml"
+    - include: "{{ ansible_dir }}/tasks/system_updates.yml"
+    - include: "{{ ansible_dir }}/tasks/system_utilities.yml"
+    - include: "{{ ansible_dir }}/tasks/mysql.yml"
+    - include: "{{ ansible_dir }}/tasks/mysql-admin.yml"
+    - include: "{{ ansible_dir }}/tasks/nginx.yml"
+    - include: "{{ ansible_dir }}/tasks/php.yml"
+    - include: "{{ ansible_dir }}/tasks/php_composer.yml"
+    - include: "{{ ansible_dir }}/tasks/swap.yml"
+    - include: "{{ ansible_dir }}/tasks/bash-profile.yml"
+    - include: "{{ ansible_dir }}/tasks/phpunit.yml"
+
+  handlers:
+    - include: "{{ ansible_dir}}/handlers/main.yml"
+    - name: Restart Server
+      debug: msg="Run 'vagrant reload' after provisioning completes"

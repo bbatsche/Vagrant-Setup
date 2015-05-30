@@ -1,5 +1,5 @@
 ---
-www_home: /vagrant/sites
+www_home: /srv/www
 
 mysql_admin: vagrant
 mysql_pass: vagrant

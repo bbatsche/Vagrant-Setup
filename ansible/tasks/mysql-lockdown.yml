@@ -1,15 +1,4 @@
 ---
-- name: Create MySQL Administrator
-  mysql_user:
-    name:     "{{ mysql_admin }}"
-    password: "{{ mysql_pass }}"
-    priv:     "*.*:ALL,GRANT"
-    state:    present
-  register: mysql_user_result
-  failed_when: >
-    mysql_user_result.msg is defined and
-    "unable to connect to database, check login_user and login_password are correct" not in mysql_user_result.msg
-
 - name: Remove MySQL Root User
   mysql_user:
     name:           root

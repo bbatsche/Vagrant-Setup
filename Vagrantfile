@@ -5,47 +5,43 @@
 # Codeup Server Setup
 #############################
 
-box      = 'ubuntu/trusty64'
-hostname = 'codeup-trusty'
-domain   = 'codeup.dev'
-ip       = '192.168.77.77'
-ram      = '512'
+box      = 'parallels/ubuntu-14.04'
+hostname = 'vagrantbox'
+ip       = '10.211.55.2'
+ram      = '1024'
+timezone = 'America/Chicago'
 
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = box
+  config.vm.define "vagrant" do |v|
+    v.vm.box = box
 
-  config.vm.hostname = hostname
-  config.vm.network :private_network, ip: ip
+    v.vm.hostname = hostname
 
-  config.ssh.insert_key = false
+    v.vm.synced_folder "./sites", "/srv/www"
+    v.vm.synced_folder ".", "/vagrant", disabled: true
 
-  config.vm.synced_folder "./", "/vagrant", id: "vagrant-root", type: "nfs"
+    v.vm.provider :parallels do |p|
+      p.name = hostname
 
-  ## VirtualBox's builtin shared folder technology
-  ## Slower than NFS, but does not require admin password
-  # config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
-  #     owner: "vagrant",
-  #     group: "www-data",
-  #     mount_options: ["dmode=775,fmode=664"]
+      p.check_guest_tools  = true
+      p.update_guest_tools = true
 
-  config.vm.provider :virtualbox do |vb|
-    vb.name = hostname
+      p.memory = ram
+      p.cpus   = 1
+    end
 
-    vb.memory = ram
-    vb.cpus = 1
-
-    vb.customize ["modifyvm",             :id, "--natdnshostresolver1", "on"]
-    vb.customize ["setextradata",         :id, "--VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
-    vb.customize ["guestproperty", "set", :id, "--timesync-threshold",  "1000"]
-  end
-
-  config.vm.provision :ansible do |ansible|
-    ansible.inventory_path = "ansible/hosts"
-    ansible.limit          = "vagrant"
-    ansible.playbook       = "ansible/vagrant-init.yml"
-    ansible.extra_vars     = { domain: domain }
+    v.vm.provision :ansible do |ansible|
+      ansible.playbook = "playbooks/vagrant/init.yml"
+      ansible.extra_vars = {
+        timezone: timezone,
+        mysql_admin: "root",
+        mysql_pass: '',
+        new_mysql_user: "vagrant",
+        new_mysql_pass: "vagrant"
+      }
+    end
   end
 
   # Plugin specific options. Helpful for development but most likely not necessary for class

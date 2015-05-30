@@ -3,7 +3,7 @@
   mysql_user:
     name:           "{{ new_mysql_user }}"
     password:       "{{ new_mysql_pass }}"
-    login_user:     "{{ mysql_admin }}"
-    login_password: "{{ mysql_pass }}"
+    login_user:     "{{ mysql_admin | default('root') }}"
+    login_password: "{{ mysql_pass | default('') }}"
     priv:           "*.*:ALL,GRANT"
     state:          present
