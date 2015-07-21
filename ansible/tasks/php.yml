@@ -27,8 +27,7 @@
 # Ubuntu 13.10+ has a bug in where the mcrypt ini file is placed.
 # Work around those by copying the file to the proper location and enabling mcrypt.
 - name: Copy mcrypt Config to Proper Location and Enable
-  shell: php5enmod mcrypt creates=/etc/php5/fpm/conf.d/20-mcrypt.ini
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '13.10'
+  command: php5enmod mcrypt creates=/etc/php5/fpm/conf.d/20-mcrypt.ini
   sudo: yes
   notify:
     - Restart PHP-FPM
@@ -77,3 +76,10 @@
   notify:
     - Restart PHP-FPM
     - Restart Warpspeed PHP-FPM
+
+- name: Install Composer
+  sudo: yes
+  shell: >
+    /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php &&
+    /bin/mv -f ./composer.phar /usr/local/bin/composer
+    creates=/usr/local/bin/composer

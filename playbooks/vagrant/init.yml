@@ -17,7 +17,6 @@
     - include: "{{ ansible_dir }}/tasks/mysql-admin.yml"
     - include: "{{ ansible_dir }}/tasks/nginx.yml"
     - include: "{{ ansible_dir }}/tasks/php.yml"
-    - include: "{{ ansible_dir }}/tasks/php_composer.yml"
     - include: "{{ ansible_dir }}/tasks/swap.yml"
     - include: "{{ ansible_dir }}/tasks/bash-profile.yml"
     - include: "{{ ansible_dir }}/tasks/phpunit.yml"
