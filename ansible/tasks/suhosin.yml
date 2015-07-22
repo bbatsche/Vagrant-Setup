@@ -1,9 +1,12 @@
+---
 - name: Add Suhosin apt-key
   apt_key: url=https://sektioneins.de/files/repository.asc state=present
   sudo: yes
 
 - name: Add Suhosin apt Repository
-  apt_repository: "repo='deb [arch=amd64] http://repo.suhosin.org/ ubuntu-trusty main' state=present"
+  apt_repository:
+    repo: 'deb [arch=amd64] http://repo.suhosin.org/ ubuntu-trusty main'
+    state: present
   sudo: yes
 
 - name: Install Suhosin Extension
