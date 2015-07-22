@@ -1,0 +1,14 @@
+---
+- name: Add HHVM Apt Key
+  apt_key: keyserver=keyserver.ubuntu.com id=0x5a16e7281be7a449 state=present
+  sudo: yes
+
+- name: Add HHVM Apt Repository
+  apt_repository:
+    repo: "deb http://dl.hhvm.com/ubuntu trusty main"
+    state: present
+  sudo: yes
+
+- name: Install HHVM
+  apt: package=hhvm state=present
+  sudo: yes
