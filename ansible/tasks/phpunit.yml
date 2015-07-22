@@ -1,3 +1,10 @@
 ---
+- name: Create Composer Directory
+  file: path={{ ansible_env.HOME }}/.composer state=directory
+
 - name: Install PHPUnit
-  composer: command='global require "phpunit/phpunit=~4.6"' working_dir=~/.composer/
+  composer:
+    command: 'global require "phpunit/phpunit=~4.6"'
+    working_dir: "{{ ansible_env.HOME }}/.composer/"
+    no_dev: no
+    optimize_autoloader: no
