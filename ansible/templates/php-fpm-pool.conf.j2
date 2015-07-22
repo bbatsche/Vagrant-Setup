@@ -33,3 +33,4 @@ env[TEMP] = /tmp
 
 php_admin_value[open_basedir] = /var/log/php:/var/lib/php:{{ www_home }}/{{ domain }}:/tmp
 php_admin_value[upload_tmp_dir] = /tmp
+php_admin_flag[suhosin.executor.disable_eval] = on
