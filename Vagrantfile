@@ -7,7 +7,6 @@
 
 box      = 'parallels/ubuntu-14.04'
 hostname = 'vagrantbox'
-ip       = '10.211.55.2'
 ram      = '1024'
 timezone = 'America/Chicago'
 
@@ -42,6 +41,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         new_mysql_pass: "vagrant"
       }
     end
+
+    if Vagrant.has_plugin? "vagrant-reload"
+      v.vm.provision :reload
+    end
   end
 
   # Plugin specific options. Helpful for development but most likely not necessary for class
@@ -67,8 +70,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # by using NFSv4 everywhere. Please note that the tcp option is not the default.
       mount_options: ['rw', 'vers=3', 'nolock']
     }
-  end
-  if Vagrant.has_plugin? "vagrant-reload"
-    config.vm.provision :reload
   end
 end
