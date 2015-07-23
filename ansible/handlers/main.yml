@@ -23,6 +23,10 @@
   service: name=mysql state=restarted
   sudo: yes
 
+- name: Restart HHVM
+  service: name=hhvm state=restarted
+  sudo: yes
+
 - name: Restart Warpspeed PHP-FPM
   service: name=php5-fpm-{{ domain }} state=restarted
   when: warpspeed_root is defined and warpspeed_root != "" and domain is defined

@@ -12,3 +12,4 @@
 - name: Install HHVM
   apt: package=hhvm state=present
   sudo: yes
+  notify: Restart HHVM
