@@ -13,15 +13,15 @@
     - include: "{{ ansible_dir }}/tasks/sysctl.yml"
     - include: "{{ ansible_dir }}/tasks/system_updates.yml"
     - include: "{{ ansible_dir }}/tasks/system_utilities.yml"
+    - include: "{{ ansible_dir }}/tasks/swap.yml"
     - include: "{{ ansible_dir }}/tasks/mysql.yml"
     - include: "{{ ansible_dir }}/tasks/mysql-admin.yml"
     - include: "{{ ansible_dir }}/tasks/nginx.yml"
     - include: "{{ ansible_dir }}/tasks/php.yml"
     - include: "{{ ansible_dir }}/tasks/suhosin.yml"
-    - include: "{{ ansible_dir }}/tasks/hhvm.yml"
-    - include: "{{ ansible_dir }}/tasks/swap.yml"
-    - include: "{{ ansible_dir }}/tasks/bash-profile.yml"
     - include: "{{ ansible_dir }}/tasks/phpunit.yml"
+    - include: "{{ ansible_dir }}/tasks/hhvm.yml"
+    - include: "{{ ansible_dir }}/tasks/bash-profile.yml"
 
   handlers:
     - include: "{{ ansible_dir}}/handlers/main.yml"
