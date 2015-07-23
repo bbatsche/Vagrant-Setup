@@ -16,6 +16,7 @@
     - include: "{{ ansible_dir }}/tasks/swap.yml"
     - include: "{{ ansible_dir }}/tasks/mysql.yml"
     - include: "{{ ansible_dir }}/tasks/mysql-admin.yml"
+    - include: "{{ ansible_dir }}/tasks/postgres.yml"
     - include: "{{ ansible_dir }}/tasks/nginx.yml"
     - include: "{{ ansible_dir }}/tasks/php.yml"
     - include: "{{ ansible_dir }}/tasks/suhosin.yml"

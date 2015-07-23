@@ -1,3 +1,5 @@
 ---
 - name: Install PostgreSQL
   apt: package=postgresql state=present
+  sudo: yes
+  notify: Restart PostgreSQL

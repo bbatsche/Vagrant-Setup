@@ -23,6 +23,10 @@
   service: name=mysql state=restarted
   sudo: yes
 
+- name: Restart PostgreSQL
+  service: name=postgresql state=restarted
+  sudo: yes
+
 - name: Restart HHVM
   service: name=hhvm state=restarted
   sudo: yes
