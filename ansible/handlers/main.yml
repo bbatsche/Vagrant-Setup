@@ -27,6 +27,10 @@
   service: name=postgresql state=restarted
   sudo: yes
 
+- name: Restart Redis
+  service: name=redis-server state=restarted
+  sudo: yes
+
 - name: Restart HHVM
   service: name=hhvm state=restarted
   sudo: yes
