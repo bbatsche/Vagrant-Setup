@@ -83,3 +83,10 @@
     /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php &&
     /bin/mv -f ./composer.phar /usr/local/bin/composer
     creates=/usr/local/bin/composer
+
+# Add composer to path
+- name: Add Composer's Bin to $PATH
+  lineinfile:
+    dest: ~/.bashrc
+    line: 'export PATH="$HOME/.composer/vendor/bin:$PATH"'
+    state: present

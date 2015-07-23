@@ -28,11 +28,3 @@
     insertafter: EOF
     state: present
   when: php_dev
-
-# Add composer to path
-- name: Add Composer's Bin Directory to $PATH
-  lineinfile:
-    dest: ~/.bashrc
-    line: 'export PATH="$PATH:$HOME/.composer/vendor/bin"'
-    insertafter: EOF
-    state: present
