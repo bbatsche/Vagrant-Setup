@@ -21,6 +21,7 @@
     - include: "{{ ansible_dir }}/tasks/suhosin.yml"
     - include: "{{ ansible_dir }}/tasks/phpunit.yml"
     - include: "{{ ansible_dir }}/tasks/hhvm.yml"
+    - include: "{{ ansible_dir }}/tasks/ruby.yml"
     - include: "{{ ansible_dir }}/tasks/bash-profile.yml"
 
   handlers:
