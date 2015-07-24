@@ -1,0 +1,28 @@
+---
+- name: Install System Node
+  apt: package={{ item }} state=present
+  sudo: yes
+  with_items:
+    - nodejs
+    - nodejs-legacy
+    - npm
+
+- name: Install NVM
+  git:
+    repo: https://github.com/creationix/nvm.git
+    dest: /usr/local/nvm
+    version: "{{ nvm_version }}"
+  sudo: yes
+
+- name: Add NVM to Profile
+  copy: src=nvm.sh dest=/etc/profile.d/nvm.sh
+  sudo: yes
+
+- name: Create NVM Alisas Directories
+  file: path=/usr/local/nvm/{{ item }} state=directory owner={{ ansible_ssh_user }} mode=0775
+  with_items:
+    - alias
+    - bin
+    - src
+    - versions
+  sudo: yes
