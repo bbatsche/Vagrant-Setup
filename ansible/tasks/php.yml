@@ -79,14 +79,20 @@
     - Restart PHP-FPM
     - Restart Warpspeed PHP-FPM
 
-- name: Install Composer
-  sudo: yes
-  shell: >
-    /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php &&
-    /bin/mv -f ./composer.phar /usr/local/bin/composer
-    creates=/usr/local/bin/composer
+- name: Check for Composer
+  stat: path=/usr/local/bin/composer
+  register: composer_result
 
-# Add composer to path
+- name: Download Composer Installer
+  get_url: url=https://getcomposer.org/installer dest=/tmp/install-composer.php
+  when: composer_result.stat.exists == false
+
+- name: Install Composer
+  command: >
+    php /tmp/install-composer.php --install-dir=/usr/local/bin --filename=composer
+    creates=/usr/local/bin/composer
+  sudo: yes
+
 - name: Add Composer's Bin to $PATH
   lineinfile:
     dest: ~/.bashrc
