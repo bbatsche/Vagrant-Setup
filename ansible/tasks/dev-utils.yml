@@ -8,5 +8,7 @@
     - grunt-cli
 
 - name: Install SASS
-  gem: name=sass user_install=no state=present
+  gem: name=sass user_install=no state=present executable=/usr/local/rbenv/shims/gem
+  environment:
+    RBENV_ROOT: /usr/local/rbenv
   sudo: yes
