@@ -6,29 +6,26 @@
 - name: Install Rbenv Plugins
   git:
     repo: https://github.com/sstephenson/{{ item }}.git
-    dest: ~/.rbenv/plugins/{{ item }}/
+    dest: /usr/local/rbenv/plugins/{{ item }}/
+  sudo: yes
   with_items:
     - ruby-build
     - rbenv-vars
     - rbenv-gem-rehash
     - rbenv-default-gems
 
-- name: Add Rbenv's Bin to $PATH
-  lineinfile:
-    dest: ~/.bashrc
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    state: present
-
-- name: Add Rbenv Init to Bash
-  lineinfile:
-    dest: ~/.bashrc
-    line: 'eval "$(rbenv init -)"'
-    state: present
-
 - name: Install Ruby
-  command: rbenv install {{ ruby_version }} creates=~/.rbenv/versions/2.2.2
+  command: rbenv install {{ ruby_version }} creates=/usr/local/rbenv/versions/{{ ruby_version }}
+  environment:
+    RBENV_ROOT: /usr/local/rbenv
+  sudo: yes
 
 - name: Set Global Ruby Version
   copy:
     content: '{{ ruby_version }}\n'
-    dest:    ~/.rbenv/version
+    dest:    /usr/local/rbenv/version
+  sudo: yes
+
+- name: Add Rbenv to Profile
+  copy: src=rbenv.sh dest=/etc/profile.d/rbenv.sh
+  sudo: yes
