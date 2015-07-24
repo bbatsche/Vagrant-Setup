@@ -17,9 +17,9 @@
     regexp: "^alias {{ item.alias }}="
     state: present
   with_items:
-    - { alias: ll, command: "ls -lFh"}
-    - { alias: la, command: "ls -lAh"}
-    - { alias: l,  command: "ls -CF"}
+    - { alias: ll, command: "ls -lFh" }
+    - { alias: la, command: "ls -lAh" }
+    - { alias: l,  command: "ls -CF" }
 
 - name: Laravel Environment Setting
   lineinfile:

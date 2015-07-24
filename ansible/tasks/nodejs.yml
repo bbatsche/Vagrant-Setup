@@ -18,7 +18,7 @@
   copy: src=nvm.sh dest=/etc/profile.d/nvm.sh
   sudo: yes
 
-- name: Create NVM Alisas Directories
+- name: Create NVM Directories
   file: path=/usr/local/nvm/{{ item }} state=directory owner={{ ansible_ssh_user }} mode=0775
   with_items:
     - alias

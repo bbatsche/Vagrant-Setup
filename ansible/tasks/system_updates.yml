@@ -5,12 +5,8 @@
   register: apt_key_result
   changed_when: apt_key_result.stdout != "0"
 
-- name: Update apt Cache
-  apt: update_cache=yes
-  sudo: yes
-
-- name: Run apt Upgrade
-  apt: upgrade=yes
+- name: Update apt
+  apt: update_cache=yes upgrade=yes cache_valid_time=86400
   sudo: yes
   notify: Restart Server
 

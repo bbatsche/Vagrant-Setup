@@ -57,6 +57,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.cache.enable :apt
     config.cache.enable :apt_lists
+    config.cache.enable :apt_cacher
     config.cache.enable :composer
     config.cache.enable :bower
     config.cache.enable :npm
