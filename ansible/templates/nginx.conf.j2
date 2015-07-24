@@ -17,17 +17,17 @@ worker_processes auto;
 # should be > worker_connections.
 worker_rlimit_nofile 8192;
 
+# Default error log file
+# (this is only used when you don't override error_log on a server{} level)
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
 events {
   # When you need > 8000 * cpu_cores connections, you start optimizing your OS,
   # and this is probably the point at which you hire people who are smarter than
   # you, as this is *a lot* of requests.
   worker_connections 8000;
 }
-
-# Default error log file
-# (this is only used when you don't override error_log on a server{} level)
-error_log  /var/log/nginx/error.log warn;
-pid        /var/run/nginx.pid;
 
 http {
 
@@ -134,6 +134,11 @@ http {
     text/xml;
   # text/html is always compressed by HttpGzipModule
 
+  ##
+  # Phusion Passenger config
+  ##
+  passenger_root /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini;
+  passenger_ruby /usr/bin/passenger_free_ruby;
 
   # This should be turned on if you are going to have pre-compressed copies (.gz) of
   # static files available. If not it should be left off as it will cause extra I/O

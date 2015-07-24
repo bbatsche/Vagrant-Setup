@@ -1,7 +1,20 @@
 ---
-- name: Install Nginx
-  apt: package=nginx state=present
+- name: Add Phusion Passenger apt Key
+  apt_key: keyserver=keyserver.ubuntu.com id=561F9B9CAC40B2F7 state=present
   sudo: yes
+
+- name: Add Phusion Passenger apt Repository
+  apt_repository:
+    repo: "deb https://oss-binaries.phusionpassenger.com/apt/passenger trusty main"
+    state: present
+  sudo: yes
+
+- name: Install Nginx & Passenger
+  apt: package={{ item }} state=present
+  sudo: yes
+  with_items:
+    - nginx-extras
+    - passenger
 
 - name: Copy HTML5 Boilerplate's Nginx Configs
   copy: src=h5bp-nginx/ dest=/etc/nginx/h5bp

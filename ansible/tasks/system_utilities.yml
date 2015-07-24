@@ -6,5 +6,8 @@
     - vim
     - git
     - curl
+    - libcurl4-openssl-dev
     - python-mysqldb
     - mailutils
+    - apt-transport-https
+    - ca-certificates

@@ -29,3 +29,9 @@
 - name: Add Rbenv to Profile
   copy: src=rbenv.sh dest=/etc/profile.d/rbenv.sh
   sudo: yes
+
+- name: Install Rack
+  gem: name=rack user_install=no state=present executable=/usr/local/rbenv/shims/gem
+  environment:
+    RBENV_ROOT: /usr/local/rbenv
+  sudo: yes
