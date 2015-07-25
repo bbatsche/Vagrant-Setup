@@ -19,6 +19,7 @@
     - include: "{{ ansible_dir }}/tasks/postgres.yml"
     - include: "{{ ansible_dir }}/tasks/postgres-admin.yml"
     - include: "{{ ansible_dir }}/tasks/redis.yml"
+    - include: "{{ ansible_dir }}/tasks/mongodb.yml"
     - include: "{{ ansible_dir }}/tasks/nginx.yml"
     - include: "{{ ansible_dir }}/tasks/php.yml"
     - include: "{{ ansible_dir }}/tasks/suhosin.yml"

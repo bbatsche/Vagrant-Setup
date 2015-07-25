@@ -1,0 +1,28 @@
+---
+- name: Add MongoDB apt Key
+  apt_key: keyserver=keyserver.ubuntu.com id=7F0CEB10 state=present
+  sudo: yes
+
+- name: Add MongoDB apt Repository
+  apt_repository:
+    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse"
+    state: present
+  sudo: yes
+
+- name: Install MongoDB
+  apt: package=mongodb-org state=present
+  sudo: yes
+  notify: Restart MongoDB
+
+- name: Disable Transparent Huge Pages
+  lineinfile:
+    dest: /etc/init/mongod.conf
+    line: "{{ item }}"
+    insertafter: pre-start script
+    state: present
+  with_items:
+    - "  if test -f /sys/kernel/mm/transparent_hugepage/khugepaged/defrag; then echo 0 > /sys/kernel/mm/transparent_hugepage/khugepaged/defrag; fi"
+    - "  if test -f /sys/kernel/mm/transparent_hugepage/defrag; then echo never > /sys/kernel/mm/transparent_hugepage/defrag; fi"
+    - "  if test -f /sys/kernel/mm/transparent_hugepage/enabled; then echo never > /sys/kernel/mm/transparent_hugepage/enabled; fi"
+  sudo: yes
+  notify: Restart MongoDB
