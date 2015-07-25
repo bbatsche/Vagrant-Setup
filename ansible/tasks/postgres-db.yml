@@ -1,0 +1,16 @@
+---
+- name: Create PostgreSQL User for Database
+  postgresql_user:
+    name:           "{{ new_postgres_user }}"
+    password:       "{{ new_postgres_pass }}"
+    login_user:     "{{ postgres_admin }}"
+    login_password: "{{ postgres_pass }}"
+    state:          present
+
+- name: Create PostgreSQL Database
+  postgresql_db:
+    name:           "{{ new_postgres_user }}"
+    login_user:     "{{ postgres_admin }}"
+    login_password: "{{ postgres_pass }}"
+    owner:          "{{ new_postgres_user }}"
+    state:          present

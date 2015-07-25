@@ -4,6 +4,9 @@ www_home: /srv/www
 mysql_admin: vagrant
 mysql_pass: vagrant
 
+postgres_admin: vagrant
+postgres_pass: vagrant
+
 php_dev:   yes
 mysql_dev: yes
 nginx_dev: yes

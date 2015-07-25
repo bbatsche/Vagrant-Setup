@@ -1,5 +1,23 @@
 ---
 - name: Install PostgreSQL
-  apt: package=postgresql state=present
+  apt: package={{ item }} state=present
+  with_items:
+    - postgresql
+    - postgresql-contrib
   sudo: yes
   notify: Restart PostgreSQL
+
+- name: Add Adminpack to Postgres Database (sudo)
+  postgresql_ext: name=adminpack db=postgres
+  sudo: yes
+  sudo_user: postgres
+  register: adminpack_as_postgres
+  failed_when: adminpack_as_postgres.msg is defined and "no password supplied" not in adminpack_as_postgres.msg
+
+- name: Add Adminpack to Postgres Database (admin user)
+  postgresql_ext:
+    name:           adminpack
+    db:             postgres
+    login_user:     "{{ postgres_admin | default('postgres') }}"
+    login_password: "{{ postgres_pass | default(omit) }}"
+  when: adminpack_as_postgres.msg is defined and "no password supplied" in adminpack_as_postgres.msg

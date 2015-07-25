@@ -8,6 +8,7 @@
     - curl
     - libcurl4-openssl-dev
     - python-mysqldb
+    - python-psycopg2
     - mailutils
     - apt-transport-https
     - ca-certificates
