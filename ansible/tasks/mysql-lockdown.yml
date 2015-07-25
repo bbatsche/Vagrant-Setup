@@ -6,7 +6,6 @@
     login_user:     "{{ mysql_admin }}"
     login_password: "{{ mysql_pass }}"
     state:          absent
-  when: not mysql_dev
   with_items:
     - localhost
     - 127.0.0.1
