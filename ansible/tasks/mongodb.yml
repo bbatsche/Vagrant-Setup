@@ -1,18 +1,27 @@
 ---
+- name: Install PyMongo
+  pip: name=pymongo state=present
+  sudo: yes
+
 - name: Add MongoDB apt Key
   apt_key: keyserver=keyserver.ubuntu.com id=7F0CEB10 state=present
   sudo: yes
 
 - name: Add MongoDB apt Repository
   apt_repository:
-    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse"
+    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/stable multiverse"
     state: present
   sudo: yes
+
+- name: Create MongoDB Configuration File
+  copy: src=mongo.conf dest=/etc/mongod.conf mode=0644
+  sudo: yes
+  notify: Restart MongoDB
 
 - name: Install MongoDB
   apt: package=mongodb-org state=present
   sudo: yes
-  notify: Restart MongoDB
+  notify: Create MongoDB Administrator
 
 - name: Disable Transparent Huge Pages
   lineinfile:
