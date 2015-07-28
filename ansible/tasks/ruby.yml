@@ -1,4 +1,8 @@
 ---
+- name: Install System Ruby
+  apt: package=ruby2.0 state=present
+  sudo: yes
+
 - name: Install Rbenv
   apt: package=rbenv state=present
   sudo: yes
@@ -8,30 +12,26 @@
     repo: https://github.com/sstephenson/{{ item }}.git
     dest: /usr/local/rbenv/plugins/{{ item }}/
   sudo: yes
+  notify: Rehash Rbenv
   with_items:
     - ruby-build
     - rbenv-vars
     - rbenv-gem-rehash
     - rbenv-default-gems
 
-- name: Install Ruby
-  command: rbenv install {{ ruby_version }} creates=/usr/local/rbenv/versions/{{ ruby_version }}
-  environment:
-    RBENV_ROOT: /usr/local/rbenv
+- name: Install Binstubs
+  git:
+    repo: https://github.com/ianheggie/rbenv-binstubs.git
+    dest: /usr/local/rbenv/plugins/rbenv-binstubs/
+    version: v1.4
   sudo: yes
-
-- name: Set Global Ruby Version
-  copy:
-    content: '{{ ruby_version }}\n'
-    dest:    /usr/local/rbenv/version
-  sudo: yes
+  notify: Rehash Rbenv
 
 - name: Add Rbenv to Profile
   copy: src=rbenv.sh dest=/etc/profile.d/rbenv.sh
   sudo: yes
 
 - name: Install Rack
-  gem: name=rack user_install=no state=present executable=/usr/local/rbenv/shims/gem
-  environment:
-    RBENV_ROOT: /usr/local/rbenv
+  gem: name=rack user_install=no state=present
+  notify: Rehash Rbenv
   sudo: yes
