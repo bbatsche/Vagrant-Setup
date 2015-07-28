@@ -6,7 +6,7 @@
 #############################
 
 box      = 'parallels/ubuntu-14.04'
-hostname = 'vagrantbox'
+hostname = 'vagrant-vm'
 ram      = '1024'
 timezone = 'America/Chicago'
 
