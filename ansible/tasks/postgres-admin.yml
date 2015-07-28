@@ -1,16 +1,5 @@
 ---
-- name: Create PostgreSQL Administrator (sudo)
-  postgresql_user:
-    name:           "{{ new_postgres_user }}"
-    password:       "{{ new_postgres_pass }}"
-    state:          present
-    role_attr_flags: SUPERUSER
-  sudo: yes
-  sudo_user: postgres
-  register: postgres_admin_sudo
-  failed_when: postgres_admin_sudo.msg is defined and "no password supplied" not in postgres_admin_sudo.msg
-
-- name: Create PostgreSQL Administrator (admin user)
+- name: Create PostgreSQL Administrator
   postgresql_user:
     name:           "{{ new_postgres_user }}"
     password:       "{{ new_postgres_pass }}"
@@ -18,7 +7,6 @@
     login_password: "{{ postgres_pass | default(omit) }}"
     state:          present
     role_attr_flags: SUPERUSER
-  when: postgres_admin_sudo.msg is defined and "no password supplied" in postgres_admin_sudo.msg
 
 - name: Create PostgreSQL Admin Database
   postgresql_db:

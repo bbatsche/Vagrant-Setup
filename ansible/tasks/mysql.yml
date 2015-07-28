@@ -5,6 +5,7 @@
   with_items:
     - mysql-server
     - percona-toolkit
+  notify: Create MySQL Administrator
 
 - name: Create MySQL Configuration File
   template: src=my.cnf.j2 dest=/etc/mysql/my.cnf

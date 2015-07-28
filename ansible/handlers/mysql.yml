@@ -1,0 +1,9 @@
+---
+- name: Create MySQL Administrator
+  mysql_user:
+    name:           "{{ mysql_admin }}"
+    password:       "{{ mysql_pass }}"
+    login_user:     root
+    login_password: ""
+    priv:           "*.*:ALL,GRANT"
+    state:          present

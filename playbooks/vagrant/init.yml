@@ -15,9 +15,7 @@
     - include: "{{ ansible_dir }}/tasks/system_utilities.yml"
     - include: "{{ ansible_dir }}/tasks/swap.yml"
     - include: "{{ ansible_dir }}/tasks/mysql.yml"
-    - include: "{{ ansible_dir }}/tasks/mysql-admin.yml"
     - include: "{{ ansible_dir }}/tasks/postgres.yml"
-    - include: "{{ ansible_dir }}/tasks/postgres-admin.yml"
     - include: "{{ ansible_dir }}/tasks/redis.yml"
     - include: "{{ ansible_dir }}/tasks/mongodb.yml"
     - include: "{{ ansible_dir }}/tasks/nginx.yml"
@@ -32,6 +30,8 @@
     - include: "{{ ansible_dir }}/tasks/bash-profile.yml"
 
   handlers:
-    - include: "{{ ansible_dir}}/handlers/main.yml"
+    - include: "{{ ansible_dir }}/handlers/main.yml"
+    - include: "{{ ansible_dir }}/handlers/mysql.yml"
+    - include: "{{ ansible_dir }}/handlers/postgres.yml"
     - name: Restart Server
       debug: msg="Run 'vagrant reload' after provisioning completes"
