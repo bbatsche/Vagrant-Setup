@@ -1,0 +1,23 @@
+---
+- name: Create MySQL Administrator
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars:
+    ansible_dir: ../../../ansible
+  vars_files:
+    - "{{ ansible_dir }}/host_vars/vagrant.yml"
+  vars_prompt:
+    - name: new_mysql_user
+      prompt: "New MySQL Username"
+      private: no
+    - name: new_mysql_pass
+      prompt: "New User Password"
+      private: yes
+      confirm: yes
+
+  tasks:
+    - include: "{{ ansible_dir }}/tasks/mysql-admin.yml"
+
+  handlers:
+    - include: "{{ ansible_dir }}/handlers/main.yml"

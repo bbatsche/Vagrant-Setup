@@ -1,0 +1,26 @@
+---
+- name: Create MySQL Database
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars:
+    ansible_dir: ../../../ansible
+  vars_files:
+    - "{{ ansible_dir }}/host_vars/vagrant.yml"
+  vars_prompt:
+    - name: db_name
+      prompt: "MySQL Database Name (e.g. something_db)"
+      private: no
+    - name: new_mysql_user
+      prompt: "Database Owner (e.g. something_user)"
+      private: no
+    - name: new_mysql_pass
+      prompt: "Owner Password"
+      private: yes
+      confirm: yes
+
+  tasks:
+    - include: "{{ ansible_dir }}/tasks/mysql-db.yml"
+
+  handlers:
+    - include: "{{ ansible_dir }}/handlers/main.yml"
