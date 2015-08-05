@@ -34,13 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.vm.provision :ansible do |ansible|
       ansible.playbook = "playbooks/vagrant/init.yml"
       ansible.extra_vars = {
-        timezone: timezone,
-        mysql_admin: "root",
-        mysql_pass: "",
-        new_mysql_user: "vagrant",
-        new_mysql_pass: "vagrant",
-        new_postgres_user: "vagrant",
-        new_postgres_pass: "vagrant"
+        timezone: timezone
       }
     end
 
