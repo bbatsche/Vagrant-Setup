@@ -21,7 +21,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.ssh.insert_key = false
 
-  config.vm.synced_folder "./", "/vagrant", id: "vagrant-root", type: "nfs"
+  config.vm.synced_folder "./", "/vagrant",
+    id:   "vagrant-root",
+    type: "nfs",
+    mount_options: ["nolock,vers=3,tcp,noatime,actimeo=1"]
 
   ## VirtualBox's builtin shared folder technology
   ## Slower than NFS, but does not require admin password
