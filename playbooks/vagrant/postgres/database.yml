@@ -1,0 +1,23 @@
+---
+- name: Create PostgreSQL Database
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars:
+    ansible_dir: ../../../ansible
+  vars_files:
+    - "{{ ansible_dir }}/host_vars/vagrant.yml"
+  vars_prompt:
+    - name: db_name
+      prompt: "PostgreSQL Database Name"
+      private: no
+    - name: new_postgres_pass
+      prompt: "PostgreSQL Database Owner Password"
+      private: yes
+      confirm: yes
+
+  tasks:
+    - include: "{{ ansible_dir }}/tasks/postgres-db.yml"
+
+  handlers:
+    - include: "{{ ansible_dir }}/handlers/main.yml"

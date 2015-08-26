@@ -1,0 +1,23 @@
+---
+- name: Create PostgreSQL Administrator
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars:
+    ansible_dir: ../../../ansible
+  vars_files:
+    - "{{ ansible_dir }}/host_vars/vagrant.yml"
+  vars_prompt:
+    - name: new_postgres_user
+      prompt: "New PostgreSQL Username"
+      private: no
+    - name: new_postgres_pass
+      prompt: "New PostgreSQL Password"
+      private: yes
+      confirm: yes
+
+  tasks:
+    - include: "{{ ansible_dir }}/tasks/postgres-admin.yml"
+
+  handlers:
+    - include: "{{ ansible_dir }}/handlers/main.yml"

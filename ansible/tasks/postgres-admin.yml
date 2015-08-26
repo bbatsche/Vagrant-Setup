@@ -3,6 +3,7 @@
   postgresql_user:
     name:           "{{ new_postgres_user }}"
     password:       "{{ new_postgres_pass }}"
+    encrypted:      yes
     login_user:     "{{ postgres_admin | default('postgres') }}"
     login_password: "{{ postgres_pass | default(omit) }}"
     state:          present

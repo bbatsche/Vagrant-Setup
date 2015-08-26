@@ -9,6 +9,7 @@
   postgresql_user:
     name:            "{{ postgres_admin }}"
     password:        "{{ postgres_pass }}"
+    encrypted:       yes
     state:           present
     role_attr_flags: SUPERUSER
   sudo: yes
