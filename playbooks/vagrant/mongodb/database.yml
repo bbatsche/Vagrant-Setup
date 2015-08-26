@@ -1,0 +1,31 @@
+---
+- name: Create MongoDB Database
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars:
+    ansible_dir: ../../../ansible
+  vars_files:
+    - "{{ ansible_dir }}/host_vars/vagrant.yml"
+  vars_prompt:
+    - name: db_name
+      prompt: Database Name
+      private: no
+    - name: new_mongo_user
+      prompt: Database Owner
+      private: no
+    - name: new_mongo_pass
+      prompt: Password for Database Owner
+      private: yes
+      confirm: yes
+
+  tasks:
+    - name: MongoDB Database
+      mongodb_user:
+        name:           "{{ new_mongo_user}}"
+        password:       "{{ new_mongo_pass }}"
+        login_user:     "{{ mongo_admin }}"
+        login_password: "{{ mongo_pass }}"
+        database:       "{{ db_name }}"
+        state:          present
+        roles:          dbOwner

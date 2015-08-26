@@ -5,4 +5,4 @@
     password: "{{ mongo_pass }}"
     database: admin
     state: present
-    roles: readWriteAnyDatabase,userAdminAnyDatabase,dbAdminAnyDatabase,clusterAdmin,dbOwner,backup,restore
+    roles: root,backup,restore
