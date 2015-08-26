@@ -17,7 +17,20 @@
       confirm: yes
 
   tasks:
-    - include: "{{ ansible_dir }}/tasks/postgres-admin.yml"
+    - name: Create PostgreSQL Administrator
+      postgresql_user:
+        name:           "{{ new_postgres_user }}"
+        password:       "{{ new_postgres_pass }}"
+        encrypted:      yes
+        login_user:     "{{ postgres_admin | default('postgres') }}"
+        login_password: "{{ postgres_pass | default(omit) }}"
+        state:          present
+        role_attr_flags: SUPERUSER
 
-  handlers:
-    - include: "{{ ansible_dir }}/handlers/main.yml"
+    - name: Create PostgreSQL Admin Database
+      postgresql_db:
+        name:           "{{ new_postgres_user }}"
+        login_user:     "{{ postgres_admin  | default('postgres') }}"
+        login_password: "{{ postgres_pass | default(omit) }}"
+        owner:          "{{ new_postgres_user }}"
+        state:          present

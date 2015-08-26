@@ -17,7 +17,19 @@
       confirm: yes
 
   tasks:
-    - include: "{{ ansible_dir }}/tasks/postgres-db.yml"
+    - name: Create PostgreSQL User
+      postgresql_user:
+        name:           "{{ db_name }}"
+        password:       "{{ new_postgres_pass }}"
+        encrypted:      yes
+        login_user:     "{{ postgres_admin | default('postgres') }}"
+        login_password: "{{ postgres_pass | default(omit) }}"
+        state:          present
 
-  handlers:
-    - include: "{{ ansible_dir }}/handlers/main.yml"
+    - name: Create PostgreSQL Database
+      postgresql_db:
+        name:           "{{ db_name }}"
+        login_user:     "{{ postgres_admin | default('postgres') }}"
+        login_password: "{{ postgres_pass | default(omit) }}"
+        owner:          "{{ db_name }}"
+        state:          present
