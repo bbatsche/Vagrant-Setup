@@ -5,7 +5,7 @@
 
 - name: Add HHVM apt Repository
   apt_repository:
-    repo: "deb http://dl.hhvm.com/ubuntu trusty main"
+    repo: "deb http://dl.hhvm.com/ubuntu trusty-lts-3.9 main"
     state: present
   sudo: yes
 
