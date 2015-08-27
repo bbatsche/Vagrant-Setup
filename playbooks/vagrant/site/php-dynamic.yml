@@ -15,7 +15,7 @@
       private: no
 
   tasks:
-  - include: "{{ ansible_dir }}/tasks/site-create.yml"
+    - include: "{{ ansible_dir }}/tasks/site-create.yml"
 
   handlers:
-  - include: "{{ ansible_dir }}/handlers/main.yml"
+    - include: "{{ ansible_dir }}/handlers/main.yml"
