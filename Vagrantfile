@@ -9,6 +9,7 @@ box      = 'parallels/ubuntu-14.04'
 hostname = 'vagrant-vm'
 ram      = '1024'
 timezone = 'America/Chicago'
+ip       = '10.37.129.200'
 
 VAGRANTFILE_API_VERSION = "2"
 
@@ -17,6 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.vm.box = box
 
     v.vm.hostname = hostname
+    v.vm.network :private_network, ip: ip
 
     v.vm.synced_folder "./sites", "/srv/www"
     v.vm.synced_folder ".", "/vagrant", disabled: true
