@@ -87,6 +87,11 @@ server {
 
     passenger_app_root {{ www_home }}/{{ domain }};
     passenger_app_type {{ passenger_type }};
+
+    {% if site_type == "node" %}
+      # Explicitly set node startup file. Passenger seems to require this.
+      passenger_startup_file app.js;
+    {% endif %}
   {% endif %}
 
   # Include the basic h5bp config set
