@@ -72,6 +72,24 @@ server {
 
       fastcgi_pass unix:/var/run/php5-fpm-{{ domain }}.sock;
     }
+  {% elif site_type == "hhvm" %}
+    index index.hh index.php index.html index.htm;
+
+    try_files $uri $uri/ /index.hh$is_args$args /index.php$is_args$args;
+
+
+    location ~ \.(hh|php)$ {
+        fastcgi_keep_conn on;
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+        {% if app_env == "dev" %}
+          fastcgi_param LARAVEL_ENV local;
+        {% endif %}
+
+        include        fastcgi_params;
+    }
   {% else %}
     index index.html index.htm;
   {% endif %}

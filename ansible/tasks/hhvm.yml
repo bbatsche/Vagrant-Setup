@@ -13,3 +13,7 @@
   apt: package=hhvm state=present
   sudo: yes
   notify: Restart HHVM
+
+- name: Start HHVM on Boot
+  service: name=hhvm enabled=yes
+  sudo: yes
