@@ -34,6 +34,10 @@ server {
   # Set this for static access logs later on
   set $log_path var/log/nginx/{{ domain }};
 
+  {% if app_env == "dev" %}
+    autoindex on;
+  {% endif %}
+
   # Skip access log and not found logging for favicons and robots.txt
   location = /favicon.ico {
     access_log off;
@@ -54,10 +58,6 @@ server {
         try_files $uri $uri/ /index.php$is_args$args;
       {% else %}
         try_files $uri $uri/ =404;
-      {% endif %}
-
-      {% if app_env == "dev" %}
-        autoindex on;
       {% endif %}
     }
 
