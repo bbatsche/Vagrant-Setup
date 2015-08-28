@@ -10,11 +10,7 @@ postgres_pass: vagrant
 mongo_admin: vagrant
 mongo_pass: vagrant
 
-php_dev:    yes
-mysql_dev:  yes
-nginx_dev:  yes
-ruby_dev:   yes
-python_dev: yes
+app_env: dev
 
 ruby_version: 2.2.2
 

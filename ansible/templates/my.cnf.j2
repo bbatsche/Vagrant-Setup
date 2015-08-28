@@ -77,7 +77,7 @@ query_cache_size  = 16M
 #
 log_error = /var/log/mysql/error.log
 
-{% if mysql_dev %}
+{% if app_env == "dev" %}
 # Here you can see queries with especially long duration
 log_slow_queries = /var/log/mysql/slow.log
 long_query_time  = 2

@@ -20,7 +20,7 @@
 
 - name: Install PHP Xdebug
   apt: package=php5-xdebug state=present
-  when: php_dev
+  when: app_env == "dev"
   sudo: yes
   notify:
     - Restart PHP-FPM

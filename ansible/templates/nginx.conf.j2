@@ -55,7 +55,7 @@ http {
   # connections are tied up longer. (Default: 65)
   keepalive_timeout 20;
 
-  {% if nginx_dev -%}
+  {% if app_env == "dev" -%}
   # Sendfile does not play well with NFS and vagrant shared folders
   # so turn it off.
   sendfile        off;

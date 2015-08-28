@@ -27,4 +27,4 @@
     line: 'export LARAVEL_ENV="local"'
     insertafter: EOF
     state: present
-  when: php_dev
+  when: app_env == "dev"
