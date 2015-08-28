@@ -76,10 +76,10 @@ server {
     index index.html index.htm;
   {% endif %}
 
-  {% if site_type == "ruby" %}
+  {% if site_type in ["node", "python", "ruby"] %}
     passenger_enabled on;
 
-    {% if ruby_dev %}
+    {% if ruby_dev or python_dev %}
       passenger_app_env development;
     {% else %}
       passenger_app_env production;
