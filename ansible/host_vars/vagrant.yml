@@ -13,6 +13,7 @@ mongo_pass: vagrant
 php_dev:   yes
 mysql_dev: yes
 nginx_dev: yes
+ruby_dev:  yes
 
 ruby_version: 2.2.2
 

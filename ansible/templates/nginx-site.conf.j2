@@ -76,6 +76,19 @@ server {
     index index.html index.htm;
   {% endif %}
 
+  {% if site_type == "ruby" %}
+    passenger_enabled on;
+
+    {% if ruby_dev %}
+      passenger_app_env development;
+    {% else %}
+      passenger_app_env production;
+    {% endif %}
+
+    passenger_app_root {{ www_home }}/{{ domain }};
+    passenger_app_type rack;
+  {% endif %}
+
   # Include the basic h5bp config set
   include h5bp/basic.conf;
 }
