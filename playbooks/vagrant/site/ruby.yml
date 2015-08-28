@@ -6,6 +6,7 @@
   vars:
     ansible_dir: ../../../ansible
     site_type: ruby
+    passenger_type: rack
   vars_files:
     - "{{ ansible_dir }}/host_vars/vagrant.yml"
   vars_prompt:

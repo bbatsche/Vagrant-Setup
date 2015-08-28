@@ -86,7 +86,7 @@ server {
     {% endif %}
 
     passenger_app_root {{ www_home }}/{{ domain }};
-    passenger_app_type rack;
+    passenger_app_type {{ passenger_type }};
   {% endif %}
 
   # Include the basic h5bp config set
