@@ -3,25 +3,25 @@
   pip: name=pymongo state=present
   sudo: yes
 
-- name: Add MongoDB apt Key
+- name: Add APT Key
   apt_key: keyserver=keyserver.ubuntu.com id=7F0CEB10 state=present
   sudo: yes
 
-- name: Add MongoDB apt Repository
+- name: Add APT Repository
   apt_repository:
     repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/stable multiverse"
     state: present
   sudo: yes
 
-- name: Create MongoDB Configuration File
+- name: Create Configuration File
   copy: src=mongo.conf dest=/etc/mongod.conf mode=0644
   sudo: yes
-  notify: Restart MongoDB
+  notify: Restart
 
-- name: Install MongoDB
+- name: Install
   apt: package=mongodb-org state=present
   sudo: yes
-  notify: Create MongoDB Administrator
+  register: mongodb_install
 
 - name: Disable Transparent Huge Pages
   lineinfile:
@@ -34,4 +34,10 @@
     - "  if test -f /sys/kernel/mm/transparent_hugepage/defrag; then echo never > /sys/kernel/mm/transparent_hugepage/defrag; fi"
     - "  if test -f /sys/kernel/mm/transparent_hugepage/enabled; then echo never > /sys/kernel/mm/transparent_hugepage/enabled; fi"
   sudo: yes
-  notify: Restart MongoDB
+  notify: Restart
+
+- include: lockdown.yml
+  when: mongodb_install | changed
+
+- include: user.yml
+  when: new_mongodb_user is defined

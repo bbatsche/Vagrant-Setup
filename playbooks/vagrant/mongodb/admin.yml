@@ -4,25 +4,15 @@
   remote_user: vagrant
 
   vars:
-    ansible_dir: ../../../ansible
-  vars_files:
-    - "{{ ansible_dir }}/host_vars/vagrant.yml"
+    mongodb_roles: root,backup,restore
   vars_prompt:
-    - name: new_mongo_user
-      prompt: Admin Username
+    - name: new_mongodb_user
+      prompt: New MongoDB Admin
       private: no
-    - name: new_mongo_pass
-      prompt: Admin Password
+    - name: new_mongodb_pass
+      prompt: New Admin Password
       private: yes
       confirm: yes
 
-  tasks:
-    - name: Create MongoDB Administrator
-      mongodb_user:
-        name:           "{{ new_mongo_user}}"
-        password:       "{{ new_mongo_pass }}"
-        login_user:     "{{ mongo_admin }}"
-        login_password: "{{ mongo_pass }}"
-        database:       admin
-        state:          present
-        roles:          root,backup,restore
+  roles:
+    - MongoDB

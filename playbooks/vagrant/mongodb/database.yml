@@ -4,28 +4,18 @@
   remote_user: vagrant
 
   vars:
-    ansible_dir: ../../../ansible
-  vars_files:
-    - "{{ ansible_dir }}/host_vars/vagrant.yml"
+    mongodb_roles: dbOwner
   vars_prompt:
     - name: db_name
-      prompt: Database Name
+      prompt: Database Name (e.g. something_db)
       private: no
-    - name: new_mongo_user
+    - name: new_mongodb_user (e.g. something_user)
       prompt: Database Owner
       private: no
-    - name: new_mongo_pass
+    - name: new_mongodb_pass
       prompt: Password for Database Owner
       private: yes
       confirm: yes
 
-  tasks:
-    - name: MongoDB Database
-      mongodb_user:
-        name:           "{{ new_mongo_user}}"
-        password:       "{{ new_mongo_pass }}"
-        login_user:     "{{ mongo_admin }}"
-        login_password: "{{ mongo_pass }}"
-        database:       "{{ db_name }}"
-        state:          present
-        roles:          dbOwner
+  roles:
+    - MongoDB

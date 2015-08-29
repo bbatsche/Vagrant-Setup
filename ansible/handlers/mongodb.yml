@@ -1,8 +1,0 @@
----
-- name: Create MongoDB Administrator
-  mongodb_user:
-    name: "{{ mongo_admin }}"
-    password: "{{ mongo_pass }}"
-    database: admin
-    state: present
-    roles: root,backup,restore
