@@ -1,5 +1,5 @@
 ---
-- name: Create MySQL Administrator
+- name: Create Administrator
   mysql_user:
     name:           "{{ mysql_admin }}"
     password:       "{{ mysql_pass }}"
@@ -8,7 +8,7 @@
     priv:           "*.*:ALL,GRANT"
     state:          present
 
-- name: Remove MySQL Root User
+- name: Remove Root User
   mysql_user:
     name:           root
     host:           "{{ item }}"

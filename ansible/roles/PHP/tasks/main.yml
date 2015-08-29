@@ -1,5 +1,5 @@
 ---
-- name: Install PHP
+- name: Install
   apt: package={{ item }} state=present
   sudo: yes
   with_items:
@@ -14,58 +14,58 @@
     - php5-gd
     - php5-imagick
     - php5-fpm
-  notify: Restart PHP-FPM
+  notify: Restart FPM
 
-- name: Install PHP Xdebug
+- name: Install Xdebug
   apt: package=php5-xdebug state=present
   when: app_env == "dev"
   sudo: yes
-  notify: Restart PHP-FPM
+  notify: Restart FPM
 
 # Ubuntu 13.10+ has a bug in where the mcrypt ini file is placed.
 # Work around those by copying the file to the proper location and enabling mcrypt.
-- name: Copy mcrypt Config to Proper Location and Enable
+- name: Enable mcrypt
   command: php5enmod mcrypt creates=/etc/php5/fpm/conf.d/20-mcrypt.ini
   sudo: yes
-  notify: Restart PHP-FPM
+  notify: Restart FPM
 
-- name: Remove Default PHP-FPM Pool
+- name: Remove Default FPM Pool
   file: path=/etc/php5/fpm/pool.d/www.conf state=absent
   sudo: yes
-  notify: Restart PHP-FPM
+  notify: Restart FPM
 
-- name: Create PHP-FPM Log Directory
+- name: Create FPM Log Directory
   file: path=/var/log/php-fpm state=directory owner=www-data
   sudo: yes
 
-- name: Create PHP Log Directory
+- name: Create Log Directory
   file: path=/var/log/php state=directory owner=www-data
   sudo: yes
 
-- name: Set PHP-FPM Error Log Path
+- name: Set FPM Error Log Path
   lineinfile:
     dest:   /etc/php5/fpm/php-fpm.conf
     state:  present
     regexp: ^error_log\s?=
     line:   error_log = /var/log/php-fpm/error.log
   sudo: yes
-  notify: Restart PHP-FPM
+  notify: Restart FPM
 
-- name: Delete old PHP-FPM Log
+- name: Delete old FPM Log
   file: path=/var/log/php5-fpm.log state=absent
   sudo: yes
 
-- name: Create PHP Session Directory
+- name: Create Session Directory
   file: path=/var/lib/php/session state=directory owner=www-data
   sudo: yes
 
-- name: Modify php.ini Settings
+- name: Copy Config
   template: src=php.ini.j2 dest=/etc/php5/{{ item }}/php.ini
   sudo: yes
   with_items:
     - fpm
     - cli
-  notify: Restart PHP-FPM
+  notify: Restart FPM
 
 - name: Check for Composer
   stat: path=/usr/local/bin/composer
@@ -96,11 +96,12 @@
   when: app_env == "dev"
 
 - include: suhosin.yml
+
 - include: phpunit.yml
   when: app_env == "dev"
 
-- name: Copy PHP-FPM Pool Config
+- name: Copy FPM Pool Config
   template: src=php-fpm-pool.conf.j2 dest=/etc/php5/fpm/pool.d/{{ domain }}.conf
   sudo: yes
-  when: site_type == "php"
-  notify: Restart PHP-FPM
+  when: domain is defined
+  notify: Restart FPM

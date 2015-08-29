@@ -1,4 +1,4 @@
 ---
-- name: Restart HHVM
+- name: Restart
   service: name=hhvm state=restarted
   sudo: yes

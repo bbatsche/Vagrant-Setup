@@ -1,5 +1,5 @@
 ---
-- name: Create PostgreSQL Administrator
+- name: Create Administrator
   postgresql_user:
     name:            "{{ postgres_admin }}"
     password:        "{{ postgres_pass }}"
@@ -9,14 +9,14 @@
   sudo: yes
   sudo_user: postgres
 
-- name: Disable Login for Postres User
+- name: Disable Login for postres User
   postgresql_user:
     name:            postgres
     role_attr_flags: NOLOGIN
   sudo: yes
   sudo_user: postgres
 
-- name: Require Password Authentication for All Users
+- name: Require Password Authentication
   lineinfile:
     name: /etc/postgresql/9.3/main/pg_hba.conf
     regexp: (local\s+all\s+{{ item }}\s+)peer
@@ -27,4 +27,4 @@
     - postgres
     - all
   sudo: yes
-  notify: Restart PostgreSQL
+  notify: Restart

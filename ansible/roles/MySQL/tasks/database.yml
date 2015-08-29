@@ -1,5 +1,5 @@
 ---
-- name: Create MySQL Database
+- name: Create Database
   mysql_db:
     name:           "{{ db_name }}"
     login_user:     "{{ mysql_admin | default('root') }}"

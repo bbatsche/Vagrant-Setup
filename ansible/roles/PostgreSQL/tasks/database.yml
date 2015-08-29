@@ -1,5 +1,5 @@
 ---
-- name: Create PostgreSQL Database
+- name: Create Database
   postgresql_db:
     name:           "{{ db_name }}"
     login_user:     "{{ postgres_admin | default('postgres') }}"

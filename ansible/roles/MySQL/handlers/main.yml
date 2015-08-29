@@ -1,4 +1,4 @@
 ---
-- name: Restart MySQL
+- name: Restart
   service: name=mysql state=restarted
   sudo: yes

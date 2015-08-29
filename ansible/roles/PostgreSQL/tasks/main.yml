@@ -1,5 +1,5 @@
 ---
-- name: Install PostgreSQL
+- name: Install
   apt: package={{ item }} state=present
   with_items:
     - postgresql
@@ -10,7 +10,7 @@
 - include: lockdown.yml
   when: postgres_install | changed
 
-- name: Add Adminpack to Postgres Database
+- name: Add Adminpack
   postgresql_ext:
     name: adminpack
     db:   postgres
