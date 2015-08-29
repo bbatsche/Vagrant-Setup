@@ -4,7 +4,7 @@
   remote_user: vagrant
 
   roles:
-    - ../../ansible/roles/common
+    - common
 
   handlers:
     - name: Restart Server
