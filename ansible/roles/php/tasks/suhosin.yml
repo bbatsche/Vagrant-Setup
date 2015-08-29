@@ -12,9 +12,7 @@
 - name: Install Suhosin Extension
   apt: package=php5-suhosin-extension state=present
   sudo: yes
-  notify:
-    - Restart PHP-FPM
-    - Restart Warpspeed PHP-FPM
+  notify: Restart PHP-FPM
 
 - name: Enable Suhosin Configuration
   file:
@@ -25,9 +23,7 @@
   with_items:
     - fpm
     - cli
-  notify:
-    - Restart PHP-FPM
-    - Restart Warpspeed PHP-FPM
+  notify: Restart PHP-FPM
 
 - name: Update Suhosin Configuration
   lineinfile:
@@ -36,9 +32,7 @@
     regexp: "{{ item.regex }}"
     line: "{{ item.line }}"
   sudo: yes
-  notify:
-    - Restart PHP-FPM
-    - Restart Warpspeed PHP-FPM
+  notify: Restart PHP-FPM
   with_items:
     - { regex: '^;?suhosin\.log\.file\s?=',                        line: "suhosin.log.file = 479 ; S_ALL & ~S_SQL" }
     - { regex: '^;?suhosin\.log\.file\.name\s?=',                  line: "suhosin.log.file.name = /var/log/php/suhosin.log" }
@@ -58,9 +52,7 @@
     regexp: ^;?suhosin\.cookie\.cryptkey\s?=
     line: suhosin.cookie.cryptkey = {{ lookup('password', '/tmp/suhosin-cookie-key chars=ascii_letters,digits') }}
   sudo: yes
-  notify:
-    - Restart PHP-FPM
-    - Restart Warpspeed PHP-FPM
+  notify: Restart PHP-FPM
 
 - name: Set Session Encryption Key
   lineinfile:
@@ -69,6 +61,4 @@
     regexp: ^;?suhosin\.session\.cryptkey\s?=
     line: suhosin.session.cryptkey = {{ lookup('password', '/tmp/suhosin-session-key chars=ascii_letters,digits') }}
   sudo: yes
-  notify:
-    - Restart PHP-FPM
-    - Restart Warpspeed PHP-FPM
+  notify: Restart PHP-FPM

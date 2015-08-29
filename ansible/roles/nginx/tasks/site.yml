@@ -45,10 +45,3 @@
     owner: www-data
     mode:  0755
   sudo: yes
-
-- name: Deploy PHP-FPM Pool Config
-  template: src=php-fpm-pool.conf.j2 dest=/etc/php5/fpm/pool.d/{{ domain }}.conf
-  sudo: yes
-  when: site_type == "php"
-  notify:
-    - Restart PHP-FPM
