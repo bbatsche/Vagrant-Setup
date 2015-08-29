@@ -16,4 +16,4 @@
       confirm: yes
 
   roles:
-    - mysql
+    - MySQL

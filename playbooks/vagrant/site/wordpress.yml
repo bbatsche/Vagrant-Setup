@@ -16,7 +16,8 @@
         that: "domain.endswith('.dev')"
 
   roles:
-    - php
+    - PHP
+    - MySQL
 
   tasks:
     - name: Download WordPress

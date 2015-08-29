@@ -14,4 +14,4 @@
         that: "domain.endswith('.dev')"
 
   roles:
-    - hhvm
+    - HHVM

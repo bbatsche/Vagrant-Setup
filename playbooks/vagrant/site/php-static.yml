@@ -16,4 +16,4 @@
         that: "domain.endswith('.dev')"
 
   roles:
-    - php
+    - PHP

@@ -15,4 +15,4 @@
       confirm: yes
 
   roles:
-    - postgresql
+    - PostgreSQL
