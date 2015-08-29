@@ -54,3 +54,4 @@
   notify: Restart Nginx
 
 - include: site.yml
+  when: domain is defined
