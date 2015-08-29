@@ -4,19 +4,21 @@
   remote_user: vagrant
 
   vars:
-    ansible_dir: ../../../ansible
-    site_type: php
     dynamic_php: yes
-  vars_files:
-    - "{{ ansible_dir }}/host_vars/vagrant.yml"
   vars_prompt:
     - name: domain
       prompt: "New Domain Name (e.g. codeup.dev)"
       private: no
 
-  tasks:
-    - include: "{{ ansible_dir }}/tasks/site-create.yml"
+  pre_tasks:
+    - name: Development domains must end with .dev
+      assert:
+        that: "domain.endswith('.dev')"
 
+  roles:
+    - php
+
+  tasks:
     - name: Download WordPress
       get_url: url=https://wordpress.org/latest.tar.gz dest=/tmp/wordpress.tar.gz
 
@@ -24,6 +26,3 @@
       command: tar xzf /tmp/wordpress.tar.gz -C {{ www_home }}/{{ domain }}/public --strip-components=1
       args:
         creates: "{{ www_home }}/{{ domain }}/public/index.php"
-
-  handlers:
-    - include: "{{ ansible_dir }}/handlers/main.yml"
