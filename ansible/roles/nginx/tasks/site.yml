@@ -26,7 +26,7 @@
   sudo: yes
 
 - name: Nginx Site Config
-  template: src=nginx-site.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}
+  template: src=site.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}
   sudo: yes
   notify: Restart Nginx
 

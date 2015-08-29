@@ -1,0 +1,4 @@
+---
+www_home: /srv/www
+
+app_env: dev

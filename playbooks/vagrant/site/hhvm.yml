@@ -3,18 +3,10 @@
   hosts: vagrant
   remote_user: vagrant
 
-  vars:
-    ansible_dir: ../../../ansible
-    site_type: hhvm
-  vars_files:
-    - "{{ ansible_dir }}/host_vars/vagrant.yml"
   vars_prompt:
     - name: domain
       prompt: "New Domain Name (e.g. codeup.dev)"
       private: no
 
-  tasks:
-    - include: "{{ ansible_dir }}/tasks/site-create.yml"
-
-  handlers:
-    - include: "{{ ansible_dir }}/handlers/main.yml"
+  roles:
+    - ../../../ansible/roles/hhvm

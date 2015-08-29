@@ -52,3 +52,5 @@
   file: src=mime.types dest=/etc/nginx/mime.types
   sudo: yes
   notify: Restart Nginx
+
+- include: site.yml

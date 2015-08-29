@@ -1,0 +1,8 @@
+---
+- name: Restart PHP-FPM
+  service: name=php5-fpm state=restarted
+  sudo: yes
+
+- name: Restart Nginx
+  service: name=nginx state=restarted
+  sudo: yes

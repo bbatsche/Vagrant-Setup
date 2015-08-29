@@ -1,0 +1,3 @@
+---
+dependencies:
+  - { role: ../../../ansible/roles/nginx, site_type: hhvm }
