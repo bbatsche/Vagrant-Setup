@@ -4,33 +4,15 @@
   remote_user: vagrant
 
   vars:
-    ansible_dir: ../../../ansible
-  vars_files:
-    - "{{ ansible_dir }}/host_vars/vagrant.yml"
+    role_attr: SUPERUSER
   vars_prompt:
     - name: new_postgres_user
       prompt: "New PostgreSQL Username"
       private: no
     - name: new_postgres_pass
-      prompt: "New PostgreSQL Password"
+      prompt: "New User Password"
       private: yes
       confirm: yes
 
-  tasks:
-    - name: Create PostgreSQL Administrator
-      postgresql_user:
-        name:           "{{ new_postgres_user }}"
-        password:       "{{ new_postgres_pass }}"
-        encrypted:      yes
-        login_user:     "{{ postgres_admin | default('postgres') }}"
-        login_password: "{{ postgres_pass | default(omit) }}"
-        state:          present
-        role_attr_flags: SUPERUSER
-
-    - name: Create PostgreSQL Admin Database
-      postgresql_db:
-        name:           "{{ new_postgres_user }}"
-        login_user:     "{{ postgres_admin  | default('postgres') }}"
-        login_password: "{{ postgres_pass | default(omit) }}"
-        owner:          "{{ new_postgres_user }}"
-        state:          present
+  roles:
+    - postgresql

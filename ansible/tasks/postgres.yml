@@ -1,8 +1,0 @@
----
-- name: Install PostgreSQL
-  apt: package={{ item }} state=present
-  with_items:
-    - postgresql
-    - postgresql-contrib
-  sudo: yes
-  notify: Add Adminpack to Postgres Database
