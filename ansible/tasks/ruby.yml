@@ -1,8 +1,4 @@
 ---
-- name: Install System Ruby
-  apt: package=ruby2.0 state=present
-  sudo: yes
-
 - name: Install Rbenv
   apt: package=rbenv state=present
   sudo: yes

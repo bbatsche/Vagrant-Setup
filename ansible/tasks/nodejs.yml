@@ -1,12 +1,4 @@
 ---
-- name: Install System Node
-  apt: package={{ item }} state=present
-  sudo: yes
-  with_items:
-    - nodejs
-    - nodejs-legacy
-    - npm
-
 - name: Install NVM
   git:
     repo: https://github.com/creationix/nvm.git

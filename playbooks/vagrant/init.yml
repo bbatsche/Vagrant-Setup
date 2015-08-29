@@ -3,36 +3,9 @@
   hosts: vagrant
   remote_user: vagrant
 
-  vars:
-    ansible_dir: ../../ansible
-  vars_files:
-    - "{{ ansible_dir }}/host_vars/vagrant.yml"
-
-  tasks:
-    - include: "{{ ansible_dir }}/tasks/timezone.yml"
-    - include: "{{ ansible_dir }}/tasks/sysctl.yml"
-    - include: "{{ ansible_dir }}/tasks/system_updates.yml"
-    - include: "{{ ansible_dir }}/tasks/system_utilities.yml"
-    - include: "{{ ansible_dir }}/tasks/python.yml"
-    - include: "{{ ansible_dir }}/tasks/swap.yml"
-    - include: "{{ ansible_dir }}/tasks/mysql.yml"
-    - include: "{{ ansible_dir }}/tasks/postgres.yml"
-    - include: "{{ ansible_dir }}/tasks/redis.yml"
-    - include: "{{ ansible_dir }}/tasks/mongodb.yml"
-    - include: "{{ ansible_dir }}/tasks/nginx.yml"
-    - include: "{{ ansible_dir }}/tasks/php.yml"
-    - include: "{{ ansible_dir }}/tasks/suhosin.yml"
-    - include: "{{ ansible_dir }}/tasks/phpunit.yml"
-    - include: "{{ ansible_dir }}/tasks/hhvm.yml"
-    - include: "{{ ansible_dir }}/tasks/ruby.yml"
-    - include: "{{ ansible_dir }}/tasks/nodejs.yml"
-    - include: "{{ ansible_dir }}/tasks/dev-utils.yml"
-    - include: "{{ ansible_dir }}/tasks/bash-profile.yml"
+  roles:
+    - ../../ansible/roles/common
 
   handlers:
-    - include: "{{ ansible_dir }}/handlers/main.yml"
-    - include: "{{ ansible_dir }}/handlers/mysql.yml"
-    - include: "{{ ansible_dir }}/handlers/postgres.yml"
-    - include: "{{ ansible_dir }}/handlers/mongodb.yml"
     - name: Restart Server
       debug: msg="Run 'vagrant reload' after provisioning completes"
