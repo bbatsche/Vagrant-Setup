@@ -5,9 +5,18 @@
   with_items:
     - mysql-server
     - percona-toolkit
-  notify: Create MySQL Administrator
+  register: mysql_install
 
 - name: Create MySQL Configuration File
   template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
   sudo: yes
   notify: Restart MySQL
+
+- include: lockdown.yml
+  when: mysql_install | changed
+
+- include: database.yml
+  when: db_name is defined
+
+- include: user.yml
+  when: new_mysql_user is defined

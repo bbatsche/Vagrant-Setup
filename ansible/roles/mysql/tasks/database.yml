@@ -1,0 +1,8 @@
+---
+- name: Create MySQL Database
+  mysql_db:
+    name:           "{{ db_name }}"
+    login_user:     "{{ mysql_admin | default('root') }}"
+    login_password: "{{ mysql_pass  | default(omit) }}"
+    collation:      utf8_general_ci
+    state:          present
