@@ -79,16 +79,17 @@ server {
 
 
     location ~ \.(hh|php)$ {
+        try_files $uri =404;
+
         fastcgi_keep_conn on;
         fastcgi_pass   127.0.0.1:9000;
         fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
         {% if app_env == "dev" %}
           fastcgi_param LARAVEL_ENV local;
         {% endif %}
 
-        include        fastcgi_params;
+        include        fastcgi.conf;
     }
   {% else %}
     index index.html index.htm;
@@ -109,6 +110,8 @@ server {
     {% if site_type == "node" %}
       # Explicitly set node startup file. Passenger seems to require this.
       passenger_startup_file app.js;
+    {% elif site_type == "python" and app_env != "dev" %}
+      passenger_python {{ www_home }}/{{ domain }}/env/bin/python;
     {% endif %}
   {% endif %}
 

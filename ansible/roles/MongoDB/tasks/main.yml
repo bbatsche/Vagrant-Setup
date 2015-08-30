@@ -1,4 +1,8 @@
 ---
+- name: Install PIP
+  apt: package=python-pip state=present
+  sudo: yes
+
 - name: Install PyMongo
   pip: name=pymongo state=present
   sudo: yes
