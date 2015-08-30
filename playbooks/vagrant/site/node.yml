@@ -1,21 +1,17 @@
 ---
-- name: Create Python Site
+- name: Create Node.js Site
   hosts: vagrant
   remote_user: vagrant
 
-  vars:
-    ansible_dir: ../../../ansible
-    site_type: node
-    passenger_type: node
-  vars_files:
-    - "{{ ansible_dir }}/host_vars/vagrant.yml"
   vars_prompt:
     - name: domain
-      prompt: "New Domain Name (e.g. codeup.dev)"
+      prompt: New Domain Name (e.g. codeup.dev)
       private: no
 
-  tasks:
-    - include: "{{ ansible_dir }}/tasks/site-create.yml"
+  pre_tasks:
+    - name: Development domains must end with .dev
+      assert:
+        that: domain.endswith(".dev")
 
-  handlers:
-    - include: "{{ ansible_dir }}/handlers/main.yml"
+  roles:
+    - Node

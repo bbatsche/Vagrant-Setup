@@ -18,3 +18,11 @@
     - src
     - versions
   sudo: yes
+
+- name: Install Current Version
+  shell: . /usr/local/nvm/nvm.sh && nvm install {{ node_version }}
+  args:
+    creates: /usr/local/nvm/versions/node/{{ node_version }}
+  environment:
+    NVM_DIR: /usr/local/nvm
+  sudo: yes
