@@ -111,6 +111,8 @@ server {
       # Explicitly set node startup file. Passenger seems to require this.
       passenger_startup_file app.js;
       passenger_nodejs /usr/local/nvm/versions/node/{{ node_version }}/bin/node;
+    {% elif site_type == "ruby" %}
+      passenger_ruby /usr/local/rbenv/shims/ruby;
     {% elif site_type == "python" and app_env != "dev" %}
       passenger_python {{ www_home }}/{{ domain }}/env/bin/python;
     {% endif %}

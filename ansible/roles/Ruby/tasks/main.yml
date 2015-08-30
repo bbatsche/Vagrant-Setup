@@ -23,6 +23,12 @@
   sudo: yes
   notify: Rehash Rbenv
 
+- name: Install
+  command: rbenv install {{ ruby_version }} creates=/usr/local/rbenv/versions/{{ ruby_version }}
+  environment:
+    RBENV_ROOT: /usr/local/rbenv
+  sudo: yes
+
 - name: Add Rbenv to Profile
   copy: src=rbenv.sh dest=/etc/profile.d/rbenv.sh
   sudo: yes
