@@ -6,14 +6,14 @@
   vars:
     dynamic_php: yes
   vars_prompt:
-    - name: domain
-      prompt: "New Domain Name (e.g. codeup.dev)"
+    - name:    domain
+      prompt:  Domain Name (e.g. codeup.dev)
       private: no
 
   pre_tasks:
     - name: Development domains must end with .dev
       assert:
-        that: "domain.endswith('.dev')"
+        that: domain.endswith(".dev")
 
   roles:
     - PHP

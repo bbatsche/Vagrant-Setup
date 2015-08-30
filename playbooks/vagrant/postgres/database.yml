@@ -6,14 +6,14 @@
   vars:
     ansible_dir: ../../../ansible
   vars_prompt:
-    - name: db_name
-      prompt: "PostgreSQL Database Name (e.g. something_db)"
+    - name:    db_name
+      prompt:  Database Name (e.g. something_db)
       private: no
-    - name: new_postgres_user
-      prompt: "Database Owner Name (e.g. something_user)"
+    - name:    new_postgres_user
+      prompt:  Database Owner (e.g. something_user)
       private: no
-    - name: new_postgres_pass
-      prompt: "Owner Password"
+    - name:    new_postgres_pass
+      prompt:  Password for Database Owner
       private: yes
       confirm: yes
 

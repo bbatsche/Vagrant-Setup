@@ -4,8 +4,8 @@
   remote_user: vagrant
 
   vars_prompt:
-    - name: domain
-      prompt: New Domain Name (e.g. codeup.dev)
+    - name:    domain
+      prompt:  Domain Name (e.g. codeup.dev)
       private: no
 
   pre_tasks:

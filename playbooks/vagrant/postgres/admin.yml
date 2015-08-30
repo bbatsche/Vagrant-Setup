@@ -6,11 +6,11 @@
   vars:
     role_attr: SUPERUSER
   vars_prompt:
-    - name: new_postgres_user
-      prompt: "New PostgreSQL Username"
+    - name:    new_postgres_user
+      prompt:  New PostgreSQL Admin
       private: no
-    - name: new_postgres_pass
-      prompt: "New User Password"
+    - name:    new_postgres_pass
+      prompt:  New Admin Password
       private: yes
       confirm: yes
 

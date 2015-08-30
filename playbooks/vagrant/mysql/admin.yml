@@ -7,11 +7,11 @@
     app_env: dev # move this into a host var
     mysql_user_priv: "*.*:ALL,GRANT"
   vars_prompt:
-    - name: new_mysql_user
-      prompt: "New MySQL Username"
+    - name:    new_mysql_user
+      prompt:  New MySQL Admin
       private: no
-    - name: new_mysql_pass
-      prompt: "New User Password"
+    - name:    new_mysql_pass
+      prompt:  New Admin Password
       private: yes
       confirm: yes
 

@@ -6,14 +6,14 @@
   vars:
     mongodb_roles: dbOwner
   vars_prompt:
-    - name: db_name
-      prompt: Database Name (e.g. something_db)
+    - name:    db_name
+      prompt:  Database Name (e.g. something_db)
       private: no
-    - name: new_mongodb_user (e.g. something_user)
-      prompt: Database Owner
+    - name:    new_mongodb_user
+      prompt:  Database Owner (e.g. something_user)
       private: no
-    - name: new_mongodb_pass
-      prompt: Password for Database Owner
+    - name:    new_mongodb_pass
+      prompt:  Password for Database Owner
       private: yes
       confirm: yes
 
