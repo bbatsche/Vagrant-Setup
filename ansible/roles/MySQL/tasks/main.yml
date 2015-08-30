@@ -10,7 +10,7 @@
 - name: Create Configuration File
   template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
   sudo: yes
-  notify: Restart
+  notify: Restart MySQL
 
 - include: lockdown.yml
   when: mysql_install | changed

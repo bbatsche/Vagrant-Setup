@@ -1,5 +1,5 @@
 ---
-- name: Create Dynamic PHP Site
+- name: Create Static PHP Site
   hosts: vagrant
   remote_user: vagrant
 

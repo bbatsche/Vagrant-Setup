@@ -16,7 +16,7 @@
 - name: Create Configuration File
   copy: src=mongo.conf dest=/etc/mongod.conf mode=0644
   sudo: yes
-  notify: Restart
+  notify: Restart MongoDB
 
 - name: Install
   apt: package=mongodb-org state=present
@@ -34,7 +34,7 @@
     - "  if test -f /sys/kernel/mm/transparent_hugepage/defrag; then echo never > /sys/kernel/mm/transparent_hugepage/defrag; fi"
     - "  if test -f /sys/kernel/mm/transparent_hugepage/enabled; then echo never > /sys/kernel/mm/transparent_hugepage/enabled; fi"
   sudo: yes
-  notify: Restart
+  notify: Restart MongoDB
 
 - include: lockdown.yml
   when: mongodb_install | changed

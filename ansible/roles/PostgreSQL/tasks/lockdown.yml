@@ -27,4 +27,4 @@
     - postgres
     - all
   sudo: yes
-  notify: Restart
+  notify: Restart PostgreSQL

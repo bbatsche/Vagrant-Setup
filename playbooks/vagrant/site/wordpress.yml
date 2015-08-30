@@ -3,8 +3,6 @@
   hosts: vagrant
   remote_user: vagrant
 
-  vars:
-    dynamic_php: yes
   vars_prompt:
     - name: domain
       prompt: "New Domain Name (e.g. codeup.dev)"
@@ -16,14 +14,6 @@
         that: "domain.endswith('.dev')"
 
   roles:
-    - PHP
-    - MySQL
+    - WordPress
 
-  tasks:
-    - name: Download WordPress
-      get_url: url=https://wordpress.org/latest.tar.gz dest=/tmp/wordpress.tar.gz
-
-    - name: Extract WordPress
-      command: tar xzf /tmp/wordpress.tar.gz -C {{ www_home }}/{{ domain }}/public --strip-components=1
-      args:
-        creates: "{{ www_home }}/{{ domain }}/public/index.php"
+- include: ../mysql/database.yml

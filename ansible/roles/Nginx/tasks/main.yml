@@ -19,12 +19,12 @@
 - name: Copy HTML5 Boilerplate Configs
   copy: src=h5bp-nginx/ dest=/etc/nginx/h5bp
   sudo: yes
-  notify: Restart
+  notify: Restart Nginx
 
 - name: Create Default Site
   copy: src=nginx.default.conf dest=/etc/nginx/sites-available/default
   sudo: yes
-  notify: Restart
+  notify: Restart Nginx
 
 - name: Enable Default Site
   file:
@@ -32,7 +32,7 @@
     dest:  /etc/nginx/sites-enabled/default
     state: link
   sudo: yes
-  notify: Restart
+  notify: Restart Nginx
 
 - name: Create Log Directory
   file: path=/var/log/nginx state=directory mode=0755 owner=www-data
@@ -41,17 +41,17 @@
 - name: Create Main Coniguration
   template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
   sudo: yes
-  notify: Restart
+  notify: Restart Nginx
 
 - name: Copy HTML5 Boilerplate Main Config
   template: src=h5bp-basic.conf.j2 dest=/etc/nginx/h5bp/basic.conf
   sudo: yes
-  notify: Restart
+  notify: Restart Nginx
 
 - name: Copy mime.types
   file: src=mime.types dest=/etc/nginx/mime.types
   sudo: yes
-  notify: Restart
+  notify: Restart Nginx
 
 - include: site.yml
   when: domain is defined
