@@ -3,19 +3,5 @@
   hosts: vagrant
   remote_user: vagrant
 
-  vars:
-    dynamic_php: yes
-  vars_prompt:
-    - name:    domain
-      prompt:  Domain Name (e.g. codeup.dev)
-      private: no
-
-  pre_tasks:
-    - name: Development domains must end with .dev
-      assert:
-        that: domain.endswith(".dev")
-
-  roles:
-    - PHP
-
+- include: ../../site/php-dynamic.yml
 - include: ../database.yml
