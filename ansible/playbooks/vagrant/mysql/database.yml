@@ -3,8 +3,6 @@
   hosts: vagrant
   remote_user: vagrant
 
-  vars:
-    app_env: dev # move this into a host var
   vars_prompt:
     - name:    db_name
       prompt:  Database Name (e.g. something_db)

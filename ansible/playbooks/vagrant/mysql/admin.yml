@@ -4,7 +4,6 @@
   remote_user: vagrant
 
   vars:
-    app_env: dev # move this into a host var
     mysql_user_priv: "*.*:ALL,GRANT"
   vars_prompt:
     - name:    new_mysql_user
