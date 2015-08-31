@@ -1,5 +1,5 @@
 ---
-- name: Initializing Vagrant Box
+- name: Initialize Vagrant Box
   hosts: vagrant
   remote_user: vagrant
 

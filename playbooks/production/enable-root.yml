@@ -1,7 +1,6 @@
 ---
 - name: Re-enable Root User in Production
   hosts: production
-  remote_user: "{{ console_user }}"
 
   tasks:
     - name: Enable root User
@@ -15,10 +14,13 @@
         regexp: "^{{ item.key }}"
         line:   "{{ item.key }} {{ item.value }}"
       with_items:
-        - { key: 'PermitRootLogin',        value: 'yes' }
-        - { key: 'AllowUsers',             value: '{{ console_user }} root' }
+        - { key: 'PermitRootLogin', value: 'yes' }
+        - { key: 'AllowUsers',      value: '{{ ansible_user_id }} root' }
       notify: Restart SSH
       sudo: yes
 
   handlers:
-    - include: handlers/main.yml
+    - name: Restart SSH
+      service: name=ssh state=restarted
+      sudo: yes
+

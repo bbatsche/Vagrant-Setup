@@ -1,9 +1,5 @@
 ---
-- name: Change root Password
-  user: name=root password={{ new_root_password }}
-  when: new_root_password is defined
-
-- name: Lock root User (use 'sudo passwd -u root' to re-enable)
+- name: Lock root User
   command: passwd -l root
 
 - name: Remove sudo Group Rights
@@ -16,7 +12,7 @@
 - name: Create Console User Account
   user:
     name:     "{{ console_user }}"
-    password: "{{ console_user_password }}"
+    password: "{{ console_password }}"
     shell:    /bin/bash
     state:    present
     groups:   www-data
@@ -34,9 +30,6 @@
   authorized_key:
     user: "{{ console_user }}"
     key:  "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-
-- name: Install Bash Profile
-  template: src=bashrc.j2 dest=/home/{{ console_user }}/.bashrc
 
 - name: Update SSH Parameters
   lineinfile:

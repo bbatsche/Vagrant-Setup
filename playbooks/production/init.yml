@@ -1,0 +1,22 @@
+---
+- name: Initialize Production Server
+  hosts: production
+  remote_user: root
+
+  vars_prompt:
+    - name:    console_password # When Ansible 2 comes out, convert this to use password_hash filter, confirm not empty
+      prompt:  Password for Console User
+      private: yes
+      confirm: yes
+      encrypt: md5_crypt
+      salt_size: 7
+    - name:    admin_email
+      prompt:  eMail Address for Notifications
+      private: no
+
+  vars:
+    console_user: "{{ lookup('env', 'USER') }}"
+
+  roles:
+    - production
+    - common

@@ -1,5 +1,5 @@
 # Put your Digital Ocean IP Address Here
-; digital_ocean ansible_ssh_host=xxx.xxx.xxx.xxx private_key_file=~/.ssh/id_rsa ansible_ssh_user=codeup
+; digital_ocean ansible_ssh_host=xxx.xxx.xxx.xxx
 
 [production]
 digital_ocean
