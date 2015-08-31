@@ -3,7 +3,6 @@
   hosts: production
 
   vars:
-    app_env: production # move this into a host var
     mysql_user_priv: "*.*:ALL,GRANT"
     mysql_admin: "{{ lookup('env', 'USER') }}"
   vars_prompt:
