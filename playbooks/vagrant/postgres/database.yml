@@ -3,8 +3,6 @@
   hosts: vagrant
   remote_user: vagrant
 
-  vars:
-    ansible_dir: ../../../ansible
   vars_prompt:
     - name:    db_name
       prompt:  Database Name (e.g. something_db)
