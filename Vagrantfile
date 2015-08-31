@@ -34,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     v.vm.provision :ansible do |ansible|
-      ansible.playbook = "playbooks/vagrant/init.yml"
+      ansible.playbook = "ansible/playbooks/vagrant/init.yml"
       ansible.extra_vars = {
         timezone: timezone
       }
