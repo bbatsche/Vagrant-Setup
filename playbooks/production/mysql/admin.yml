@@ -1,0 +1,31 @@
+---
+- name: Create MySQL Administrator
+  hosts: production
+
+  vars:
+    app_env: production # move this into a host var
+    mysql_user_priv: "*.*:ALL,GRANT"
+    mysql_admin: "{{ lookup('env', 'USER') }}"
+  vars_prompt:
+    - name:    mysql_pass
+      prompt:  MySQL Password
+      private: yes
+      confirm: yes
+    - name:    new_mysql_user
+      prompt:  New MySQL Admin
+      private: no
+    - name:    new_mysql_pass
+      prompt:  New Admin Password
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: mysql_pass != ''
+    - name: Production passwords cannot be empty
+      assert:
+        that: new_mysql_pass != ''
+
+  roles:
+    - MySQL
