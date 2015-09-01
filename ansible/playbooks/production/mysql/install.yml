@@ -1,0 +1,19 @@
+---
+- name: Install MySQL
+  hosts: production
+
+  vars:
+    mysql_admin: "{{ lookup('env', 'USER') }}"
+  vars_prompt:
+    - name:    mysql_pass
+      prompt:  MySQL Password
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: mysql_pass != ''
+
+  roles:
+    - MySQL-Install

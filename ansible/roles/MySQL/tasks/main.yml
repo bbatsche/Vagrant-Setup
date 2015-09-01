@@ -1,22 +1,19 @@
 ---
-- name: Install
-  apt: package={{ item }} state=present
-  sudo: yes
-  with_items:
-    - mysql-server
-    - percona-toolkit
-  register: mysql_install
-
-- name: Create Configuration File
-  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
-  sudo: yes
-  notify: Restart MySQL
-
-- include: lockdown.yml
-  when: mysql_install | changed
-
-- include: database.yml
+- name: Create Database
+  mysql_db:
+    name:           "{{ db_name }}"
+    login_user:     "{{ mysql_admin | default('root') }}"
+    login_password: "{{ mysql_pass  | default(omit) }}"
+    collation:      utf8_general_ci
+    state:          present
   when: db_name is defined
 
-- include: user.yml
+- name: Create User
+  mysql_user:
+    name:           "{{ new_mysql_user }}"
+    password:       "{{ new_mysql_pass }}"
+    login_user:     "{{ mysql_admin | default('root') }}"
+    login_password: "{{ mysql_pass  | default(omit) }}"
+    priv:           "{{ mysql_user_priv }}"
+    state:          present
   when: new_mysql_user is defined

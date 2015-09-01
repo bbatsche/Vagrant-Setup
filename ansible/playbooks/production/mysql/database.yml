@@ -8,7 +8,6 @@
     - name:    mysql_pass
       prompt:  MySQL Password
       private: yes
-      confirm: yes
     - name:    db_name
       prompt:  Database Name (e.g. something_db)
       private: no
@@ -21,9 +20,6 @@
       confirm: yes
 
   pre_tasks:
-    - name: Production passwords cannot be empty
-      assert:
-        that: mysql_pass != ''
     - name: Production passwords cannot be empty
       assert:
         that: new_mysql_pass != ''

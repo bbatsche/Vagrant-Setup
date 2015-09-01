@@ -21,4 +21,5 @@
         mysql_user_priv: "{{ db_name }}.*:ALL"
 
   roles:
+    - MySQL-Install
     - MySQL

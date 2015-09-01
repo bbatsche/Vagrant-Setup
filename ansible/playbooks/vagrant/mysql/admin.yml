@@ -15,4 +15,5 @@
       confirm: yes
 
   roles:
+    - MySQL-Install
     - MySQL

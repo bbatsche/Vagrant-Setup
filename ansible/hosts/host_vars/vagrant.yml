@@ -2,4 +2,7 @@
 app_env: dev
 
 mongodb_admin: vagrant
-mongodb_pass: vagrant
+mongodb_pass:  vagrant
+
+mysql_admin: vagrant
+mysql_pass:  vagrant
