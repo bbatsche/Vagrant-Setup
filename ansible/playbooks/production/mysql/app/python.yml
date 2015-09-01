@@ -1,0 +1,6 @@
+---
+- name: Create MySQL Based Python Application
+  hosts: production
+
+- include: ../../python.yml
+- include: ../database.yml

@@ -1,30 +1,19 @@
 ---
-- name: Create Git Repo Directory
+- name: Create Repo Directory
   file:
     path:  "{{ git_home }}/{{ domain }}.git"
     state: directory
     owner: "{{ ansible_ssh_user }}"
   sudo: yes
 
-- name: Create Git Repo for New Site
+- name: Create Repo for Site
   shell: git init --bare
   args:
     chdir:   "{{ git_home }}/{{ domain }}.git"
     creates: "{{ git_home }}/{{ domain }}.git/config"
-  sudo: no
 
-- name: Create Git Post-Receive Hook
+- name: Create Post-Receive Hook
   template:
     src:  git-post-receive.j2
     dest: "{{ git_home }}/{{ domain }}.git/hooks/post-receive"
     mode: 0755
-  sudo: no
-
-- name: Notes
-  debug:
-    msg: >
-      git remote add {{ git_remote }}
-      ssh://{{ ansible_ssh_user }}@{{ ansible_ssh_host }}:{{ ansible_ssh_port }}{{ git_home }}/{{ domain }}.git
-
-- name: Notes
-  debug: msg="git push {{ git_remote }} master"

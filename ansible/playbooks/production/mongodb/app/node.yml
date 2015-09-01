@@ -1,0 +1,6 @@
+---
+- name: Create MongoDB Based Node.js Application
+  hosts: production
+
+- include: ../../site/node.yml
+- include: ../database.yml

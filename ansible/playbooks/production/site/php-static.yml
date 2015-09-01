@@ -1,0 +1,14 @@
+---
+- name: Create Static PHP Site
+  hosts: production
+
+  vars:
+    dynamic_php: no
+  vars_prompt:
+    - name:    domain
+      prompt:  Domain Name (e.g. codeup.com)
+      private: no
+
+  roles:
+    - PHP
+    - Git-Hook

@@ -1,0 +1,12 @@
+---
+- name: Create Ruby Site
+  hosts: production
+
+  vars_prompt:
+    - name:    domain
+      prompt:  Domain Name (e.g. codeup.com)
+      private: no
+
+  roles:
+    - Ruby
+    - Git-Hook
