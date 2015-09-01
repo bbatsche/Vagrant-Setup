@@ -9,7 +9,6 @@
     - name:    mongodb_pass
       prompt:  MongoDB Password
       private: yes
-      confirm: yes
     - name:    new_mongodb_user
       prompt:  New MongoDB Admin
       private: no
@@ -19,9 +18,6 @@
       confirm: yes
 
   pre_tasks:
-    - name: Production passwords cannot be empty
-      assert:
-        that: mongodb_pass != ''
     - name: Production passwords cannot be empty
       assert:
         that: new_mongodb_pass != ''

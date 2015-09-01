@@ -18,4 +18,5 @@
       confirm: yes
 
   roles:
+    - MongoDB-Install
     - MongoDB

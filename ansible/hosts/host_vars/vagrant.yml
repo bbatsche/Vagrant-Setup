@@ -1,2 +1,5 @@
 ---
 app_env: dev
+
+mongodb_admin: vagrant
+mongodb_pass: vagrant

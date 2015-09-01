@@ -1,0 +1,19 @@
+---
+- name: Install MongoDB
+  hosts: production
+
+  vars:
+    mongodb_admin: "{{ lookup('env', 'USER') }}"
+  vars_prompt:
+    - name:    mongodb_pass
+      prompt:  MongoDB Password
+      private: yes
+      configm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: mongodb_pass != ''
+
+  roles:
+    - MongoDB-Install
