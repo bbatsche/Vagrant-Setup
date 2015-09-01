@@ -1,0 +1,19 @@
+---
+- name: Install PostgreSQL
+  hosts: production
+
+  vars:
+    postgres_admin: "{{ lookup('env', 'USER') }}"
+  vars_prompt:
+    - name:    postgres_pass
+      prompt:  PostgreSQL Password
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: postgres_pass != ''
+
+  roles:
+    - PostgreSQL-Install

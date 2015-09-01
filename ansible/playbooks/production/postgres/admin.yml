@@ -9,7 +9,6 @@
     - name:    postgres_pass
       prompt:  PostgreSQL Password
       private: yes
-      confirm: yes
     - name:    new_postgres_user
       prompt:  New PostgreSQL Admin
       private: no
@@ -19,9 +18,6 @@
       confirm: yes
 
   pre_tasks:
-    - name: Production passwords cannot be empty
-      assert:
-        that: postgres_pass != ''
     - name: Production passwords cannot be empty
       assert:
         that: new_postgres_pass != ''

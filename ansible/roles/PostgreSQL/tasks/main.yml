@@ -1,23 +1,14 @@
 ---
-- name: Install
-  apt: package={{ item }} state=present
-  with_items:
-    - postgresql
-    - postgresql-contrib
-  sudo: yes
-  register: postgres_install
-
-- include: lockdown.yml
-  when: postgres_install | changed
-
-- name: Add Adminpack
-  postgresql_ext:
-    name: adminpack
-    db:   postgres
+- name: Create User
+  postgresql_user:
+    name:           "{{ new_postgres_user }}"
+    password:       "{{ new_postgres_pass }}"
+    db:             postgres
+    encrypted:      yes
     login_user:     "{{ postgres_admin | default('postgres') }}"
     login_password: "{{ postgres_pass  | default(omit) }}"
-
-- include: user.yml
+    state:          present
+    role_attr_flags: "{{ role_attr | default(omit) }}"
   when: new_postgres_user is defined
 
 - include: database.yml
