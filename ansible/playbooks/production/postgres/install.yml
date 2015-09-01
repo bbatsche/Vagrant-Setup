@@ -2,8 +2,6 @@
 - name: Install PostgreSQL
   hosts: production
 
-  vars:
-    postgres_admin: "{{ lookup('env', 'USER') }}"
   vars_prompt:
     - name:    postgres_pass
       prompt:  PostgreSQL Password

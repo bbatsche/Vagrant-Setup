@@ -4,7 +4,6 @@
 
   vars:
     mongodb_roles: root,backup,restore
-    mongodb_admin: "{{ lookup('env', 'USER') }}"
   vars_prompt:
     - name:    mongodb_pass
       prompt:  MongoDB Password

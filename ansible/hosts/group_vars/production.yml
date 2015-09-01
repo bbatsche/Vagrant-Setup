@@ -1,2 +1,6 @@
 ---
 app_env: prod
+
+mongodb_admin:  "{{ lookup('env', 'USER') }}"
+mysql_admin:    "{{ lookup('env', 'USER') }}"
+postgres_admin: "{{ lookup('env', 'USER') }}"
