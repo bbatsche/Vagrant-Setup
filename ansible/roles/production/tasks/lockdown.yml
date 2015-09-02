@@ -2,12 +2,15 @@
 - name: Lock root User
   command: passwd -l root
 
-- name: Remove sudo Group Rights
+- name: Remove Sudo and Admin Group Rights
   lineinfile:
     dest:     /etc/sudoers
-    regexp:   "^%sudo"
+    regexp:   "^{{ item }}"
     state:    absent
     validate: "visudo -cf %s"
+  with_items:
+    - "%sudo"
+    - "%admin"
 
 - name: Create Console User Account
   user:
@@ -21,8 +24,14 @@
 - name: Add Console User to Sudoers
   lineinfile:
     dest:     /etc/sudoers
-    regexp:   "^{{ console_user }} ALL"
     line:     "{{ console_user }} ALL=(ALL) ALL"
+    state:    present
+    validate: "visudo -cf %s"
+
+- name: Allow Console User to Reload Nginx Configs
+  lineinfile:
+    dest:     /etc/sudoers
+    line:     "{{ console_user }} ALL=NOPASSWD: /usr/sbin/service nginx reload"
     state:    present
     validate: "visudo -cf %s"
 

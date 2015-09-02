@@ -26,6 +26,17 @@
   sudo: yes
   notify: Restart Nginx
 
+# I'd really like to not do this! But lineinfile wants write permision.
+# http://serverfault.com/questions/718586/ansible-lineinfile-and-permissions-of-parent-directory
+- name: Allow User to Write Sites-Available
+  file:
+    dest: /etc/nginx/sites-available
+    state: directory
+    owner: "{{ ansible_ssh_user }}"
+    group: www-data
+    mode: 0755
+  sudo: yes
+
 - name: Enable Default Site
   file:
     src:   /etc/nginx/sites-available/default

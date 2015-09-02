@@ -26,7 +26,12 @@
   sudo: yes
 
 - name: Copy Site Config
-  template: src=site.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}
+  template:
+    src:   site.conf.j2
+    dest:  /etc/nginx/sites-available/{{ domain }}
+    owner: "{{ ansible_ssh_user }}"
+    group: www-data
+    mode:  0640
   sudo: yes
   notify: Restart Nginx
 
