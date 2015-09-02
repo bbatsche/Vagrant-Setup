@@ -62,3 +62,11 @@
     line: suhosin.session.cryptkey = {{ lookup('password', '/tmp/suhosin-session-key chars=ascii_letters,digits') }}
   sudo: yes
   notify: Restart FPM
+
+- name: Allow CLI Scripts to Increase their Memory
+  lineinfile:
+    dest: /etc/php5/cli/php.ini
+    state: present
+    regexp: ^;?suhosin\.memory_limit\s?=
+    line: suhosin.memory_limit = 1G
+  sudo: yes

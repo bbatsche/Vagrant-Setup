@@ -1,0 +1,8 @@
+---
+- name: Copy .env.php
+  copy:
+    src:   "{{ local_site_dir | realpath }}/.env.php"
+    dest:  "{{ prod_site_dir  | realpath }}/.env.php"
+    owner: "{{ ansible_ssh_user }}"
+    group: www-data
+    mode:  0640

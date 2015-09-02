@@ -1,0 +1,6 @@
+---
+- name: Migrate Databases
+  command: /usr/bin/php {{ prod_site_dir | realpath }}/artisan migrate --force
+  register: migrate_result
+  changed_when: '"Nothing to migrate." not in migrate_result.stdout'
+

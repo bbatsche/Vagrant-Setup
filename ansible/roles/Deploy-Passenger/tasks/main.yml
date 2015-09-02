@@ -6,7 +6,7 @@
     regexp: ^\s*passenger_env_var\s+{{ item.key }}
     line: passenger_env_var {{ item.key }} {{ item.value }};
     create: no
-  with_dict: "{{ env_vars }}"
+  with_dict: "{{ env_vars | default({}) }}"
   notify: Reload Nginx Config
 
 - name: Make Sure tmp Directory Exists
