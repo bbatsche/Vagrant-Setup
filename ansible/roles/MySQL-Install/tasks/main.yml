@@ -1,6 +1,9 @@
 ---
 - name: Install
-  apt: package=mysql-server state=present
+  apt: package={{ item }} state=present
+  with_items:
+    - mysql-server
+    - libmysqlclient-dev
   sudo: yes
   register: mysql_install
 

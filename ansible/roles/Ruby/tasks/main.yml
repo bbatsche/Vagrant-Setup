@@ -3,11 +3,22 @@
   apt: package=rbenv state=present
   sudo: yes
 
+- name: Install Readline Headers
+  apt: package=libreadline-dev state=present
+  sudo: yes
+
+- name: Give Console User Ownership of Rbenv
+  file:
+    path: /usr/local/rbenv
+    state: directory
+    owner: "{{ ansible_ssh_user }}"
+    mode: 0755
+  sudo: yes
+
 - name: Install Rbenv Plugins
   git:
     repo: https://github.com/sstephenson/{{ item }}.git
     dest: /usr/local/rbenv/plugins/{{ item }}/
-  sudo: yes
   notify: Rehash Rbenv
   with_items:
     - ruby-build
@@ -20,20 +31,16 @@
     repo: https://github.com/ianheggie/rbenv-binstubs.git
     dest: /usr/local/rbenv/plugins/rbenv-binstubs/
     version: v1.4
-  sudo: yes
   notify: Rehash Rbenv
+
+- name: Set Default Gems
+  copy: src=default-gems dest=/usr/local/rbenv/default-gems
 
 - name: Install
   command: rbenv install {{ ruby_version }} creates=/usr/local/rbenv/versions/{{ ruby_version }}
   environment:
     RBENV_ROOT: /usr/local/rbenv
-  sudo: yes
 
 - name: Add Rbenv to Profile
-  copy: src=rbenv.sh dest=/etc/profile.d/rbenv.sh
-  sudo: yes
-
-- name: Install Rack
-  gem: name=rack user_install=no state=present
-  notify: Rehash Rbenv
+  template: src=rbenv.sh.j2 dest=/etc/profile.d/rbenv.sh
   sudo: yes

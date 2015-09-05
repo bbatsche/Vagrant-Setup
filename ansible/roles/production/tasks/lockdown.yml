@@ -11,6 +11,8 @@
   with_items:
     - "%sudo"
     - "%admin"
+  tags:
+    - sudoer
 
 - name: Create Console User Account
   user:
@@ -27,13 +29,27 @@
     line:     "{{ console_user }} ALL=(ALL) ALL"
     state:    present
     validate: "visudo -cf %s"
+  tags:
+    - sudoer
 
-- name: Allow Console User to Reload Nginx Configs
+- name: Allow Some Passwordless Sudo Commands
   lineinfile:
     dest:     /etc/sudoers
     line:     "{{ console_user }} ALL=NOPASSWD: /usr/sbin/service nginx reload"
     state:    present
     validate: "visudo -cf %s"
+  tags:
+    - sudoer
+
+- name: Keep Rbenv Root When Sudo-ing
+  lineinfile:
+    dest: /etc/sudoers
+    line: Defaults	env_keep += "RBENV_ROOT"
+    insertafter: Defaults\s+env_reset
+    state: present
+    validate: "visudo -cf %s"
+  tags:
+    - sudoer
 
 - name: Ensure Public Key is in authorized_keys
   authorized_key:
