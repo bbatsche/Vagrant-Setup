@@ -3,5 +3,5 @@
   hosts: vagrant
   remote_user: vagrant
 
-- include: ../../ruby.yml
+- include: ../../site/ruby.yml
 - include: ../database.yml
