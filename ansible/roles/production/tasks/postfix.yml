@@ -1,13 +1,14 @@
 ---
-# test mail with the following command:
-# echo "Mail test." | mail -s "Just Testing" <some_email@address>
-
-- name: Set up Postfix Selections (main mailer type)
-  command: 'echo "{{ item }}" | debconf-set-selections'
+- name: Set Postfix Package Options
+  debconf:
+    name: postfix
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.type }}"
   with_items:
-    - postfix postfix/main_mailer_type select Internet Site
-    - postfix postfix/mailname string localhost
-    - postfix postfix/destinations string localhost.localdomain, localhost
+    - { question: postfix/main_mailer_type, type: select,      value: Internet Site }
+    - { question: postfix/mailname,         type: string,      value: "{{ ansible_hostname }}" }
+    - { question: postfix/destinations,     type: multiselect, value: "{{ ansible_hostname }}, localhost.localdomain, localhost" }
 
 - name: Install Postfix
   apt: pkg=postfix state=present
