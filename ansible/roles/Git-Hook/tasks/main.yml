@@ -1,4 +1,6 @@
 ---
+# Ansible's git module must have a remote declared. Since this repo will
+# be receiving pushes we can't use the module to initialize things here.
 - name: Create Repo Directory
   file:
     path:  "{{ git_home }}/{{ domain }}.git"
