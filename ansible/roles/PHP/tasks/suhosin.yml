@@ -50,7 +50,7 @@
     dest: /etc/php5/mods-available/suhosin.ini
     state: present
     regexp: ^;?suhosin\.cookie\.cryptkey\s?=
-    line: suhosin.cookie.cryptkey = {{ lookup('password', '/tmp/suhosin-cookie-key chars=ascii_letters,digits') }}
+    line: suhosin.cookie.cryptkey = {{ lookup('password', '../../../storage/' + ansible_hostname + '/suhosin-cookie-key chars=ascii_letters,digits length=64') }}
   sudo: yes
   notify: Restart FPM
 
@@ -59,7 +59,7 @@
     dest: /etc/php5/mods-available/suhosin.ini
     state: present
     regexp: ^;?suhosin\.session\.cryptkey\s?=
-    line: suhosin.session.cryptkey = {{ lookup('password', '/tmp/suhosin-session-key chars=ascii_letters,digits') }}
+    line: suhosin.session.cryptkey = {{ lookup('password', '../../../storage/' + ansible_hostname + '/suhosin-session-key chars=ascii_letters,digits length=64') }}
   sudo: yes
   notify: Restart FPM
 

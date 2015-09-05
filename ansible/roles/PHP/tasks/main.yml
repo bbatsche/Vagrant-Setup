@@ -56,7 +56,7 @@
   sudo: yes
 
 - name: Create Session Directory
-  file: path=/var/lib/php/session state=directory owner=www-data
+  file: path=/var/lib/php5/session state=directory owner=www-data
   sudo: yes
 
 - name: Copy Config
