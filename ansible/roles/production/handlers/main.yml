@@ -14,7 +14,3 @@
 - name: Restart UFW
   service: name=ufw state=restarted
   sudo: yes
-
-- name: Restart Server
-  command: /sbin/reboot
-  sudo: yes

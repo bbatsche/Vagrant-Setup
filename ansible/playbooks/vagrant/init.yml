@@ -5,7 +5,3 @@
 
   roles:
     - common
-
-  handlers:
-    - name: Restart Server
-      debug: msg="Run 'vagrant reload' after provisioning completes"

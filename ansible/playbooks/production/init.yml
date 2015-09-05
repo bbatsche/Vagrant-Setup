@@ -4,8 +4,8 @@
   remote_user: root
 
   vars_prompt:
-    - name:    console_password # When Ansible 2 comes out, convert this to use password_hash filter, confirm not empty
-      prompt:  Password for Console User
+    - name:    ansible_sudo_pass # When Ansible 2 comes out, convert this to use password_hash filter, confirm not empty
+      prompt:  Sudo Password
       private: yes
       confirm: yes
       encrypt: md5_crypt

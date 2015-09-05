@@ -2,6 +2,11 @@
 - name: Re-enable Root User in Production
   hosts: production
 
+  vars_prompt:
+    - name: ansible_sudo_pass
+      prompt: Sudo Password
+      private: yes
+
   tasks:
     - name: Enable root User
       command: passwd -u root
