@@ -9,3 +9,5 @@ postgres_admin: "{{ lookup('env', 'USER') }}"
 
 git_home: /var/git
 git_remote: production
+
+ruby_version: 2.2.3
