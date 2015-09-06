@@ -9,3 +9,5 @@ mysql_pass:  vagrant
 
 postgres_admin: vagrant
 postgres_pass:  vagrant
+
+ansible_python_interpreter: /usr/bin/python2

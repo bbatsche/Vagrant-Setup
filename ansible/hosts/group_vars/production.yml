@@ -11,3 +11,5 @@ git_home: /var/git
 git_remote: production
 
 ruby_version: 2.2.3
+
+ansible_python_interpreter: /usr/bin/python2
