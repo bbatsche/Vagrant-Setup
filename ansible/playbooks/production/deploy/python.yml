@@ -1,0 +1,58 @@
+---
+- name: Deploy Python Based Application to Production
+  hosts: production
+
+  vars_prompt:
+    - name:    site_name
+      prompt:  Name of site to deploy (omit '.yml')
+      private: no
+
+  pre_tasks:
+    - name: Cannot deploy the template
+      assert:
+        that: site_name != "template"
+
+    - name: Set Path to Site Variables
+      set_fact: site_vars=ansible/site_vars/{{ site_name }}.yml
+
+    - name: Load Site variables
+      include_vars: "{{ site_vars | realpath }}"
+
+    - name: Set Path to Local Site
+      set_fact: local_site_dir=sites/{{ local_domain }}
+
+    - name: Set Path to Production Site
+      set_fact: prod_site_dir={{ www_home }}/{{ production_domain }}
+
+    - name: Check Path to Local Site
+      local_action: stat path={{ local_site_dir | realpath }}
+      register: local_site_result
+
+    - name: Check Path to Production Site
+      stat: path={{ prod_site_dir | realpath }}
+      register: prod_site_result
+
+    - name: Local domain must be an existing site on this computer
+      assert:
+        that: local_site_result.stat.exists and local_site_result.stat.isdir
+
+    - name: Production domain must be an existing site on the server
+      assert:
+        that: prod_site_result.stat.exists and prod_site_result.stat.isdir
+
+    - name: Site type must be a valid value
+      assert:
+        that: site_type is defined and site_type in ["django", "flask"]
+    - name: Python version must be valid
+      assert:
+        that: python_version is defined and python_version in ["python2.7", "python3.4"]
+
+  roles:
+    - Git-Deploy
+    - Deploy-Frontend
+    - Deploy-Python
+    - Deploy-Passenger
+
+  post_tasks:
+    - name: Restart App
+      file: name={{ prod_site_dir | realpath }}/tmp/restart.txt state=touch

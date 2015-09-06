@@ -33,3 +33,8 @@ env_vars:
   DB_NAME: ## FILL ME IN ##
   DB_USER: ## FILL ME IN ##
   DB_PASS: ## FILL ME IN ##
+
+##### Python Version #####
+# This option is only necessary if you are deploying a Python based
+# site. Should be set to either python2.7 or python3.4
+python_version: # python2.7 | python3.4
