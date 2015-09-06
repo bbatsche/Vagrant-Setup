@@ -53,7 +53,7 @@ server {
   # consolidate and clean this mess up!!
 
 {% if site_type == "php" or site_type == "hhvm" %}
-  index {{ "index.hh" if site_type == "hhvm" }} index.php index.html index.htm;
+  index {{ "index.hh" if site_type == "hhvm" else "" }} index.php index.html index.htm;
 
   location / {
   {% if site_type == "hhvm" %}
