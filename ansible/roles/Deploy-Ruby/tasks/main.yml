@@ -20,7 +20,9 @@
 
 # replace with module when 2.0 comes out http://docs.ansible.com/bundler_module.html
 - name: Install Gems
-  command: "/usr/local/rbenv/versions/{{ ruby_version }}/bin/bundle install --gemfile={{ prod_site_dir | realpath }}/Gemfile --deployment --without development test"
+  command: >
+    /usr/local/rbenv/versions/{{ ruby_version }}/bin/bundle install
+    --gemfile={{ prod_site_dir | realpath }}/Gemfile --deployment --without development test
   args:
     chdir: "{{ prod_site_dir | realpath }}"
   environment:
@@ -29,7 +31,10 @@
 
 - name: Generate Secret
   set_fact:
-    SECRET_KEY: "{{ lookup('password', '../../../storage/' + ansible_hostname + '/' + production_domain + '-secret chars=ascii_letters,digits length=128') }}"
+    SECRET_KEY: >
+      {{ lookup('password',
+      '../../../storage/' + ansible_hostname + '/' + production_domain + '-secret
+      chars=ascii_letters,digits length=128') }}
   when: env_vars.SECRET_KEY is not defined
 
 - name: Add Secret to Site Config
