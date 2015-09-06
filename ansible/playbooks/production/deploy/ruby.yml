@@ -32,7 +32,7 @@
       stat: path={{ prod_site_dir | realpath }}
       register: prod_site_result
 
-    - name: Local domain must be an existing on this computer
+    - name: Local domain must be an existing site on this computer
       assert:
         that: local_site_result.stat.exists and local_site_result.stat.isdir
 
@@ -53,4 +53,3 @@
   post_tasks:
     - name: Restart App
       file: name={{ prod_site_dir | realpath }}/tmp/restart.txt state=touch
-

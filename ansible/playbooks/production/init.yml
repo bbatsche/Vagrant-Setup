@@ -17,6 +17,14 @@
   vars:
     console_user: "{{ lookup('env', 'USER') }}"
 
+  pre_tasks:
+    - name: Production server must be Ubuntu
+      assert:
+        that: ansible_distribution == "Ubuntu"
+    - name: Production server must be Trusty Tahr
+      assert:
+        that: ansible_distribution_version == "14.04"
+
   roles:
     - production
     - common
