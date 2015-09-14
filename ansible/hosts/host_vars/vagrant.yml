@@ -1,0 +1,13 @@
+---
+app_env: dev
+
+www_home: /vagrant/sites
+
+mongodb_admin: vagrant
+mongodb_pass:  vagrant
+
+mysql_admin: vagrant
+mysql_pass:  vagrant
+
+postgres_admin: vagrant
+postgres_pass:  vagrant

@@ -1,5 +1,0 @@
----
-- name: Install PHPUnit
-  command: >
-    composer global require "phpunit/phpunit=~4.5" --no-interaction
-    creates=~/.composer/vendor/bin/phpunit
