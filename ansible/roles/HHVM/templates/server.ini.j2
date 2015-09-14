@@ -1,0 +1,25 @@
+; php options
+
+pid = /var/run/hhvm/pid
+
+; hhvm specific
+
+hhvm.server.file_socket = /var/run/hhvm/server.sock
+hhvm.server.type = fastcgi
+hhvm.server.default_document = index.php
+hhvm.log.use_log_file = true
+hhvm.log.file = /var/log/hhvm/error.log
+hhvm.repo.central.path = /var/run/hhvm/hhvm.hhbc
+
+hhvm.jit = true
+
+{% if app_env == "dev" %}
+hhvm.admin_server.port = 8080
+
+hhvm.debugger.enable_debugger_server = true
+hhvm.debugger.port = 8089
+{% else %}
+hhvm.admin_server.port = 0
+
+hhvm.debugger.enable_debugger_server = false
+{% endif %}

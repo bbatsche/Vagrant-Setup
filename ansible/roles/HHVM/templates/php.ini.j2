@@ -1,0 +1,38 @@
+; php options
+session.save_handler = files
+session.save_path = /var/lib/hhvm/sessions
+session.gc_maxlifetime = 1440
+
+; hhvm specific
+hhvm.log.level = Warning
+hhvm.log.always_log_unhandled_exceptions = true
+hhvm.log.runtime_error_reporting_level = 8191
+hhvm.mysql.typed_results = true
+
+hhvm.enable_short_tags = false
+
+hhvm.enable_zend_compat = true
+
+{% if app_env == "dev" %}
+hhvm.debugger.enable_debugger = true
+hhvm.debugger.enable_debugger_color = true
+hhvm.debugger.enable_debugger_prompt = true
+
+hhvm.log.runtime_error_reporting_level = 32767
+
+hhvm.log.level = Info
+
+xdebug.enable = true
+
+display_errors = true
+{% else %}
+hhvm.debugger.enable_debugger = false
+
+hhvm.log.runtime_error_reporting_level = 5111
+
+hhvm.log.level = Warning
+
+xdebug.enable = false
+
+display_errors = false
+{% endif %}

@@ -1,0 +1,27 @@
+---
+- name: Add APT Key
+  apt_key: keyserver=keyserver.ubuntu.com id=0x5a16e7281be7a449 state=present
+  sudo: yes
+
+- name: Add APT Repository
+  apt_repository:
+    repo: "deb http://dl.hhvm.com/ubuntu trusty-lts-3.9 main"
+    state: present
+  sudo: yes
+
+- name: Install
+  apt: package=hhvm state=present
+  sudo: yes
+  notify: Restart HHVM
+
+- name: Copy Config
+  template: src={{ item }}.ini.j2 dest=/etc/hhvm/{{ item }}.ini
+  with_items:
+    - php
+    - server
+  sudo: yes
+  notify: Restart HHVM
+
+- name: Start on Boot
+  service: name=hhvm enabled=yes
+  sudo: yes
