@@ -1,8 +1,14 @@
 ---
 ruby_version:    2.2.3
 nvm_version:     v0.26.1
-nodejs_version:  v0.12.7
+node_version:    v0.12.7
 phpunit_version: ~4.8
+
+ruby_build_version:   v20150818
+default_gems_version: v1.0.0
+rbenv_vars_version:   v1.2.0
+gem_rehash_version:   v1.0.0
+binstubs_version:     v1.4
 
 nvm_root:   /usr/local/nvm
 rbenv_root: /usr/local/rbenv

@@ -1,0 +1,28 @@
+---
+- name: Install NVM
+  git:
+    repo: https://github.com/creationix/nvm.git
+    dest: "{{ nvm_root }}"
+    version: "{{ nvm_version }}"
+  sudo: yes
+
+- name: Add NVM to Profile
+  template: src=nvm.sh.j2 dest=/etc/profile.d/nvm.sh
+  sudo: yes
+
+- name: Create NVM Directories
+  file: path={{ nvm_root }}/{{ item }} state=directory owner={{ ansible_ssh_user }} mode=0775
+  with_items:
+    - alias
+    - bin
+    - src
+    - versions
+  sudo: yes
+
+- name: Install Current Version
+  shell: . {{ nvm_root }}/nvm.sh && nvm install {{ node_version }}
+  args:
+    creates: "{{ nvm_root }}/versions/node/{{ node_version }}"
+  environment:
+    NVM_DIR: "{{ nvm_root }}"
+  sudo: yes

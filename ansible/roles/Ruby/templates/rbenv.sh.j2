@@ -1,0 +1,10 @@
+export RBENV_ROOT={{ rbenv_root }}
+export PATH="{{ rbenv_root }}/bin:$PATH"
+
+{% if app_env == "dev" %}
+export RAILS_ENV=development
+{% else %}
+export RAILS_ENV=production
+{% endif %}
+
+eval "$(rbenv init -)"
