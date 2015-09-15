@@ -1,0 +1,15 @@
+---
+- name: Create HipHop VM Site
+  hosts: production
+
+  vars_prompt:
+    - name:    ansible_sudo_pass
+      prompt:  Sudo Password
+      private: yes
+    - name:    domain
+      prompt:  Domain Name (e.g. codeup.com)
+      private: no
+
+  roles:
+    - HHVM
+    - Git-Hook
