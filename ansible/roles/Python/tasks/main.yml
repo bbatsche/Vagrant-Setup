@@ -1,0 +1,31 @@
+---
+- name: Install Python
+  apt: package={{ item }} state=present
+  sudo: yes
+  with_items:
+    - python2.7
+    - python3
+    - pypy
+    - python-pip
+    - python3-pip
+
+- name: Install Virtualenv
+  pip: name=virtualenv executable={{ item }}
+  sudo: yes
+  with_items:
+    - pip2
+    - pip3
+
+- name: Install Virtualenv Wrapper
+  pip: name=virtualenvwrapper executable={{ item }}
+  sudo: yes
+  with_items:
+    - pip2
+    - pip3
+
+- name: Source Virtualenv Wrapper to Shell
+  file:
+    state: link
+    src: /usr/local/bin/virtualenvwrapper_lazy.sh
+    dest: /etc/profile.d/virtualenvwrapper.sh
+  sudo: yes
