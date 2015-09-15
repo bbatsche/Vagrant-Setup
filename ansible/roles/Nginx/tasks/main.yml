@@ -46,7 +46,7 @@
   notify: Restart Nginx
 
 - name: Create Log Directory
-  file: path=/var/log/nginx state=directory mode=0755 owner=www-data
+  file: path=/var/log/nginx state=directory mode=0755 owner=www-data group=www-data
   sudo: yes
 
 - name: Create Main Coniguration
