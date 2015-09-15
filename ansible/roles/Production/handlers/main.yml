@@ -1,0 +1,16 @@
+---
+- name: Restart Postfix
+  service: name=postfix state=restarted
+  sudo: yes
+
+- name: Restart Fail2Ban
+  service: name=fail2ban state=restarted
+  sudo: yes
+
+- name: Restart SSH
+  service: name=ssh state=restarted
+  sudo: yes
+
+- name: Restart UFW
+  service: name=ufw state=restarted
+  sudo: yes
