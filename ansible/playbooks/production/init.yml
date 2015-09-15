@@ -34,4 +34,5 @@
 
   roles:
     - Production
+    - PHP
     - MySQL-Install

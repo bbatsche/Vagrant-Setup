@@ -5,7 +5,8 @@ git_home: "{{ ansible_user_dir }}/git"
 nvm_root:   "{{ ansible_user_dir }}/.nvm"
 rbenv_root: "{{ ansible_user_dir }}/.rbenv"
 
-git_remote: warpspeed
+git_remote:      warpspeed
+git_hook_script: warpspeed.sh
 
 mysql_admin:    warpspeed
 postgres_admin: waprpseed
