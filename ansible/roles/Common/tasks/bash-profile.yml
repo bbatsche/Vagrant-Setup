@@ -27,4 +27,4 @@
     line: cd /vagrant
     state: present
     insertafter: EOF
-  when: ansible_hostname == "vagrant"
+  when: inventory_hostname == "vagrant"
