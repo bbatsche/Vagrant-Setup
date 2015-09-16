@@ -1,0 +1,18 @@
+---
+- name: Configure Warpspeed Server
+  hosts: warpspeed
+  remote_user: warpspeed
+
+  vars_prompt:
+    - name:    ansible_sudo_pass
+      prompt:  Sudo Password
+      private: yes
+
+  tasks:
+    - name: Install Ansible Database Dependencies
+      apt: package={{ item }} state=present
+      become: yes
+      with_items:
+        - python-mysqldb
+        - python-psycopg2
+
