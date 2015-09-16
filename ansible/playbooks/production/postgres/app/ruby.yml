@@ -1,0 +1,6 @@
+---
+- name: Create PostgreSQL Based Ruby Application
+  hosts: production
+
+- include: ../../site/ruby.yml
+- include: ../database.yml
