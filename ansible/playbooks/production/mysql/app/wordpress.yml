@@ -1,0 +1,13 @@
+---
+- name: Create WordPress Application
+  hosts: production
+
+  vars_prompt:
+    - name:    domain
+      prompt:  Domain Name (e.g. codeup.com)
+      private: no
+
+  roles:
+    - WordPress
+
+- include: ../database.yml

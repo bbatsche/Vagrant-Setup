@@ -1,0 +1,6 @@
+---
+- name: Create MySQL Based PHP Application
+  hosts: production
+
+- include: ../../site/php-dynamic.yml
+- include: ../database.yml
