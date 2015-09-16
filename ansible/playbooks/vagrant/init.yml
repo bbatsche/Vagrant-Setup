@@ -14,4 +14,4 @@
   roles:
     - Common
     - PHP
-    - MySQL-Install
+    - MySQL/Install

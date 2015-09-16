@@ -17,4 +17,4 @@
         that: mongodb_pass != ''
 
   roles:
-    - MongoDB-Install
+    - MongoDB/Install

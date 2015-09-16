@@ -22,4 +22,4 @@
         that: new_mysql_pass != ''
 
   roles:
-    - MySQL
+    - MySQL/Manage

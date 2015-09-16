@@ -22,4 +22,4 @@
         that: new_mongodb_pass != ''
 
   roles:
-    - MongoDB
+    - MongoDB/Manage

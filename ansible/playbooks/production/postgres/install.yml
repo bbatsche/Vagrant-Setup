@@ -17,4 +17,4 @@
         that: postgres_pass != ''
 
   roles:
-    - PostgreSQL-Install
+    - PostgreSQL/Install

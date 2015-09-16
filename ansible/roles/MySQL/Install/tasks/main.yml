@@ -4,6 +4,7 @@
   with_items:
     - mysql-server
     - libmysqlclient-dev
+    - python-mysqldb
   sudo: yes
   register: mysql_install
 

@@ -15,5 +15,5 @@
       confirm: yes
 
   roles:
-    - MongoDB-Install
-    - MongoDB
+    - MongoDB/Install
+    - MongoDB/Manage

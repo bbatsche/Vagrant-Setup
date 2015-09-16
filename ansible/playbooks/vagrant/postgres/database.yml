@@ -16,5 +16,5 @@
       confirm: yes
 
   roles:
-    - PostgreSQL-Install
-    - PostgreSQL
+    - PostgreSQL/Install
+    - PostgreSQL/Manage

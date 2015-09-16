@@ -4,6 +4,7 @@
   with_items:
     - postgresql
     - postgresql-contrib
+    - python-psycopg2
   sudo: yes
   register: postgres_install
 

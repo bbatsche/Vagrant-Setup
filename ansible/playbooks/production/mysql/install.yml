@@ -17,4 +17,4 @@
         that: mysql_pass != ''
 
   roles:
-    - MySQL-Install
+    - MySQL/Install
