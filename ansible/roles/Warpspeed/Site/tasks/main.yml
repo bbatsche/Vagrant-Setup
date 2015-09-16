@@ -1,0 +1,7 @@
+---
+- name: Create Site
+  command: "{{ ansible_user_dir }}/.warpspeed/bin/warpspeed site:create {{ site_type }} {{ domain }} --force --push"
+  environment:
+    WARPSPEED_ROOT: "{{ ansible_user_dir }}/.warpspeed"
+    WARPSPEED_USER: "{{ ansible_ssh_user }}"
+  become: yes

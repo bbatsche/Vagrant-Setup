@@ -1,0 +1,17 @@
+---
+- name: Create Python Site
+  hosts: warpspeed
+  remote_user: warpspeed
+
+  vars:
+    site_type: python
+  vars_prompt:
+    - name:    ansible_sudo_pass
+      prompt:  Sudo Password
+      private: yes
+    - name:    domain
+      prompt:  Domain Name (e.g. codeup.com)
+      private: no
+
+  roles:
+    - Warpspeed/Site
