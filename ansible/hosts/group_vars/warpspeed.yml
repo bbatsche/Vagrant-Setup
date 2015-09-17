@@ -1,6 +1,6 @@
 ---
 www_home: "{{ ansible_user_dir }}/sites"
-git_home: "{{ ansible_user_dir }}/git"
+git_home: "{{ ansible_user_dir }}/repos"
 
 nvm_root:   "{{ ansible_user_dir }}/.nvm"
 rbenv_root: "{{ ansible_user_dir }}/.rbenv"

@@ -25,7 +25,7 @@
   debug:
     msg: >
       git remote add {{ git_remote }}
-      ssh://{{ ansible_ssh_user }}@{{ ansible_ssh_host }}{{ git_home }}/{{ domain }}.git
+      ssh://{{ ansible_user_id }}@{{ ansible_ssh_host }}{{ git_home }}/{{ domain }}.git
 
 - name: Push your Repository to Deploy
   debug: msg="git push {{ git_remote }} {{ git_production_branch | default('master') }}"
