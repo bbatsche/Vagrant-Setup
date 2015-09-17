@@ -13,14 +13,10 @@
         that: site_name != "template"
 
     - name: Load Site variables
-      include_vars: ../../site_vars/{{ site_name }}.yml
-      tags: testing
-
-    - name: Set Local Site Path
-      set_fact: local_site_dir={{ ("sites/" ~ local_domain) | realpath}}
+      include_vars: "{{ site_var_dir }}/{{ site_name }}.yml"
 
     - name: Check Path to Local Site
-      local_action: stat path={{ local_site_dir | realpath }}
+      local_action: stat path={{ local_sites_dir }}/{{ local_domain }}
       register: local_site_result
 
     - name: Check Path to Production Site

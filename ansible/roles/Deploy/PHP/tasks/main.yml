@@ -1,6 +1,6 @@
 ---
 - name: Check for .env.php File
-  local_action: stat path={{ local_site_dir }}/.env.php
+  local_action: stat path={{ local_sites_dir }}/{{ local_domain }}/.env.php
   register: dot_env_file
 
 - include: dot-env-php.yml
