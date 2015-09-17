@@ -1,0 +1,4 @@
+---
+- name: Remount Root
+  command: mount -o remount /
+  become: yes
