@@ -1,0 +1,11 @@
+---
+- name: Migrate Database
+  shell: >
+    . {{ www_home }}/{{ production_domain }}/env/bin/activate &&
+    {{ www_home }}/{{ production_domain }}/env/bin/python manage.py migrate
+  args:
+    chdir: "{{ www_home }}/{{ production_domain }}"
+  register: migrate_result
+  changed_when: >
+    migrate_result.stdout_lines is defined and
+    "No migrations to apply." not in migrate_result.stdout_lines | last
