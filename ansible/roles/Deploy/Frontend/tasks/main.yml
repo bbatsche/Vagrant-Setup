@@ -26,9 +26,11 @@
 
 - name: Run Default Grunt Task
   command: >
-    /usr/local/bin/grunt --gruntfile={{ www_home }}/{{ production_domain }}/Gruntfile.js
+    grunt --gruntfile={{ www_home }}/{{ production_domain }}/Gruntfile.js
     --base={{ www_home }}/{{ production_domain }}
   when: grunt_file.stat.exists and (git_push.changed or node_install.changed or bower_install.changed)
+  register: grunt_result
+  failed_when: 'grunt_result.stdout.endswith("Done, without errors.")'
 
 # Gulp
 - name: Check for Gulp File

@@ -1,0 +1,13 @@
+---
+- name: Add Environment Values to Config
+  lineinfile:
+    dest: /etc/nginx/sites-available/{{ production_domain }}
+    insertafter: ^\s*passenger_app_type
+    regexp: ^\s*passenger_env_var\s+{{ item.key }}
+    line: passenger_env_var {{ item.key }} "{{ item.value }}";
+    create: no
+  with_dict: "{{ env_vars | default({}) }}"
+  notify: Reload Nginx Config
+
+- name: Make Sure tmp Directory Exists
+  file: path={{ www_home }}/{{ production_domain }}/tmp state=directory
