@@ -52,7 +52,7 @@
     regexp: ^;?suhosin\.cookie\.cryptkey\s?=
     line: >
       suhosin.cookie.cryptkey = {{ lookup('password',
-      '../../../storage/' + ansible_hostname + '/suhosin-cookie-key chars=ascii_letters,digits length=64') }}
+      storage_dir + '/' + ansible_hostname + '/suhosin-cookie-key chars=ascii_letters,digits length=64') }}
   sudo: yes
   notify: Restart FPM
 
@@ -63,7 +63,7 @@
     regexp: ^;?suhosin\.session\.cryptkey\s?=
     line: >
       suhosin.session.cryptkey = {{ lookup('password',
-      '../../../storage/' + ansible_hostname + '/suhosin-session-key chars=ascii_letters,digits length=64') }}
+      storage_dir + '/' + ansible_hostname + '/suhosin-session-key chars=ascii_letters,digits length=64') }}
   sudo: yes
   notify: Restart FPM
 
