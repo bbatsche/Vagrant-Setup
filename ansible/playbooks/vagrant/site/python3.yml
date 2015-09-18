@@ -1,8 +1,10 @@
 ---
-- name: Create Python Site
+- name: Create Python 3.4 Site
   hosts: vagrant
   remote_user: vagrant
 
+  vars:
+    python_version: 3.4
   vars_prompt:
     - name:    domain
       prompt:  Domain Name (e.g. codeup.dev)
