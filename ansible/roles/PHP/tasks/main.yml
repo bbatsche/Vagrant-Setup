@@ -90,6 +90,7 @@
 - name: Laravel Environment Setting for CLI
   lineinfile:
     dest: ~/.bashrc
+    regexp: ^\s*export\s+LARAVEL_ENV=
     line: 'export LARAVEL_ENV="local"'
     insertafter: EOF
     state: present

@@ -4,10 +4,12 @@
   sudo: yes
   with_items:
     - python2.7
-    - python3
-    - pypy
+    - python2.7-dev
     - python-pip
+    - python3.4
+    - python3.4-dev
     - python3-pip
+    - pypy
 
 - name: Install Virtualenv
   pip: name=virtualenv executable={{ item }}
@@ -29,3 +31,12 @@
     src: /usr/local/bin/virtualenvwrapper_lazy.sh
     dest: /etc/profile.d/virtualenvwrapper.sh
   sudo: yes
+
+- name: WSGI Environment Setting for CLI
+  lineinfile:
+    dest: ~/.bashrc
+    regexp: ^\s*export\s+WSGI_ENV=
+    line: 'export WSGI_ENV="development"'
+    insertafter: EOF
+    state: present
+  when: app_env == "dev"

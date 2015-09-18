@@ -30,7 +30,7 @@
   notify: Reload Nginx Config
   when: env_vars.SECRET_KEY is not defined
 
-- name: Add Secret to Virtualenv Activation
+- name: Add Secret to Virtualenv
   lineinfile:
     dest: "{{ www_home }}/{{ production_domain }}/env/bin/activate"
     regexp: ^\s*export\s+SECRET_KEY=
@@ -38,7 +38,7 @@
     create: no
   when: env_vars.SECRET_KEY is not defined
 
-- name: Add Environment Values to Virtualenv Activation
+- name: Add Environment Values to Virtualenv
   lineinfile:
     dest: "{{ www_home }}/{{ production_domain }}/env/bin/activate"
     regexp: ^\s*export\s+{{ item.key }}=
