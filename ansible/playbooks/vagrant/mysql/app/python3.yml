@@ -3,5 +3,5 @@
   hosts: vagrant
   remote_user: vagrant
 
-- include: ../../site/python.yml
+- include: ../../site/python3.yml
 - include: ../database.yml
