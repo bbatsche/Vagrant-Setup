@@ -1,0 +1,20 @@
+---
+- name: Install MySQL
+  hosts: production
+
+  vars_prompt:
+    - name:    ansible_sudo_pass
+      prompt:  Sudo Password
+      private: yes
+    - name:    mysql_pass
+      prompt:  MySQL Password
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: mysql_pass != ''
+
+  roles:
+    - MySQL/Install

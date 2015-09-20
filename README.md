@@ -1,190 +1,609 @@
-# Codeup Vagrant Box & Ansible Scripts
+# Codeup Vagrant & Ansible Configuration
 
-This repository contains files and scripts intended for [Codeup](http://www.codeup.com) students to use throughout their class. It contains:
+This repository contains configuration files intended for [Codeup](http://www.codeup.com) students to use throughout their class. It contains:
 
-1. A Vagrantfile definition for local development and testing of LAMP based applications
-1. Ansible scripts for deploying those same applications to a production server, in particular those hosted by [DigitalOcean](https://www.digitalocean.com)
+1. A Vagrantfile for local development and testing of web based applications
+1. Ansible playbooks for provisioning development and production servers, and deploying those applications. Primarily targetting servers hosted by [DigitalOcean](https://www.digitalocean.com)
 
-## Installation & Setup
+# Installation & Setup
 
-Ideally this repository should be downloaded and configured using the LAMP Setup Script hosted [here](https://github.com/gocodeup/LAMP-Setup-Script). In addition to installing the necessary tools and utilities, it will also create a new SSH key the Ansible scripts will setup for use with the DigitalOcean droplet.
+One of the goals for this environment is make set up as simple and straight forward as possible.
 
-## Ansible Scripts
+## Automated
 
-Included with this repository is a set of scripts for managing either your vagrant or production environments. You can run these scripts from directly on your Mac and Ansible will go into either your Vagrant or production server and perform whatever the required tasks are. We will go into more detail on how to use many of these scripts, but the following is an overview of the included items.
+The easiest way to get started with this repository is using the LAMP Setup Script hosted in [Codeup's GitHub account](https://github.com/gocodeup/LAMP-Setup-Script). In addition to installing the necessary tools and utilities, it will also create an SSH key for Ansible to use with DigitalOcean droplets.
 
-- `vagrant-init.yml`
-  - Set up the vagrant environment. You should **not** run this script directly; `vagrant up` or `vagrant provision` will run it for you.
-- `prod-init.yml`
-  - Set up a production environment. It will create a new commandline (console) user and a new MySQL administrator, both called `codeup`. You will be prompted to provide a new password for both. These are the passwords you will use in subsequent `sudo` or database admin tasks.
-- `warpspeed-init.yml`
-  - If you have created a production server using Warpspeed, this script will add a couple of additional utilities and config files so that ansible can also manage that server.
-  - Requires the `--ask-sudo-pass` flag.
-- `create-vagrant-site.yml`
-  - Create a new site within the Vagrant environment.
-- `create-vagrant-mysql-admin.yml`
-  - Create a new MySQL user in the Vagrant environment with database wide admin privileges.
-- `create-vagrant-mysql-db.yml`
-  - Create a new MySQL database in the Vagrant environment and a dedicated user for it. This user will have full privileges for the database but no access to any others.
-- `destroy-vagrant-site.yml`
-  - Disable a site in the Vagrant environment. Will not delete any user files unless a `purge` flag is passed.
-- `create-production-site.yml`
-  - Create a new site within the production environment. Will setup git hooks so that you can push your site to production using `git`.
-  - Requires the `--ask-sudo-pass` flag.
-- `create-production-mysql-admin.yml`
-  - Create a new MySQL user in the production environment with database wide admin privileges.
-- `create-production-mysql-db.yml`
-  - Create a new MySQL database in the production environment and a dedicated user for it. This user will have full privileges for the database but no access to any others.
-- `create-production-app.yml`
-  - Combination of the `create-production-site.yml` and `create-production-mysql-db.yml` scripts, for setting up a new site and a dedicated database & user for it. Just like above, it will create git hooks for push deployment.
-  - Requires the `--ask-sudo-pass` flag.
-- `deploy-site.yml`
-  - Push a local site to production using git. It will prompt you for the site you wish to deploy, see below for more information on how to set this up.
-- `destroy-production-site.yml`
-  - Disable a site in the production environment. Will not delete any user files unless a `purge` flag is passed.
-  - Requires the `--ask-sudo-pass` flag.
+## Manual
 
-## Creating a Site in Vagrant
+Our environment depends on three third party utilities:
 
-When you first run `vagrant up` inside this directory, Vagrant will automatically run the necessary Ansible scripts to configure your test server and setup your first site. Later on in the course if you need to create additional sites you can do so by running:
+- [Vagrant](https://www.vagrantup.com)
+- [VirtualBox](https://www.virtualbox.org)
+- [Ansible](http://www.ansible.com)
+
+To install these on your Mac, we recommend using [Homebrew](http://brew.sh). Run the following commands in your Terminal or iTerm:
+
+1. Install Homebrew
+
+    ```bash
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    ```
+
+1. Use Homebrew to install Ansible
+
+    ```bash
+    brew install ansible
+    ```
+
+1. Use Homebrew to install [Cask](http://caskroom.io)
+
+    ```bash
+    brew install caskroom/cask/brew-cask
+    ```
+
+1. Use Homebrew Cask to install Vagrant and VirutalBox
+
+    ```bash
+    brew cask install vagrant
+    brew cask install virtualbox
+    ```
+
+1. Clone this repository, `cd` into it, and start the Vagrant box with `vagrant up`.
+
+# Ansible Playbooks
+
+Both the Vagrant and production servers can be managed with Ansible using what are called "playbooks". Our playbooks are located in the directory `ansible/playbooks`. The available playbooks are:
+
+    ansible/playbooks
+    +-- vagrant
+    |   +-- init.yml
+    |   +-- sites
+    |   |   +-- hhvm.yml
+    |   |   +-- node.yml
+    |   |   +-- php.yml
+    |   |   +-- python2.yml
+    |   |   +-- python3.yml
+    |   |   +-- ruby.yml
+    |   |   +-- static.yml
+    |   +-- mysql
+    |   |   +-- admin.yml
+    |   |   +-- database.yml
+    |   |   +-- app
+    |   |       +-- hhvm.yml
+    |   |       +-- php.yml
+    |   |       +-- python2.yml
+    |   |       +-- python3.yml
+    |   |       +-- ruby.yml
+    |   |       +-- wordpress.yml
+    |   +-- postgres
+    |   |   +-- admin.yml
+    |   |   +-- database.yml
+    |   |   +-- app
+    |   |       +-- php.yml
+    |   |       +-- python2.yml
+    |   |       +-- python3.yml
+    |   |       +-- ruby.yml
+    |   +-- mongodb
+    |       +-- admin.yml
+    |       +-- database.yml
+    |       +-- app
+    |           +-- node.yml
+    +-- production
+    |   +-- init.yml
+    |   +-- enable-root.yml
+    |   +-- sites
+    |   |   +-- hhvm.yml
+    |   |   +-- node.yml
+    |   |   +-- php.yml
+    |   |   +-- python.yml
+    |   |   +-- ruby.yml
+    |   |   +-- static.yml
+    |   +-- mysql
+    |   |   +-- install.yml
+    |   |   +-- admin.yml
+    |   |   +-- database.yml
+    |   |   +-- app
+    |   |       +-- hhvm.yml
+    |   |       +-- php.yml
+    |   |       +-- python.yml
+    |   |       +-- ruby.yml
+    |   |       +-- wordpress.yml
+    |   +-- postgres
+    |   |   +-- install.yml
+    |   |   +-- admin.yml
+    |   |   +-- database.yml
+    |   |   +-- app
+    |   |       +-- php.yml
+    |   |       +-- python.yml
+    |   |       +-- ruby.yml
+    |   +-- mongodb
+    |       +-- install.yml
+    |       +-- admin.yml
+    |       +-- database.yml
+    |       +-- app
+    |           +-- node.yml
+    +-- warpspeed
+    |   +-- init.yml
+    |   +-- sites
+    |   |   +-- node.yml
+    |   |   +-- php.yml
+    |   |   +-- python.yml
+    |   |   +-- ruby.yml
+    |   |   +-- static.yml
+    |   +-- mysql
+    |   |   +-- admin.yml
+    |   |   +-- database.yml
+    |   |   +-- app
+    |   |       +-- php.yml
+    |   |       +-- python.yml
+    |   |       +-- ruby.yml
+    |   +-- postgres
+    |       +-- admin.yml
+    |       +-- database.yml
+    |       +-- app
+    |           +-- php.yml
+    |           +-- python.yml
+    |           +-- ruby.yml
+    +-- deploy
+        +-- node.yml
+        +-- php.yml
+        +-- python.yml
+        +-- ruby.yml
+
+## Vagrant
+
+You should *not* run the `init.yml` playbook by hand; this is done the first time your run `vagrant up` or by running `vagrant provision`.
+
+### Sites
+
+Our Vagrant environment supports creating virtual hosts running PHP (either "static" or "dynamic"), Facebook's HipHop VM, Ruby, Node.js, or Python (either versions 2.7 or 3.4). To create a new site, run one of the following playbooks:
 
 ```bash
-ansible-playbook ansible/create-vagrant-site.yml
+# Static PHP Site
+ansible-playbook ansible/playbooks/vagrant/site/static.yml
+
+# Dynamic PHP Site
+ansible-playbook ansible/playbooks/vagrant/site/php.yml
+
+# HipHop VM Site
+ansible-playbook ansible/playbooks/vagrant/site/hhvm.yml
+
+# Node.js Site
+ansible-playbook ansible/playbooks/vagrant/site/node.yml
+
+# Python 2.7 Site
+ansible-playbook ansible/playbooks/vagrant/site/python2.yml
+
+# Python 3.4 Site
+ansible-playbook ansible/playbooks/vagrant/site/python3.yml
+
+# Ruby Site
+ansible-playbook ansible/playbooks/vagrant/site/ruby.yml
 ```
 
-The `create-vagrant-site.yml` script can also optionally add your new domain to your local hosts file, facilitating the local deployment process. In order to do so however, you must have administer rights and run the script in the following manner:
+These playbooks will first prompt you for a new domain name (all domains in the Vagrant environment must end with `.dev`), install any necessary software, create the required configuration files, and then restart Nginx, if needed.
+
+#### Static vs. Dynamic
+
+A "dynamic" PHP site will route all requests for missing files through `index.php`. This is useful for frameworks such as Laravel. If you are not using such a framework, a "static" site will still execute any PHP file requested directly.
+
+### Database Services
+
+We have included playbooks for managing MySQL, PostgreSQL, and MongoDB database servers. You can use the playbooks either to create a new administrator or databases in any one of these. By default, when these servers are created, Ansible will create a default administrator with the username `vagrant` and password `vagrant`. (_Do **not** delete the `vagrant` user from any of these database servers, otherwise Ansible will no longer be able to manage that service._)
+
+#### Admin
+
+To create a new database administrator in either MySQL, PostgreSQL, or MongoDB run one of the following playbooks:
 
 ```bash
-sudo ansible-playbook ansible/create-vagrant-site.yml -e "append_host=true"
+# MySQL
+ansible-playbook ansible/playbooks/vagrant/mysql/admin.yml
+
+# PostgreSQL
+ansible-playbook ansible/playbooks/vagrant/postgres/admin.yml
+
+# MongoDB
+ansible-playbook ansible/playbooks/vagrant/mongodb/admin.yml
 ```
 
-## Setting up a Digital Ocean Server
+You will first be prompted for a new username and password for your administrator. Ansible will then install any required software and create the requested user.
 
-We use DigitalOcean in part because their signup process is quite straight forward and easy to follow. Simply navigate to the [signup page](https://cloud.digitalocean.com/registrations/new) and follow the prompts.
+#### Database
 
-### Adding a Key
+To create a new database in one of the services, run the playbook for the required database type:
 
-If you used the LAMP Setup Script provided you should have an SSH key generated for you. You must add that key to your DigitalOcean account in order to connect to your server. In order to do so, follow these steps
+```bash
+# MySQL
+ansible-playbook ansible/playbooks/vagrant/mysql/database.yml
 
-1. Navigate to the [SSH Keys section](https://cloud.digitalocean.com/ssh_keys) in your DigitalOcean account page.
+# PostgreSQL
+ansible-playbook ansible/playbooks/vagrant/postgres/database.yml
+
+# MongoDB
+ansible-playbook ansible/playbooks/vagrant/mongodb/database.yml
+```
+
+Ansible will prompt you for the database name, followed by a username and password for an "owner" of that database. Owners are dedicated users that have full control over that database, but no access outside of it. Administrator have access to all databases.
+
+#### App
+
+In addition, there are several shortcut playbooks for creating a database *and* a new site with a single command. These are under the `app` directory for each type of database. Since not all languages support or are well suited for each database flavor, only a subset of sites are available for a given database service.
+
+```bash
+# PHP and MySQL App
+ansible-playbook ansible/playbooks/vagrant/mysql/app/php.yml
+
+# Wordpress App (this will create a PHP app and download the latest version of Wordpress into it)
+ansible-playbook ansible/playbooks/vagrant/mysql/app/wordpress.yml
+
+# HipHop VM and MySQL App
+ansible-playbook ansible/playbooks/vagrant/mysql/app/hhvm.yml
+
+# Python 2.7 and MySQL App
+ansible-playbook ansible/playbooks/vagrant/mysql/app/python2.yml
+
+# Python 3.4 and MySQL App
+ansible-playbook ansible/playbooks/vagrant/mysql/app/python3.yml
+
+# Ruby and MySQL App
+ansible-playbook ansible/playbooks/vagrant/mysql/app/ruby.yml
+
+# PHP and PostgreSQL App
+ansible-playbook ansible/playbooks/vagrant/postgres/app/php.yml
+
+# Python 2.7 and PostgreSQL App
+ansible-playbook ansible/playbooks/vagrant/postgres/app/python2.yml
+
+# Python 3.4 and PostgreSQL App
+ansible-playbook ansible/playbooks/vagrant/postgres/app/python3.yml
+
+# Ruby and PostgreSQL App
+ansible-playbook ansible/playbooks/vagrant/postgres/app/ruby.yml
+
+# Node.js and MongoDB App
+ansible-playbook ansible/playbooks/vagrant/mongodb/app/node.yml
+```
+
+These playbooks will first prompt you for a new domain name, followed by a database name, and then the username and password for that database's owner.
+
+## Production
+
+Ansible can be used to manage a production server much in the same way as your Vagrant environment. Our instructions are geared towards [Digital Ocean](https://www.digitalocean.com) servers, but these playbooks should all work with any server running Ubuntu 14.04 (or later).
+
+### Adding your SSH Key
+
+If you used the LAMP Setup Script you should have an SSH key generated for you. You must add that key to your DigitalOcean account in order to connect to your server. To do this, follow these steps
+
+1. Copy your public key using `cat ~/.ssh/id_rsa.pub | pbcopy`.
+1. Navigate to the [security settings](https://cloud.digitalocean.com/settings/security) page DigitalOcean.
 1. Click "Add SSH Key"
-1. Copy the contents of the file `~/.ssh/id_rsa.pub` (hint, you can do this easily by running `cat ~/.ssh/id_rsa.pub | pbcopy`)
-1. Give your key a meaningful name (something like "Codeup SSH Key") and then paste your key data into the form.
-1. Now save your changes.
+1. Give your key a name (such as "Codeup SSH Key") and then paste your key data into the form.
+1. Save your changes
 
 ### Creating a Droplet
 
-1. Click the [Create](https://cloud.digitalocean.com/droplets/new) button
-1. Give your server a meaningful hostname, such as "Codeup-Server"
-1. Pretty much all of the default options selected are appropriate for your first droplet (512MB / New York 2 / Ubuntu 14.04)
-1. **Make sure you select the option to add your SSH key to your new droplet!**
+1. Click the [Create Droplet](https://cloud.digitalocean.com/droplets/new) button
+1. Give your server a hostname, such as "Codeup-Server"
+1. Typically, we suggest using the base droplet size ($5 / month)
+1. We suggest using either the New York or San Fransisco data centers
+1. Chose Ubuntu 14.04 x64 as the image.
+1. **Make sure to add your SSH key to your new droplet!**
 1. Click create and then wait.
-1. Make sure to note your droplet's new IP address
+1. Make note of your droplet's new IP address
 
-### Editing Local Configs
+### Configuring Ansible
 
-1. Edit `ansible/hosts` and remove the `;` from the start of the line containing `production`
-1. Replace the `xxx.xxx.xxx.xxx` with your droplet's IP address
+Ansible needs to know what your droplet's IP address is and how to connect to it. Open the file `ansible/hosts/production`. The second line in there should initially be commented out. Remove the leading `;` to make the line active and replace the `xxx.xxx.xxx.xxx` with your droplet's IP address. Everything else in this file should be fine.
 
-### Provisioning the Server
+### Provisioning
 
-Run the following command to initialize your server
+You will need to use Ansible to create a user account for you on the server, as well as install our core software and configuration files. This is a one-time process. Run the following playbook:
 
 ```bash
-ansible-playbook ansible/prod-init.yml
+ansible-playbook ansible/playbooks/production/init.yml
 ```
 
-This will guide you through the process of setting up the site, as well as initializing a site on your server. You will need to provide it:
+You will be prompted for a new sudo password, database admin password, and an eMail address for notifications. Ansible will create an admin user on the server with the same username as your local computer. It will also create a MySQL administrator with the same username. If you are unsure what your computer username is, you can run the command `whoami`.
 
-- A password for the default console or shell user, "codeup"
-- An eMail address to receive notifications from the server
-- A password for the default MySQL administrator, also called "codeup"
-
-## Adding a Site to Digital Ocean
-
-Adding a site to your DigitalOcean droplet is similar to adding one to your Vagrant box, although we need to tell Ansible to ask for your password first:
+There is also a playbook to re-enable the root user in production. In most cases, this will not ever be needed and is only included for debugging and development purposes.
 
 ```bash
-ansible-playbook ansible/create-production-site.yml --ask-sudo-pass
+# Re-enable the root user; you should NOT need to run this
+ansible-playbook ansible/playbooks/production/enable-root.yml
 ```
 
-### Next Steps
+Because Ansible uses your username to create the production user account, to log in to your server all you need to do is run `ssh xxx.xxx.xxx.xxx` where the `xxx.xxx.xxx.xxx` is your server's IP address.
 
-1. As the Ansible script runs, two messages with git commands should be outputted. Run those commands from within your application's root directory.
-1. The init script created a user called "codeup" in your droplet; you will use this user when SSH-ing into your new server.
-1. You must now SSH into your server and run the standard composer and artisan commands to initialize your application.
+### Sites
 
-## Creating a Production Application
-
-Most web applications require a combination of domain name and database. Thankfully, ansible can set this up using a single command. Use:
+Ansible can provision the same types of sites in production as in your Vagrant environment. (_**Note:** Production Python sites use virtualenv, and will use whatever Python binary is included in the environment. Thus, there is no distinction between creating Python 2.7 or 3.4 virtual host._)
 
 ```bash
-ansible-playbook ansible/create-production-app.yml --ask-sudo-pass
+# Static PHP Site
+ansible-playbook ansible/playbooks/production/site/static.yml
+
+# Dynamic PHP Site
+ansible-playbook ansible/playbooks/production/site/php.yml
+
+# HipHop VM Site
+ansible-playbook ansible/playbooks/production/site/hhvm.yml
+
+# Node.js Site
+ansible-playbook ansible/playbooks/production/site/node.yml
+
+# Python Site
+ansible-playbook ansible/playbooks/production/site/python.yml
+
+# Ruby Site
+ansible-playbook ansible/playbooks/production/site/ruby.yml
 ```
 
-You will be prompted for the following:
+These playbooks will first prompt you for your Sudo password. This is the password you created when initializing your production site. Next you will be asked for the site's domain name, just like with the Vagrant playbooks. Ansible will then install any necessary software and create the required config files.
 
-- Your sudo password &mdash; this is the password for the command line user `codeup`
-- Your MySQL admin password &mdash; this is the password for the database user `codeup`
-- Site domain name &mdash; what is the domain name for your new site?
-- MySQL database name &mdash; the name of the database your application will use
-- MySQL user name &mdash; the user your application will connect to MySQL as
-- MySQL password &mdash; the password your application will use when connecting to MySQL
+### Database Services
 
-## Deploying Laravel Applications
+Ansible can be used to install and/or manage either MySQL, PostgreSQL, or MongoDB database servers in production. However, unlike the Vagrant environment database services must be expressly installed if needed. By default, MySQL server is installed when your server is first set up, but neither PostgreSQL or MongoDB are.
 
-Ansible can automatically deploy your local dev sites to production using git. First, you must create the application in production using the above steps. Second, you need to create a new config file in `ansible/site_vars`. Take the `template.yml` file and copy it to a new filename (for example, "blog.yml"). Fill in the two parameters in your new file. The `local_domain` should be your local site's domain name, under the `sites` directory next to this README. The `production_domain` is your sites new domain name you specified when running `create-production-site.yml` or `create-production-app.yml`. Save your new vars file and then run:
+#### Installing
+
+To install any one of the three supported database servers, run the relevant Ansible playbook:
 
 ```bash
-ansible-playbook ansible/deploy-site.yml
+# Install MySQL Server
+ansible-playbook ansible/playbooks/production/mysql/install.yml
+
+# Install PostgreSQL Server
+ansible-playbook ansible/playbooks/production/postgres/install.yml
+
+# Install MongoDB Server
+ansible-playbook ansible/playbooks/production/mongodb/install.yml
 ```
 
-You will be prompted for the name of your site to deploy. This is the file name you created just moments ago, without the `.yml` extension. So, if you created `blog.yml` in `ansible/site_vars`, the name of your site is just `blog`. The script will then do the following:
+These playbooks will first prompt you for your sudo password (which you set up when first creating the server itself) followed by a password for the database administrator. In all three cases, Ansible will create an administrator in the database server with the same username as your local computer, and your production server itself.
 
-- Ensure a proper git remote is set in your local repository
-- Push your site to production using git
-- Copy the `.env.php` file to production (**Make sure this file exists first**)
-- Run `composer install` for your application
-- Run any new migrations for your application
+#### Admin
 
-_**Note:** The deploy script will not do any seeding! This is intentional._
-
-## Managing a Warpspeed Server
-
-If you have provisioned a server using [Warpspeed](http://warpspeed.io) our ansible scripts can still work with it! You will need to adjust a config file, and run a simple init script, and then the rest of the production ansible script will work just like before. Open `ansible/host_vars/production.yml` in your favorite editor. There are three sections of variables. The first are the default production parameters. Add a `#` to the beginning of lines 8 - 12 to comment them out. The second section are parameters for a Warpspeed server. Remove the `#` from lines 20 - 24 to enable those settings. Once this is done and saved, we need to add just a couple of config files to your server. This is done by running:
+If you need to create additional database administrators, you can do so with the following playbooks:
 
 ```bash
-ansible-playbook ansible/warpspeed-init.yml --ask-sudo-pass
+# Create MySQL Administrator
+ansible-playbook ansible/playbooks/production/mysql/admin.yml
+
+# Create PostgreSQL Administrator
+ansible-playbook ansible/playbooks/production/postgres/admin.yml
+
+# Create MongoDB Administrator
+ansible-playbook ansible/playbooks/production/mongodb/admin.yml
 ```
 
-Once you've run this script, all our existing "production" commands work just like before! The only catch being that the Warpspeed users are `warpspeed` for both the command line and database, instead of `codeup`. Ansible is setup to make this switch seamlessly, but beware when this documentation discusses ssh-ing as `codeup`.
+These playbooks will prompt you for the database password you created when install the servers, followed by the new administrator username and password.
 
-### Removing a Site
+#### Database
 
-If you wish to remove a site from either your Vagrant box or Digital Ocean server, you can do so using the following ansible commands
+Ansible can be used to create a database in any one of the three database servers, just like the Vagrant environment
 
 ```bash
-ansible-playbook ansible/destroy-vagrant-site.yml
-# or
-ansible-playbook ansible/destroy-production-site.yml --ask-sudo-pass
+# Create MySQL Database
+ansible-playbook ansible/playbooks/production/mysql/database.yml
+
+# Create PostgreSQL Database
+ansible-playbook ansible/playbooks/production/postgres/database.yml
+
+# Create MongoDB Database
+ansible-playbook ansible/playbooks/production/mongodb/database.yml
 ```
 
-This command will only remove the configuration files for your site, it will in no way delete any of your files on the server or remove any entries to your hosts file. If you would like to delete the actual files in your site, add the option `-e "purge=true"`. **Be extremely careful with this option! It really will completely wipe your site from the server!** If you wish to delete the site record in your hosts file, run the command with `sudo` and add `-e "purge_host=true"`.
+Like with creating administrators, the playbooks will prompt you for your database password, followed by the name of the new database and a username & password for the database owner.
 
-## Managing MySQL
+_**Note:** Ansible will not allow you to create database users with blank passwords in production!_
 
-Included with these files is also a script to aide in setting up MySQL users & databases. In order to create a MySQL administrator, use the following command
+#### App
+
+Just like the Vagrant playbooks, there are "shortcut" playbooks for creating production sites and databases with a single command:
+
 
 ```bash
-ansible-playbook ansible/create-vagrant-mysql-admin.yml
-# or
-ansible-playbook ansible/create-production-mysql-admin.yml
+# PHP and MySQL App
+ansible-playbook ansible/playbooks/production/mysql/app/php.yml
+
+# Wordpress App (this will create a PHP app and download the latest version of Wordpress into it)
+ansible-playbook ansible/playbooks/production/mysql/app/wordpress.yml
+
+# HipHop VM and MySQL App
+ansible-playbook ansible/playbooks/production/mysql/app/hhvm.yml
+
+# Python and MySQL App
+ansible-playbook ansible/playbooks/production/mysql/app/python.yml
+
+# Ruby and MySQL App
+ansible-playbook ansible/playbooks/production/mysql/app/ruby.yml
+
+# PHP and PostgreSQL App
+ansible-playbook ansible/playbooks/production/postgres/app/php.yml
+
+# Python and PostgreSQL App
+ansible-playbook ansible/playbooks/production/postgres/app/python.yml
+
+# Ruby and PostgreSQL App
+ansible-playbook ansible/playbooks/production/postgres/app/ruby.yml
+
+# Node.js and MongoDB App
+ansible-playbook ansible/playbooks/production/mongodb/app/node.yml
 ```
 
-To make a new database & user for your application, use the following:
+You will be asked for:
+
+- Your server's sudo password
+- The new domain name
+- Your database administrator password
+- The new database name
+- A username for the database owner
+- The password for the database owner
+
+## Warpspeed
+
+If you have created a server using [Warpspeed](https://warpspeed.io) some of your server's features can be managed using Ansible. First though, you must tell Ansible that your server uses Warpspeed. Open `ansible/hosts/production`. At the end of the file you should see the following:
+
+```ini
+# ...
+
+[warpspeed]
+; digital_ocean ansible_ssh_user=warpspeed
+```
+
+Delete the semicolon (`;`) from the beginning of the last line. Now, our playbooks will know your server was created with Warpspeed. Ansible requires some additional software be installed in your server to manage it. To do this, run the following playbook:
 
 ```bash
-ansible-playbook ansible/create-vagrant-mysql-db.yml
-# or
-ansible-playbook ansible/create-production-mysql-db.yml
+ansible-playbook ansible/playbooks/warpspeed/init.yml
+```
+
+Ansible will ask for your sudo password. This password was eMailed to you when you first created the server.
+
+### Sites
+
+If you would like, Ansible can be used to create virtual hosts in your Warpspeed server. The following playbooks can be used to create a site in your Warpspeed server:
+
+```bash
+# Static Site
+ansible-playbook ansible/playbooks/warpspeed/site/static.yml
+
+# Dynamic PHP Site
+ansible-playbook ansible/playbooks/warpspeed/site/php.yml
+
+# HipHop VM Site
+ansible-playbook ansible/playbooks/warpspeed/site/hhvm.yml
+
+# Node.js Site
+ansible-playbook ansible/playbooks/warpspeed/site/node.yml
+
+# Python Site
+ansible-playbook ansible/playbooks/warpspeed/site/python.yml
+
+# Ruby Site
+ansible-playbook ansible/playbooks/warpspeed/site/ruby.yml
+```
+
+Like the normal production playbooks, Ansible will ask for your sudo password (from your welcome eMail) followed by your new domain name.
+
+#### Notes
+
+1. Unlike servers provisioned by Ansible, static sites in Warpspeed cannot execute PHP code.
+1. Warpspeed does not support the latest version(s) of Python, only 2.7.
+1. Warpspeed does not include support for Facebook's HipHop VM.
+
+### Database Services
+
+A subset of our database playbooks are supported in Warpspeed. You can use Ansible to manage either MySQL or PostgreSQL database servers:
+
+```bash
+# Create a MySQL Administrator
+ansible-playbook ansible/playbooks/warpspeed/mysql/admin.yml
+
+# Create a MySQL Database
+ansible-playbook ansible/playbooks/warpspeed/mysql/database.yml
+
+# Create a PostgreSQL Administrator
+ansible-playbook ansible/playbooks/warpspeed/postgres/admin.yml
+
+# Create a PostgreSQL Database
+ansible-playbook ansible/playbooks/warpspeed/postgres/database.yml
+```
+
+These playbooks are nearly identical to those for managing production database servers. They will prompt you for the database administrator password. As with the sudo password, this was sent to you via eMail.
+
+#### Notes
+
+1. Just like with the other sets of playbooks, there are also Warpspeed app playbooks for creating PHP, Python, or Ruby sites along side a database.
+1. Because Warpspeed uses an outdated version of MongoDB, Ansible cannot be used to manage it, nor can Warpspeed's MongoDB server be easily locked down.
+1. The production database playbooks take several steps to secure your servers that are incompatible with Warpspeed, therefore it is not advisable to use the production database playbooks.
+
+## Deployment
+
+When a site is created in production, a remote git repository is also created on your server for pushing code to. Ansible will output a couple of instructions for adding the remote to your local repository and pushing your site to it. The remote URL will look like the following:
+
+    ssh://[username]@[server-ip-address]/var/git/[production-domain].git
+
+When you push your repository to the server, your code will be put in the directory `/srv/www/[production-domain]` where `[production-domain]` is your site's domain name. If you need to do any additional steps to manage your application, such as editing config files or migrating databases, you can `ssh` to your server, `cd` to the site's directory, and manage your application from there.
+
+### Automated
+
+To simplify common deployment tasks, there are four automated deployment playbooks included. These playbooks are designed to deploy web applications written with most popular web application frameworks, including:
+
+- Django
+- Express.js
+- Flask
+- Laravel (versions 4 or 5)
+- Lumen
+- Rails
+- Sails.js
+- Sinatra
+
+To use automated deployment, you must first create a "site vars" file. Site vars are stored in `ansible/site_vars` and are written in [YAML](http://www.yaml.org). In that directory you will find a `template.yml`. Make a copy of this file and name it after you site (such as `blog.yml`). In your new site vars file, you must fill in the local domain, production domain, and site type values. If your application depends on any environment variables (such as API keys or database credentials) you can fill those in under the `env_vars` entry. Lastly, if your application is written in Python, you must specify if it uses either version 2.7 or 3.4. Once you are done, save your site vars file. To deploy run one of the four deployment playbooks in `ansible/playbooks/deploy`:
+
+```
+# Deploy an application written in Laravel 4, 5, or Lumen
+ansible-playbook ansible/playbooks/deploy/php.yml
+
+# Deploy an application written in Express.js or Sails.js
+ansible-playbook ansible/playbooks/deploy/node.yml
+
+# Deploy an application written in Django or Flask
+ansible-playbook ansible/playbooks/deploy/python.yml
+
+# Deploy an application written in Rails or Sinatra
+ansible-playbook ansible/playbooks/deploy/ruby.yml
+```
+
+The playbook will prompt you for your site's name, meaning the site vars file name you created without the `.yml` extension. Ansible will read your site vars file, do some basic validation, and then perform the following steps:
+
+- Add the remote to your local git repository
+- Push your site to production
+- Install any Node or Bower dependencies
+- Run the default Gulp and/or Grunt tasks
+- Install your framework's dependencies (based on `composer.json/composer.lock`, `Gemfile/Gemfile.lock` or `requirements.txt`)
+- Add the environment variables to the site configs
+- Migrate the database, if necessary
+
+The goal of these playbooks was to perform as many of the typical application setup steps as possible, while minimizing the risk to existing data. They will not, therefore, do any database seeding even if your framework supports it. You **must** seed your database by hand.
+
+# Vagrant Plugins (Optional)
+
+The Vagrantfile includes support for some optional Vagrant plugins that can make development quicker and easier. These plugins are not required, but can be useful.
+
+## VB Guest
+
+The [`vagrant-vbguest`](https://github.com/dotless-de/vagrant-vbguest) plugin can automatically update VirtualBox's software in the guest OS. To install, run the following on your Mac:
+
+```bash
+vagrant plugin install vagrant-vbguest
+```
+
+## DNS
+
+Your Mac can be configured to resolve any domain ending in `.dev` to the Vagrant server. To do this, you must install the [`vagrant-dns`](https://github.com/BerlinVagrant/vagrant-dns) plugin. First, install the plugin itself:
+
+```bash
+vagrant plugin install vagrant-dns
+```
+
+Then, from the directory containing your vagrant environment, run:
+
+```bash
+vagrant dns --install
+```
+
+_**Note:** This feature can cause conflicts if two or more Vagrant boxes are running with the same configuration. Use this feature with caution if you have multiple Vagrant environments._
+
+## Cachier
+
+To speed up installation of dependencies and OS packages, you can use the plugin [`vagrant-cachier`](https://github.com/fgrehm/vagrant-cachier). This plugin is configured to cache downloaded software on your local Mac, so that future requests for those files will be resolved from your computer rather than the internet. To install, just run:
+
+```bash
+vagrant plugin install vagrant-cachier
+```
+
+Then, if your Vagrant environment is already running restart it with:
+
+```bash
+vagrant reload
 ```

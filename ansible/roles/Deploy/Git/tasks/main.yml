@@ -1,0 +1,13 @@
+---
+- name: Add Remote to Local Repository
+  local_action: >
+    command git -C {{ local_sites_dir }}/{{ local_domain }} remote add {{ git_remote }}
+    ssh://{{ ansible_user_id }}@{{ ansible_ssh_host }}{{ git_home }}/{{ production_domain }}.git
+  register: git_result
+  failed_when: 'git_result.rc != 0 and ("remote {{ git_remote }} already exists" not in git_result.stderr)'
+  changed_when: git_result.rc == 0
+
+- name: Push Repository
+  local_action: command git -C {{ local_sites_dir }}/{{ local_domain }} push {{ git_remote }} master
+  register: git_push
+  changed_when: '"Everything up-to-date" not in git_push.stderr'

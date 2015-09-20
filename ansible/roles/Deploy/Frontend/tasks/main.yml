@@ -1,0 +1,44 @@
+---
+# Node.js
+- name: Check for Node Dependencies
+  stat: path={{ www_home }}/{{ production_domain }}/package.json
+  register: package_file
+
+- name: Install Node Dependencies
+  npm: path={{ www_home }}/{{ production_domain }} global=no production=yes
+  when: package_file.stat.exists
+  register: node_install
+
+# Bower
+- name: Check for Bower Dependencies
+  stat: path={{ www_home }}/{{ production_domain }}/bower.json
+  register: bower_dependencies
+
+- name: Install Bower Dependencies
+  bower: path={{ www_home }}/{{ production_domain }}
+  when: bower_dependencies.stat.exists
+  register: bower_install
+
+# Grunt
+- name: Check for Grunt File
+  stat: path={{ www_home }}/{{ production_domain }}/Gruntfile.js
+  register: grunt_file
+
+- name: Run Default Grunt Task
+  command: >
+    grunt --gruntfile={{ www_home }}/{{ production_domain }}/Gruntfile.js
+    --base={{ www_home }}/{{ production_domain }}
+  when: grunt_file.stat.exists and (git_push.changed or node_install.changed or bower_install.changed)
+  register: grunt_result
+  failed_when: 'grunt_result.stdout.endswith("Done, without errors.")'
+
+# Gulp
+- name: Check for Gulp File
+  stat: path={{ www_home }}/{{ production_domain }}/gulpfile.js
+  register: gulp_file
+
+- name: Run Default Gulp Task
+  command: >
+    /usr/local/bin/gulp --gulpfile {{ www_home }}/{{ production_domain }}/gulpfile.js
+    --cwd {{ www_home }}/{{ production_domain }}
+  when: gulp_file.stat.exists and (git_push.changed or node_install.changed or bower_install.changed)

@@ -1,0 +1,19 @@
+---
+- name: Create MongoDB Administrator
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars:
+    mongodb_roles: root,backup,restore
+  vars_prompt:
+    - name:    new_mongodb_user
+      prompt:  New MongoDB Admin
+      private: no
+    - name:    new_mongodb_pass
+      prompt:  New Admin Password
+      private: yes
+      confirm: yes
+
+  roles:
+    - MongoDB/Install
+    - MongoDB/Manage

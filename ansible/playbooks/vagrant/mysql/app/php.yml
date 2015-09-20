@@ -1,0 +1,7 @@
+---
+- name: Create MySQL Based PHP Application
+  hosts: vagrant
+  remote_user: vagrant
+
+- include: ../../site/php.yml
+- include: ../database.yml

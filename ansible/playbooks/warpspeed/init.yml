@@ -1,0 +1,12 @@
+---
+- name: Configure Warpspeed Server
+  hosts: warpspeed
+  remote_user: warpspeed
+
+  vars_prompt:
+    - name:    ansible_sudo_pass
+      prompt:  Sudo Password
+      private: yes
+
+  roles:
+    - Warpspeed/Setup

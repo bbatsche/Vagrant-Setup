@@ -1,0 +1,16 @@
+#!/bin/bash
+
+while read oldrev newrev ref; do
+    if [[ $ref =~ .*/{{ git_production_branch | default('master') }}$ ]]; then
+        echo "Deploying {{ git_production_branch | default('master') }} branch"
+        git --work-tree={{ www_home }}/{{ domain }} --git-dir={{ git_home }}/{{ domain }}.git checkout -f {{ git_production_branch | default('master') }}
+
+        if [ -f "{{ www_home }}/{{ domain }}/{{ git_hook_script }}" ]; then
+            cd "{{ www_home }}/{{ domain }}"
+            echo "Executing {{ git_hook_script }} script..."
+            bash {{ git_hook_script }}
+        fi
+    else
+        echo "Doing nothing: only the {{ git_production_branch | default('master') }} branch may be deployed."
+    fi
+done

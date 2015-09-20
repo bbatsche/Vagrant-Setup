@@ -1,0 +1,76 @@
+---
+- name: Add Suhosin APT Key
+  apt_key: url=https://sektioneins.de/files/repository.asc state=present
+  sudo: yes
+
+- name: Add Suhosin APT Repository
+  apt_repository:
+    repo: 'deb [arch=amd64] http://repo.suhosin.org/ ubuntu-trusty main'
+    state: present
+  sudo: yes
+
+- name: Install Suhosin Extension
+  apt: package=php5-suhosin-extension state=present
+  sudo: yes
+  notify: Restart FPM
+
+- name: Enable Suhosin Configuration
+  file:
+    path:  /etc/php5/{{ item }}/conf.d/01-suhosin.ini
+    src:   /etc/php5/mods-available/suhosin.ini
+    state: link
+  sudo: yes
+  with_items:
+    - fpm
+    - cli
+  notify: Restart FPM
+
+- name: Update Suhosin Configuration
+  lineinfile:
+    dest: /etc/php5/mods-available/suhosin.ini
+    state: present
+    regexp: "{{ item.regex }}"
+    line: "{{ item.line }}"
+  sudo: yes
+  notify: Restart FPM
+  with_items:
+    - { regex: '^;?suhosin\.log\.file\s?=',                        line: "suhosin.log.file = 479 ; S_ALL & ~S_SQL" }
+    - { regex: '^;?suhosin\.log\.file\.name\s?=',             line: "suhosin.log.file.name = /var/log/php/suhosin.log" }
+    - { regex: '^;?suhosin\.executor\.include\.max_traversal\s?=', line: "suhosin.executor.include.max_traversal = 5" }
+    - { regex: '^;?suhosin\.executor\.include\.whitelist\s?=',     line: "suhosin.executor.include.whitelist = phar" }
+    - { regex: '^;?suhosin\.executor\.disable_emodifier\s?=',      line: "suhosin.executor.disable_emodifier = On" }
+    - { regex: '^;?suhosin\.mail\.protect\s?=',                    line: "suhosin.mail.protect = 1" }
+    - { regex: '^;?suhosin\.sql\.comment\s?=',                     line: "suhosin.sql.comment = 1" }
+    - { regex: '^;?suhosin\.sql\.opencomment\s?=',                 line: "suhosin.sql.opencomment = 2" }
+    - { regex: '^;?suhosin\.session\.cryptua\s?=',                 line: "suhosin.session.cryptua = On" }
+    - { regex: '^;?suhosin\.cookie\.encrypt\s?=',                  line: "suhosin.cookie.encrypt = On" }
+
+- name: Set Cookie Encryption Key
+  lineinfile:
+    dest: /etc/php5/mods-available/suhosin.ini
+    state: present
+    regexp: ^;?suhosin\.cookie\.cryptkey\s?=
+    line: >
+      suhosin.cookie.cryptkey = {{ lookup('password',
+      storage_dir + '/' + ansible_hostname + '/suhosin-cookie-key chars=ascii_letters,digits length=64') }}
+  sudo: yes
+  notify: Restart FPM
+
+- name: Set Session Encryption Key
+  lineinfile:
+    dest: /etc/php5/mods-available/suhosin.ini
+    state: present
+    regexp: ^;?suhosin\.session\.cryptkey\s?=
+    line: >
+      suhosin.session.cryptkey = {{ lookup('password',
+      storage_dir + '/' + ansible_hostname + '/suhosin-session-key chars=ascii_letters,digits length=64') }}
+  sudo: yes
+  notify: Restart FPM
+
+- name: Allow CLI Scripts to Increase their Memory
+  lineinfile:
+    dest: /etc/php5/cli/php.ini
+    state: present
+    regexp: ^;?suhosin\.memory_limit\s?=
+    line: suhosin.memory_limit = 1G
+  sudo: yes

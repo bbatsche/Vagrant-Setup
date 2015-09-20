@@ -1,0 +1,3 @@
+---
+dependencies:
+  - { role: Nginx, site_type: ruby, passenger_type: rack }

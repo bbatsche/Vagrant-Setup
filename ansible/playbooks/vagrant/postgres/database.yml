@@ -1,0 +1,20 @@
+---
+- name: Create PostgreSQL Database
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars_prompt:
+    - name:    db_name
+      prompt:  Database Name (e.g. something_db)
+      private: no
+    - name:    new_postgres_user
+      prompt:  Database Owner (e.g. something_user)
+      private: no
+    - name:    new_postgres_pass
+      prompt:  Password for Database Owner
+      private: yes
+      confirm: yes
+
+  roles:
+    - PostgreSQL/Install
+    - PostgreSQL/Manage

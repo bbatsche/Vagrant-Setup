@@ -1,0 +1,31 @@
+---
+# Ansible's git module must have a remote declared. Since this repo will
+# be receiving pushes we can't use the module to initialize things here.
+- name: Create Repo Directory
+  file:
+    path:  "{{ git_home }}/{{ domain }}.git"
+    state: directory
+    owner: "{{ ansible_ssh_user }}"
+  sudo: yes
+
+- name: Create Repo for Site
+  shell: git init --bare
+  args:
+    chdir:   "{{ git_home }}/{{ domain }}.git"
+    creates: "{{ git_home }}/{{ domain }}.git/config"
+    warn:    no
+
+- name: Create Post-Receive Hook
+  template:
+    src:  git-post-receive.j2
+    dest: "{{ git_home }}/{{ domain }}.git/hooks/post-receive"
+    mode: 0755
+
+- name: Add the Remote to your Repository
+  debug:
+    msg: >
+      git remote add {{ git_remote }}
+      ssh://{{ ansible_user_id }}@{{ ansible_ssh_host }}{{ git_home }}/{{ domain }}.git
+
+- name: Push your Repository to Deploy
+  debug: msg="git push {{ git_remote }} {{ git_production_branch | default('master') }}"

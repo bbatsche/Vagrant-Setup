@@ -1,0 +1,12 @@
+---
+- name: Install Logwatch
+  apt: pkg=logwatch state=installed
+  become: yes
+
+- name: Copy Logwatch Configuration
+  template: src=logwatch.conf.j2 dest=/usr/share/logwatch/default.conf/logwatch.conf
+  become: yes
+
+- name: Copy Custom Logwatch Header
+  copy: src=logwatch-header.html dest=/usr/share/logwatch/default.conf/html/header.html
+  become: yes

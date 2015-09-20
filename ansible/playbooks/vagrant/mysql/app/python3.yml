@@ -1,0 +1,7 @@
+---
+- name: Create MySQL Based Python Application
+  hosts: vagrant
+  remote_user: vagrant
+
+- include: ../../site/python3.yml
+- include: ../database.yml

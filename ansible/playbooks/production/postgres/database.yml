@@ -1,0 +1,26 @@
+---
+- name: Create PostgreSQL Database
+  hosts: production
+
+  vars_prompt:
+    - name:    postgres_pass
+      prompt:  PostgreSQL Password
+      private: yes
+    - name:    db_name
+      prompt:  Database Name (e.g. something_db)
+      private: no
+    - name:    new_postgres_user
+      prompt:  Database Owner (e.g. something_user)
+      private: no
+    - name:    new_postgres_pass
+      prompt:  Password for Database Owner
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: new_postgres_pass != ''
+
+  roles:
+    - PostgreSQL/Manage

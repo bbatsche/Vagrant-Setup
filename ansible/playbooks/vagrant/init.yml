@@ -1,0 +1,17 @@
+---
+- name: Initialize Vagrant Box
+  hosts: vagrant
+  remote_user: vagrant
+
+  # Manually specify these since Vagrant doesn't seem to use ansible/hosts so it can't find them automatically
+  vars_files:
+    - ../../hosts/group_vars/all.yml
+    - ../../hosts/host_vars/vagrant.yml
+
+  vars:
+    dynamic_php: no
+
+  roles:
+    - Common
+    - PHP
+    - MySQL/Install

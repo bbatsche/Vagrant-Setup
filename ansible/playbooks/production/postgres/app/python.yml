@@ -1,0 +1,6 @@
+---
+- name: Create PostgreSQL Based Python Application
+  hosts: production
+
+- include: ../../site/python.yml
+- include: ../database.yml

@@ -1,0 +1,20 @@
+---
+- name: Install PostgreSQL
+  hosts: production
+
+  vars_prompt:
+    - name:    ansible_sudo_pass
+      prompt:  Sudo Password
+      private: yes
+    - name:    postgres_pass
+      prompt:  PostgreSQL Password
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: postgres_pass != ''
+
+  roles:
+    - PostgreSQL/Install

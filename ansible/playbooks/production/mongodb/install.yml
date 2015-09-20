@@ -1,0 +1,20 @@
+---
+- name: Install MongoDB
+  hosts: production
+
+  vars_prompt:
+    - name:    ansible_sudo_pass
+      prompt:  Sudo Password
+      private: yes
+    - name:    mongodb_pass
+      prompt:  MongoDB Password
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: mongodb_pass != ''
+
+  roles:
+    - MongoDB/Install

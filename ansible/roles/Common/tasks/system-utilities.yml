@@ -1,0 +1,13 @@
+---
+- name: Install System Utilties
+  apt: package={{ item }} state=present
+  sudo: yes
+  with_items:
+    - vim
+    - git
+    - curl
+    - libcurl4-openssl-dev
+    - build-essential
+    - mailutils
+    - apt-transport-https
+    - ca-certificates

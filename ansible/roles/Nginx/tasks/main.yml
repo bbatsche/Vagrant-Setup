@@ -1,0 +1,68 @@
+---
+- name: Add Phusion Passenger APT Key
+  apt_key: keyserver=keyserver.ubuntu.com id=561F9B9CAC40B2F7 state=present
+  sudo: yes
+
+- name: Add Phusion Passenger APT Repository
+  apt_repository:
+    repo: "deb https://oss-binaries.phusionpassenger.com/apt/passenger trusty main"
+    state: present
+  sudo: yes
+
+- name: Install
+  apt: package={{ item }} state=present
+  sudo: yes
+  with_items:
+    - nginx-extras
+    - passenger
+
+- name: Copy HTML5 Boilerplate Configs
+  copy: src=h5bp-nginx/ dest=/etc/nginx/h5bp
+  sudo: yes
+  notify: Restart Nginx
+
+- name: Create Default Site
+  copy: src=nginx.default.conf dest=/etc/nginx/sites-available/default
+  sudo: yes
+  notify: Restart Nginx
+
+# I'd really like to not do this! But lineinfile wants write permision.
+# http://serverfault.com/questions/718586/ansible-lineinfile-and-permissions-of-parent-directory
+- name: Allow User to Write Sites-Available
+  file:
+    dest: /etc/nginx/sites-available
+    state: directory
+    owner: "{{ ansible_ssh_user }}"
+    group: www-data
+    mode: 0755
+  sudo: yes
+
+- name: Enable Default Site
+  file:
+    src:   /etc/nginx/sites-available/default
+    dest:  /etc/nginx/sites-enabled/default
+    state: link
+  sudo: yes
+  notify: Restart Nginx
+
+- name: Create Log Directory
+  file: path=/var/log/nginx state=directory mode=0755 owner=www-data group=www-data
+  sudo: yes
+
+- name: Create Main Coniguration
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  sudo: yes
+  notify: Restart Nginx
+
+- name: Copy HTML5 Boilerplate Main Config
+  template: src=h5bp-basic.conf.j2 dest=/etc/nginx/h5bp/basic.conf
+  sudo: yes
+  notify: Restart Nginx
+
+- name: Copy mime.types
+  file: src=mime.types dest=/etc/nginx/mime.types
+  sudo: yes
+  notify: Restart Nginx
+
+- include: site.yml
+  when: domain is defined

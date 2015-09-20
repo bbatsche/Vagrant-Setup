@@ -1,0 +1,36 @@
+[{{ domain }}]
+
+user = www-data
+group = www-data
+
+request_slowlog_timeout = 5s
+slowlog = /var/log/php-fpm/slowlog-{{ domain }}.log
+
+listen = /var/run/php5-fpm-{{ domain }}.sock
+listen.owner = www-data
+listen.group = www-data
+listen.mode = 0666
+listen.backlog = -1
+
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+pm.max_requests = 500
+
+request_terminate_timeout = 120s
+rlimit_files = 131072
+rlimit_core = unlimited
+catch_workers_output = yes
+
+env[HOSTNAME] = $HOSTNAME
+env[TMP] = /tmp
+env[TMPDIR] = /tmp
+env[TEMP] = /tmp
+{% if app_env == "dev" %}env[LARAVEL_ENV] = local{% endif %}
+
+
+php_admin_value[open_basedir] = /var/log/php:/var/lib/php5/session:{{ www_home }}/{{ domain }}:/tmp
+php_admin_value[upload_tmp_dir] = /tmp
+php_admin_flag[suhosin.executor.disable_eval] = on

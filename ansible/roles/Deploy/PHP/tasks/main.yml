@@ -1,0 +1,23 @@
+---
+- name: Check for .env.php File
+  local_action: stat path={{ local_sites_dir }}/{{ local_domain }}/.env.php
+  register: dot_env_file
+
+- include: dot-env-php.yml
+  when: site_type == "laravel4" and dot_env_file.stat.exists
+
+- name: Add Environment Values to Nginx Config
+  lineinfile:
+    dest: /etc/nginx/sites-available/{{ production_domain }}
+    insertafter: ^\s*fastcgi_pass
+    regexp: ^\s*fastcgi_param\s+{{ item.key }}
+    line: fastcgi_param {{ item.key }} {{ item.value }};
+    create: no
+  with_dict: "{{ env_vars | default({}) }}"
+  notify: Reload Nginx Config
+
+- name: Install Composer Dependencies
+  composer: working_dir={{ www_home }}/{{ production_domain }} no_dev=yes optimize_autoloader=yes
+
+- include: laravel.yml
+  when: site_type in ["laravel4", "laravel5", "lumen"]

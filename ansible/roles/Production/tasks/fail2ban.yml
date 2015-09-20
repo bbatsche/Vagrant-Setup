@@ -1,0 +1,35 @@
+---
+- name: Install Pyinotify
+  apt: package=python-pyinotify state=present
+  become: yes
+
+- name: Install Fail2ban
+  apt: package=fail2ban state=present
+  become: yes
+
+- name: Copy Nginx 444 Filter
+  copy: src=nginx-444.conf dest=/etc/fail2ban/filter.d/nginx-444.conf
+  sudo: yes
+  notify: Restart Fail2Ban
+
+- name: Create Nginx Log Directory
+  file:
+    name: /var/log/nginx
+    owner: www-data
+    group: www-data
+    mode: 0755
+    state: directory
+  sudo: yes
+
+- name: Create Nginx Access Log
+  file:
+    name: /var/log/nginx/access.log
+    owner: www-data
+    group: www-data
+    mode: 0644
+    state: touch
+  sudo: yes
+
+- name: Copy Fail2ban Default Config
+  template: src=fail2ban.conf.j2 dest=/etc/fail2ban/jail.local
+  notify: Restart Fail2Ban

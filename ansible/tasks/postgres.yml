@@ -1,3 +1,0 @@
----
-- name: Install PostgreSQL
-  apt: package=postgresql state=present

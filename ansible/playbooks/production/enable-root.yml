@@ -1,0 +1,31 @@
+---
+- name: Re-enable Root User in Production
+  hosts: production
+
+  vars_prompt:
+    - name: ansible_sudo_pass
+      prompt: Sudo Password
+      private: yes
+
+  tasks:
+    - name: Enable root User
+      command: passwd -u root
+      sudo: yes
+
+    - name: Allow root SSH Login
+      lineinfile:
+        dest:   /etc/ssh/sshd_config
+        state:  present
+        regexp: "^{{ item.key }}"
+        line:   "{{ item.key }} {{ item.value }}"
+      with_items:
+        - { key: 'PermitRootLogin', value: 'yes' }
+        - { key: 'AllowUsers',      value: '{{ ansible_user_id }} root' }
+      notify: Restart SSH
+      sudo: yes
+
+  handlers:
+    - name: Restart SSH
+      service: name=ssh state=restarted
+      sudo: yes
+

@@ -1,0 +1,60 @@
+---
+- name: Find Virtualenv Binary
+  command: which {{ 'virtualenv-3.4' if python_version == 'python3.4' else 'virtualenv' }}
+  register: virtualenv
+  changed_when: false
+
+- name: Create Virtualenv
+  command: >
+    {{ python_version }} {{ virtualenv.stdout }}
+    -p {{ python_version }} {{ www_home }}/{{ production_domain }}/env
+  args:
+    chdir: "{{ www_home }}/{{ production_domain }}"
+    creates: "{{ www_home }}/{{ production_domain }}/env/bin/python"
+
+- name: Generate Secret
+  set_fact:
+    SECRET_KEY: >
+      {{ lookup('password',
+      storage_dir + '/' + ansible_hostname + '/' + production_domain + '-secret
+      chars=ascii_letters,digits length=64') }}
+  when: env_vars.SECRET_KEY is not defined
+
+- name: Add Secret to Site Config
+  lineinfile:
+    dest: /etc/nginx/sites-available/{{ production_domain }}
+    insertafter: ^\s*passenger_app_type
+    regexp: ^\s*passenger_env_var\s+SECRET_KEY
+    line: passenger_env_var SECRET_KEY {{ SECRET_KEY }};
+    create: no
+  notify: Reload Nginx Config
+  when: env_vars.SECRET_KEY is not defined
+
+- name: Add Secret to Virtualenv
+  lineinfile:
+    dest: "{{ www_home }}/{{ production_domain }}/env/bin/activate"
+    regexp: ^\s*export\s+SECRET_KEY=
+    line: 'export SECRET_KEY="{{ SECRET_KEY }}"'
+    create: no
+  when: env_vars.SECRET_KEY is not defined
+
+- name: Add Environment Values to Virtualenv
+  lineinfile:
+    dest: "{{ www_home }}/{{ production_domain }}/env/bin/activate"
+    regexp: ^\s*export\s+{{ item.key }}=
+    line: 'export {{ item.key }}="{{ item.value }}"'
+    create: no
+  with_dict: "{{ env_vars | default({}) }}"
+
+- name: Install Dependencies
+  pip:
+    chdir: "{{ www_home }}/{{ production_domain }}"
+    requirements: "{{ www_home }}/{{ production_domain }}/requirements.txt"
+    virtualenv: "{{ www_home }}/{{ production_domain }}/env"
+    executable: "{{ www_home }}/{{ production_domain }}/env/bin/pip"
+
+- include: django.yml
+  when: site_type == "django"
+
+- include: flask.yml
+  when: site_type == "flask"

@@ -1,0 +1,38 @@
+---
+- name: Set Postfix Package Options
+  debconf:
+    name: postfix
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.type }}"
+  with_items:
+    - { question: postfix/main_mailer_type, type: select,      value: Internet Site }
+    - { question: postfix/mailname,         type: string,      value: "{{ ansible_hostname }}" }
+    - { question: postfix/destinations,     type: multiselect, value: "{{ ansible_hostname }}, localhost.localdomain, localhost" }
+
+- name: Install Postfix
+  apt: pkg=postfix state=present
+
+- name: Set Postfix to Loopback Only
+  lineinfile:
+    dest:   /etc/postfix/main.cf
+    regexp: "^inet_interfaces"
+    line:   "inet_interfaces = loopback-only"
+    state:  present
+  notify: Restart Postfix
+
+- name: Set Postfix Hostname
+  lineinfile:
+    dest:   /etc/postfix/main.cf
+    regexp: "^myhostname"
+    line:   "myhostname = {{ ansible_fqdn }}"
+    state:  present
+  notify: Restart Postfix
+
+- name: Create root eMail Alias
+  lineinfile:
+    dest:   /etc/aliases
+    regexp: "^root"
+    line:   "root: {{ admin_email }}"
+    state:  present
+  notify: Restart Postfix

@@ -1,7 +1,0 @@
----
-- name: Install Bash Completion
-  apt: package=bash-completion state=present
-  sudo: yes
-
-- name: Install Bash Profile
-  template: src=bashrc.j2 dest=~/.bashrc

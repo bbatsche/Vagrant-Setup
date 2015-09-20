@@ -1,0 +1,25 @@
+---
+- name: Create MongoDB Administrator
+  hosts: production
+
+  vars:
+    mongodb_roles: root,backup,restore
+  vars_prompt:
+    - name:    mongodb_pass
+      prompt:  MongoDB Password
+      private: yes
+    - name:    new_mongodb_user
+      prompt:  New MongoDB Admin
+      private: no
+    - name:    new_mongodb_pass
+      prompt:  New Admin Password
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: new_mongodb_pass != ''
+
+  roles:
+    - MongoDB/Manage

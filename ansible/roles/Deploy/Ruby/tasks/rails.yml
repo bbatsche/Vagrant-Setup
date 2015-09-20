@@ -1,0 +1,27 @@
+---
+# Use combine filter to add 'RAILS_ENV': 'production' to these commands when Ansible 2.0 released
+- name: Migrate Database
+  shell: >
+    eval "$({{ rbenv_root }}/bin/rbenv init -)" &&
+    bundle exec rake -f {{ www_home }}/{{ production_domain }}/Rakefile db:migrate
+  args:
+    chdir: "{{ www_home }}/{{ production_domain }}"
+  environment: "{{ env_vars | default({}) }}"
+  register: migrate_result
+  changed_when: migrate_result.stdout is defined and migrate_result.stdout != ""
+
+- name: Compile Assets
+  shell: >
+    eval "$({{ rbenv_root }}/bin/rbenv init -)" &&
+    bundle exec rake -f {{ www_home }}/{{ production_domain }}/Rakefile assets:precompile
+  args:
+    chdir: "{{ www_home }}/{{ production_domain }}"
+  environment: "{{ env_vars | default({}) }}"
+  register: assets_result
+  changed_when: assets_result.stdout is defined and assets_result.stdout != ""
+
+- name: Don't forget to seed your database (if necessary)
+  debug:
+    msg: >
+      ssh {{ ansible_ssh_user }}@{{ ansible_ssh_host }}
+      bundle exec rake -f {{ www_home }}/{{ production_domain }}/Rakefile db:seed

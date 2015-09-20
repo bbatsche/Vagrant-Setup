@@ -1,0 +1,39 @@
+---
+- name: Put Environment Values in .env
+  lineinfile:
+    dest: "{{ www_home }}/{{ production_domain }}/.env"
+    regexp: ^{{ item.key }}=
+    line: "{{ item.key }}={{ item.value }}"
+    create: yes
+  with_dict: "{{ env_vars | default({}) }}"
+  when: site_type in ["laravel5", "lumen"]
+
+- name: Generate App Key
+  set_fact:
+    SECRET_KEY: >
+      {{ lookup('password',
+      storage_dir + '/' + ansible_hostname + '/' + production_domain + '-secret
+      chars=ascii_letters,digits length=32') }}
+  when: env_vars.APP_KEY is not defined and site_type in ["laravel5", "lumen"]
+
+- name: Add Key to Site Config
+  lineinfile:
+    dest: /etc/nginx/sites-available/{{ production_domain }}
+    insertafter: ^\s*fastcgi_pass
+    regexp: ^\s*fastcgi_param\s+APP_KEY
+    line: passenger_env_var APP_KEY {{ SECRET_KEY }};
+    create: no
+  notify: Reload Nginx Config
+  when: env_vars.APP_KEY is not defined and site_type in ["laravel5", "lumen"]
+
+- name: Migrate Database
+  shell: /usr/bin/php {{ www_home }}/{{ production_domain }}/artisan migrate --force
+  environment: "{{ env_vars | default({}) }}"
+  register: migrate_result
+  changed_when: '"Nothing to migrate." not in migrate_result.stdout'
+
+- name: Don't forget to seed your database (if necessary)
+  debug:
+    msg: >
+      ssh {{ ansible_ssh_user }}@{{ ansible_ssh_host }}
+      '/usr/bin/php {{ www_home }}/{{ production_domain }}/artisan db:seed --force'

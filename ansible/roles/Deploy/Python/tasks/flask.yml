@@ -1,0 +1,11 @@
+---
+- name: Migrate Database
+  shell: >
+    . {{ www_home }}/{{ production_domain }}/env/bin/activate &&
+    {{ www_home }}/{{ production_domain }}/env/bin/python manage.py db upgrade
+  args:
+    chdir: "{{ www_home }}/{{ production_domain }}"
+  register: migrate_result
+  changed_when: >
+    migrate_result.stderr is defined and
+    "Running upgrade." in migrate_result.stderr

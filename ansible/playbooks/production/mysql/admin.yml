@@ -1,0 +1,25 @@
+---
+- name: Create MySQL Administrator
+  hosts: production
+
+  vars:
+    mysql_user_priv: "*.*:ALL,GRANT"
+  vars_prompt:
+    - name:    mysql_pass
+      prompt:  MySQL Password
+      private: yes
+    - name:    new_mysql_user
+      prompt:  New MySQL Admin
+      private: no
+    - name:    new_mysql_pass
+      prompt:  New Admin Password
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: new_mysql_pass != ''
+
+  roles:
+    - MySQL/Manage

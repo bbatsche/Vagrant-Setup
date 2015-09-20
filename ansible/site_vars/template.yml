@@ -1,10 +1,40 @@
 ---
-##### Local Repository Directory #####
-# Set this to the local directory where your Laravel application is installed
-# It should look like "local_directory: blog.dev"
+##### Local Development Domain #####
+# Set this to the local directory where your application is installed
+# It should look like "local_domain: blog.dev"
 local_domain: ## FILL ME IN ##
 
 ##### Production Domain Name #####
 # Set this to your application domain name
 # It should look like "production_domain: example.com"
 production_domain: ## FILL ME IN ##
+
+##### Site Type #####
+# Set this to the framework type your application was written in
+# Valid values are:
+#   django
+#   express.js
+#   flask
+#   laravel4
+#   laravel5
+#   lumen
+#   php
+#   rails
+#   sails.js
+#   sinatra
+site_type: ## FILL ME IN ##
+
+##### Environment Values #####
+# If your application depends on any environment variables they
+# should be listed here as "name: value". Some sample values are
+# included below but they are not required and others may be added
+env_vars:
+  DB_HOST: localhost
+  DB_NAME: ## FILL ME IN ##
+  DB_USER: ## FILL ME IN ##
+  DB_PASS: ## FILL ME IN ##
+
+##### Python Version #####
+# This option is only necessary if you are deploying a Python based
+# site. Should be set to either python2.7 or python3.4
+python_version: # python2.7 | python3.4

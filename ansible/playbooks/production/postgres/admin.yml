@@ -1,0 +1,25 @@
+---
+- name: Create PostgreSQL Administrator
+  hosts: production
+
+  vars:
+    role_attr: SUPERUSER
+  vars_prompt:
+    - name:    postgres_pass
+      prompt:  PostgreSQL Password
+      private: yes
+    - name:    new_postgres_user
+      prompt:  New PostgreSQL Admin
+      private: no
+    - name:    new_postgres_pass
+      prompt:  New Admin Password
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: new_postgres_pass != ''
+
+  roles:
+    - PostgreSQL/Manage

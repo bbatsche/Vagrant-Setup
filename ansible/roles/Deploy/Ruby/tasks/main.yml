@@ -1,0 +1,51 @@
+---
+- name: Check if Ruby Version Set
+  stat: path={{ www_home }}/{{ production_domain }}/.ruby-version
+  register: ruby_file_result
+
+- name: Read Ruby Version
+  command: cat {{ www_home }}/{{ production_domain }}/.ruby-version
+  register: ruby_version_result
+  changed_when: false
+  when: ruby_file_result.stat.exists
+
+- name: Set Ruby Version
+  set_fact: ruby_version={{ ruby_version_result.stdout }}
+  when: ruby_file_result.stat.exists
+
+- name: Install Ruby
+  command: rbenv install {{ ruby_version }} creates={{ rbenv_root }}/versions/{{ ruby_version }}
+  environment:
+    RBENV_ROOT: "{{ rbenv_root }}"
+
+# replace with module when 2.0 comes out http://docs.ansible.com/bundler_module.html
+- name: Install Gems
+  command: >
+    {{ rbenv_root }}/versions/{{ ruby_version }}/bin/bundle install
+    --gemfile={{ www_home }}/{{ production_domain }}/Gemfile --deployment --without development test
+  args:
+    chdir: "{{ www_home }}/{{ production_domain }}"
+  environment:
+    RBENV_ROOT: "{{ rbenv_root }}"
+  when: git_push | changed
+
+- name: Generate Secret
+  set_fact:
+    SECRET_KEY: >
+      {{ lookup('password',
+      storage_dir + '/' + ansible_hostname + '/' + production_domain + '-secret
+      chars=ascii_letters,digits length=128') }}
+  when: env_vars.SECRET_KEY is not defined
+
+- name: Add Secret to Site Config
+  lineinfile:
+    dest: /etc/nginx/sites-available/{{ production_domain }}
+    insertafter: ^\s*passenger_app_type
+    regexp: ^\s*passenger_env_var\s+SECRET_KEY
+    line: passenger_env_var SECRET_KEY {{ SECRET_KEY }};
+    create: no
+  notify: Reload Nginx Config
+  when: env_vars.SECRET_KEY is not defined
+
+- include: rails.yml
+  when: site_type == "rails"

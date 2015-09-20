@@ -1,0 +1,126 @@
+# www to non-www redirect -- duplicate content is BAD:
+# https://github.com/h5bp/html5-boilerplate/blob/5370479476dceae7cc3ea105946536d6bc0ee468/.htaccess#L362
+# Choose between www and non-www, listen on the *wrong* one and redirect to
+# the right one -- http://wiki.nginx.org/Pitfalls#Server_Name
+server {
+  # don't forget to tell on which port this server listens
+  listen [::]:80;
+  listen 80;
+
+  # listen on the www host
+  server_name www.{{ domain }};
+
+  # and redirect to the non-www host (declared below)
+  return 301 $scheme://{{ domain }}$request_uri;
+}
+
+server {
+  listen [::]:80;
+  listen 80;
+
+  # The host name to respond to
+  server_name {{ domain }};
+
+  # Path for static files
+  root {{ www_home }}/{{ domain }}/public;
+
+  #Specify a charset
+  charset utf-8;
+
+  # Logs for local domain
+  access_log  /var/log/nginx/{{ domain }}/access.log;
+  error_log  /var/log/nginx/{{ domain }}/error.log;
+
+  # Set this for static access logs later on
+  set $log_path var/log/nginx/{{ domain }};
+
+{% if app_env == "dev" %}
+  autoindex on;
+{% endif %}
+
+  # Skip access log and not found logging for favicons and robots.txt
+  location = /favicon.ico {
+    access_log off;
+    log_not_found off;
+  }
+
+  location = /robots.txt {
+    allow all;
+    access_log off;
+    log_not_found off;
+  }
+
+  # consolidate and clean this mess up!!
+
+{% if site_type == "php" or site_type == "hhvm" %}
+  index {{ "index.hh" if site_type == "hhvm" else "" }} index.php index.html index.htm;
+
+  location / {
+  {% if site_type == "hhvm" %}
+    try_files $uri $uri/ /index.hh$is_args$args /index.php$is_args$args;
+  {% elif dynamic_php %}
+    try_files $uri $uri/ /index.php$is_args$args;
+  {% else %}
+    try_files $uri $uri/ =404;
+  {% endif %}
+  }
+
+  location ~ {{ "\.php$" if site_type == "php" else "\.(hh|php)$" }} {
+    try_files $uri =404;
+
+  {% if site_type == "php" -%}
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+  {% endif %}
+
+    fastcgi_index index.php;
+
+  {% if app_env == "dev" -%}
+    fastcgi_param LARAVEL_ENV local;
+  {% endif %}
+
+    include fastcgi.conf;
+
+  {% if site_type == "php" -%}
+    fastcgi_pass unix:/var/run/php5-fpm-{{ domain }}.sock;
+  {% else -%}
+    # Eventually directly managing HHVM repo in production will probably add some performance
+    # improvements, but as yet there isn't a clear way to change the setting on a per host basis
+    # fastcgi_param PHP_VALUE "hhvm.repo.local.path = /var/run/hhvm/{{ domain }}.hhbc";
+    fastcgi_keep_conn on;
+    fastcgi_pass unix:/var/run/hhvm/server.sock;
+  {% endif %}
+  }
+{% else %}
+  index index.html index.htm;
+{% endif %}
+
+{% if site_type in ["node", "python", "ruby"] %}
+  passenger_enabled on;
+
+  {% if app_env == "dev" %}
+  passenger_app_env development;
+  {% else %}
+  passenger_app_env production;
+  {% endif %}
+
+  passenger_app_root {{ www_home }}/{{ domain }};
+  passenger_app_type {{ passenger_type }};
+
+  {% if site_type == "node" %}
+  # Explicitly set node startup file. Passenger seems to require this.
+  passenger_startup_file app.js;
+  passenger_nodejs {{ nvm_root }}/versions/node/{{ node_version }}/bin/node;
+  {% elif site_type == "ruby" %}
+  passenger_ruby {{ rbenv_root }}/shims/ruby;
+  {% elif site_type == "python" %}
+    {% if app_env == "dev" %}
+  passenger_python /usr/bin/python{{ python_version }};
+    {% else %}
+  passenger_python {{ www_home }}/{{ domain }}/env/bin/python;
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+  # Include the basic h5bp config set
+  include h5bp/basic.conf;
+}

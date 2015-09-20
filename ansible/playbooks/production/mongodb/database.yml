@@ -1,0 +1,28 @@
+---
+- name: Create MongoDB Database
+  hosts: production
+
+  vars:
+    mongodb_roles: dbOwner
+  vars_prompt:
+    - name:    mongodb_pass
+      prompt:  MongoDB Password
+      private: yes
+    - name:    db_name
+      prompt:  Database Name (e.g. something_db)
+      private: no
+    - name:    new_mongodb_user
+      prompt:  Database Owner (e.g. something_user)
+      private: no
+    - name:    new_mongodb_pass
+      prompt:  Password for Database Owner
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+    - name: Production passwords cannot be empty
+      assert:
+        that: new_mongodb_pass != ''
+
+  roles:
+    - MongoDB/Manage

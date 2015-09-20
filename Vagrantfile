@@ -14,41 +14,39 @@ ram      = '512'
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = box
+  config.vm.define "vagrant" do |v|
+    v.vm.box = box
 
-  config.vm.hostname = hostname
-  config.vm.network :private_network, ip: ip
+    v.vm.hostname = hostname
+    v.vm.network :private_network, ip: ip
 
-  config.ssh.insert_key = false
+    v.vm.synced_folder "./", "/vagrant",
+      id:   "vagrant-root",
+      type: "nfs",
+      mount_options: ["nolock,vers=3,tcp,noatime,actimeo=1"]
 
-  config.vm.synced_folder "./", "/vagrant",
-    id:   "vagrant-root",
-    type: "nfs",
-    mount_options: ["nolock,vers=3,tcp,noatime,actimeo=1"]
+    # # VirtualBox's builtin shared folder technology
+    # # Slower than NFS, but does not require admin password
+    # v.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
+    #     owner: "vagrant",
+    #     group: "www-data",
+    #     mount_options: ["dmode=775,fmode=664"]
 
-  ## VirtualBox's builtin shared folder technology
-  ## Slower than NFS, but does not require admin password
-  # config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
-  #     owner: "vagrant",
-  #     group: "www-data",
-  #     mount_options: ["dmode=775,fmode=664"]
+    v.vm.provider :virtualbox do |vb|
+      vb.name = hostname
 
-  config.vm.provider :virtualbox do |vb|
-    vb.name = hostname
+      vb.memory = ram
+      vb.cpus = 1
 
-    vb.memory = ram
-    vb.cpus = 1
+      vb.customize ["modifyvm",             :id, "--natdnshostresolver1", "on"]
+      vb.customize ["setextradata",         :id, "--VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+      vb.customize ["guestproperty", "set", :id, "--timesync-threshold",  "1000"]
+    end
 
-    vb.customize ["modifyvm",             :id, "--natdnshostresolver1", "on"]
-    vb.customize ["setextradata",         :id, "--VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
-    vb.customize ["guestproperty", "set", :id, "--timesync-threshold",  "1000"]
-  end
-
-  config.vm.provision :ansible do |ansible|
-    ansible.inventory_path = "ansible/hosts"
-    ansible.limit          = "vagrant"
-    ansible.playbook       = "ansible/vagrant-init.yml"
-    ansible.extra_vars     = { domain: domain }
+    v.vm.provision :ansible do |ansible|
+      ansible.playbook       = "ansible/playbooks/vagrant/init.yml"
+      ansible.extra_vars     = { domain: domain }
+    end
   end
 
   # Plugin specific options. Helpful for development but most likely not necessary for class
@@ -56,8 +54,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.dns.tld      = "dev"
     config.dns.patterns = [/^.*\.dev$/]
   end
+
   if Vagrant.has_plugin? "vagrant-cachier"
     config.cache.scope = :box
+
+    config.cache.enable :apt
+    config.cache.enable :apt_lists
+    config.cache.enable :apt_cacher
+    config.cache.enable :composer
+    config.cache.enable :bower
+    config.cache.enable :npm
+    config.cache.enable :gem
+    # config.cache.enable :pip
+
+    config.cache.enable :generic, {
+      "rbenv" => { cache_dir: "/usr/local/rbenv/cache" }
+    }
+
     config.cache.synced_folder_opts = {
       type: :nfs,
       # The nolock option can be useful for an NFSv3 client that wants to avoid the
@@ -66,8 +79,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # by using NFSv4 everywhere. Please note that the tcp option is not the default.
       mount_options: ['rw', 'vers=3', 'nolock']
     }
-  end
-  if Vagrant.has_plugin? "vagrant-reload"
-    config.vm.provision :reload
   end
 end

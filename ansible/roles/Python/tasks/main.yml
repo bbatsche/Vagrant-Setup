@@ -1,0 +1,42 @@
+---
+- name: Install Python
+  apt: package={{ item }} state=present
+  sudo: yes
+  with_items:
+    - python2.7
+    - python2.7-dev
+    - python-pip
+    - python3.4
+    - python3.4-dev
+    - python3-pip
+    - pypy
+
+- name: Install Virtualenv
+  pip: name=virtualenv executable={{ item }}
+  sudo: yes
+  with_items:
+    - pip2
+    - pip3
+
+- name: Install Virtualenv Wrapper
+  pip: name=virtualenvwrapper executable={{ item }}
+  sudo: yes
+  with_items:
+    - pip2
+    - pip3
+
+- name: Source Virtualenv Wrapper to Shell
+  file:
+    state: link
+    src: /usr/local/bin/virtualenvwrapper_lazy.sh
+    dest: /etc/profile.d/virtualenvwrapper.sh
+  sudo: yes
+
+- name: WSGI Environment Setting for CLI
+  lineinfile:
+    dest: ~/.bashrc
+    regexp: ^\s*export\s+WSGI_ENV=
+    line: 'export WSGI_ENV="development"'
+    insertafter: EOF
+    state: present
+  when: app_env == "dev"

@@ -1,0 +1,41 @@
+---
+- name: Deploy PHP Application to Production
+  hosts: production
+
+  vars_prompt:
+    - name:    site_name
+      prompt:  Name of site to deploy (omit '.yml')
+      private: no
+
+  pre_tasks:
+    - name: Cannot deploy the template
+      assert:
+        that: site_name != "template"
+
+    - name: Load Site variables
+      include_vars: "{{ site_var_dir }}/{{ site_name }}.yml"
+
+    - name: Check Path to Local Site
+      local_action: stat path={{ local_sites_dir }}/{{ local_domain }}
+      register: local_site_result
+
+    - name: Check Path to Production Site
+      stat: path={{ www_home }}/{{ production_domain }}
+      register: prod_site_result
+
+    - name: Local domain must be an existing site on this computer
+      assert:
+        that: local_site_result.stat.exists and local_site_result.stat.isdir
+
+    - name: Production domain must be an existing site on the server
+      assert:
+        that: prod_site_result.stat.exists and prod_site_result.stat.isdir
+
+    - name: Site type must be a valid value
+      assert:
+        that: site_type is defined and site_type in ["laravel4", "laravel5", "lumen", "php"]
+
+  roles:
+    - Deploy/Git
+    - Deploy/Frontend
+    - Deploy/PHP

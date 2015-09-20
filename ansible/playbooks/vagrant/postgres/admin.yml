@@ -1,0 +1,19 @@
+---
+- name: Create PostgreSQL Administrator
+  hosts: vagrant
+  remote_user: vagrant
+
+  vars:
+    role_attr: SUPERUSER
+  vars_prompt:
+    - name:    new_postgres_user
+      prompt:  New PostgreSQL Admin
+      private: no
+    - name:    new_postgres_pass
+      prompt:  New Admin Password
+      private: yes
+      confirm: yes
+
+  roles:
+    - PostgreSQL/Install
+    - PostgreSQL/Manage

@@ -1,0 +1,20 @@
+---
+- name: Install
+  apt: package={{ item }} state=present
+  with_items:
+    - postgresql
+    - postgresql-contrib
+    - python-psycopg2
+  sudo: yes
+  register: postgres_install
+
+- include: lockdown.yml
+  when: postgres_install | changed
+
+- name: Add Adminpack
+  postgresql_ext:
+    name: adminpack
+    db:   postgres
+    login_user:     "{{ postgres_admin | default('postgres') }}"
+    login_password: "{{ postgres_pass  | default(omit) }}"
+
