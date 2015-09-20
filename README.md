@@ -1,9 +1,9 @@
-# Codeup Vagrant Box & Ansible Configuration
+# Codeup Vagrant & Ansible Configuration
 
 This repository contains configuration files intended for [Codeup](http://www.codeup.com) students to use throughout their class. It contains:
 
 1. A Vagrantfile for local development and testing of web based applications
-1. Ansible playbooks for provisioning development and production servers, and deploying those applications, in particular those hosted by [DigitalOcean](https://www.digitalocean.com)
+1. Ansible playbooks for provisioning development and production servers, and deploying those applications. Primarily targetting servers hosted by [DigitalOcean](https://www.digitalocean.com)
 
 # Installation & Setup
 
@@ -11,7 +11,7 @@ One of the goals for this environment is make set up as simple and straight forw
 
 ## Automated
 
-The easiest way to get started with this repository is using the LAMP Setup Script hosted in [Codeup's GitHub account](https://github.com/gocodeup/LAMP-Setup-Script). In addition to installing the necessary tools and utilities, it will also create a new SSH key the Ansible scripts will setup for use with the DigitalOcean droplet.
+The easiest way to get started with this repository is using the LAMP Setup Script hosted in [Codeup's GitHub account](https://github.com/gocodeup/LAMP-Setup-Script). In addition to installing the necessary tools and utilities, it will also create an SSH key for Ansible to use with DigitalOcean droplets.
 
 ## Manual
 
@@ -152,11 +152,11 @@ Both the Vagrant and production servers can be managed with Ansible using what a
 
 ## Vagrant
 
-You should *not* need to run the `init.yml` playbook by hand; this is done the first time your run `vagrant up` or by running `vagrant provision`.
+You should *not* run the `init.yml` playbook by hand; this is done the first time your run `vagrant up` or by running `vagrant provision`.
 
 ### Sites
 
-Our Vagrant environment supports creating virtual hosts running either PHP (either "static" or "dynamic"), Facebook's HipHop VM, Ruby, Node.js, or Python (either versions 2.7 or 3.4). To create a new site, run one of the following playbooks:
+Our Vagrant environment supports creating virtual hosts running PHP (either "static" or "dynamic"), Facebook's HipHop VM, Ruby, Node.js, or Python (either versions 2.7 or 3.4). To create a new site, run one of the following playbooks:
 
 ```bash
 # Static PHP Site
@@ -272,7 +272,7 @@ Ansible can be used to manage a production server much in the same way as your V
 
 ### Adding your SSH Key
 
-If you used the LAMP Setup Script provided you should have an SSH key generated for you. You must add that key to your DigitalOcean account in order to connect to your server. To do this, follow these steps
+If you used the LAMP Setup Script you should have an SSH key generated for you. You must add that key to your DigitalOcean account in order to connect to your server. To do this, follow these steps
 
 1. Copy your public key using `cat ~/.ssh/id_rsa.pub | pbcopy`.
 1. Navigate to the [security settings](https://cloud.digitalocean.com/settings/security) page DigitalOcean.
@@ -284,7 +284,7 @@ If you used the LAMP Setup Script provided you should have an SSH key generated 
 
 1. Click the [Create Droplet](https://cloud.digitalocean.com/droplets/new) button
 1. Give your server a hostname, such as "Codeup-Server"
-1. Typically, we suggest using the base drop let size ($5 month, 512MB of RAM)
+1. Typically, we suggest using the base droplet size ($5 / month)
 1. We suggest using either the New York or San Fransisco data centers
 1. Chose Ubuntu 14.04 x64 as the image.
 1. **Make sure to add your SSH key to your new droplet!**
@@ -316,7 +316,7 @@ Because Ansible uses your username to create the production user account, to log
 
 ### Sites
 
-Ansible can provision the same types of sites in production as in your Vagrant environment. (_**Note:** Production Python sites attempt to use a virtualenv, and will use whatever Python binary is included in the environment. Thus, there is no distinction between creating Python 2.7 or 3.4 virtual host._)
+Ansible can provision the same types of sites in production as in your Vagrant environment. (_**Note:** Production Python sites use virtualenv, and will use whatever Python binary is included in the environment. Thus, there is no distinction between creating Python 2.7 or 3.4 virtual host._)
 
 ```bash
 # Static PHP Site
@@ -451,7 +451,7 @@ If you have created a server using [Warpspeed](https://warpspeed.io) some of you
 ; digital_ocean ansible_ssh_user=warpspeed
 ```
 
-Delete the semicolon (`;`) from the beginning of the last line. Now, our playbooks will know your server was created with Warpspeed. Ansible requires some additional software be installed in your server to manage it. To install this, run the following playbook:
+Delete the semicolon (`;`) from the beginning of the last line. Now, our playbooks will know your server was created with Warpspeed. Ansible requires some additional software be installed in your server to manage it. To do this, run the following playbook:
 
 ```bash
 ansible-playbook ansible/playbooks/warpspeed/init.yml
@@ -461,7 +461,7 @@ Ansible will ask for your sudo password. This password was eMailed to you when y
 
 ### Sites
 
-If you would like, Ansible can be used to create virtual hosts in your Warpspeed server. The following playbooks can be used to create site(s) in your Warpspeed server:
+If you would like, Ansible can be used to create virtual hosts in your Warpspeed server. The following playbooks can be used to create a site in your Warpspeed server:
 
 ```bash
 # Static Site
@@ -487,13 +487,13 @@ Like the normal production playbooks, Ansible will ask for your sudo password (f
 
 #### Notes
 
-1. Unlike servers managed purely by Ansible, static sites in Warpspeed cannot execute PHP code.
+1. Unlike servers provisioned by Ansible, static sites in Warpspeed cannot execute PHP code.
 1. Warpspeed does not support the latest version(s) of Python, only 2.7.
 1. Warpspeed does not include support for Facebook's HipHop VM.
 
 ### Database Services
 
-A subset of our playbooks are supported in Warpspeed. You can use Ansible to manage either MySQL or PostgreSQL database servers:
+A subset of our database playbooks are supported in Warpspeed. You can use Ansible to manage either MySQL or PostgreSQL database servers:
 
 ```bash
 # Create a MySQL Administrator
@@ -509,7 +509,7 @@ ansible-playbook ansible/playbooks/warpspeed/postgres/admin.yml
 ansible-playbook ansible/playbooks/warpspeed/postgres/database.yml
 ```
 
-These playbooks are nearly identical to those for managing production database servers. They will prompt you for the database administrator password. As with the sudo password, this was sent to your via eMail.
+These playbooks are nearly identical to those for managing production database servers. They will prompt you for the database administrator password. As with the sudo password, this was sent to you via eMail.
 
 #### Notes
 
@@ -519,7 +519,7 @@ These playbooks are nearly identical to those for managing production database s
 
 ## Deployment
 
-When a site is created in production, a remote repository is also created on your server for pushing code to. Ansible will output a couple of instructions for adding the remote to your local repository and pushing your site to it. The remote URL will look like the following:
+When a site is created in production, a remote git repository is also created on your server for pushing code to. Ansible will output a couple of instructions for adding the remote to your local repository and pushing your site to it. The remote URL will look like the following:
 
     ssh://[username]@[server-ip-address]/var/git/[production-domain].git
 
@@ -538,7 +538,7 @@ To simplify common deployment tasks, there are four automated deployment playboo
 - Sails.js
 - Sinatra
 
-To use automated deployment, you must first create a "site vars" file. Site vars are stored in `ansible/site_vars` and are written in [YAML](http://www.yaml.org). In that directory you will find a `template.yml`. Make a copy of that file and name it after you site (such as `blog.yml`). In your new site vars file, you must fill in the local domain, production domain, and site type values. If your application depends on any environment variables (such as API keys or database credentials) you can fill those in under the `env_vars` entry. Lastly, if your application is written in Python, you must specify if it uses either version 2.7 or 3.4. Once you are done, save your site vars file. To deploy run one of the four deployment playbooks in `ansible/playbooks/deploy`:
+To use automated deployment, you must first create a "site vars" file. Site vars are stored in `ansible/site_vars` and are written in [YAML](http://www.yaml.org). In that directory you will find a `template.yml`. Make a copy of this file and name it after you site (such as `blog.yml`). In your new site vars file, you must fill in the local domain, production domain, and site type values. If your application depends on any environment variables (such as API keys or database credentials) you can fill those in under the `env_vars` entry. Lastly, if your application is written in Python, you must specify if it uses either version 2.7 or 3.4. Once you are done, save your site vars file. To deploy run one of the four deployment playbooks in `ansible/playbooks/deploy`:
 
 ```
 # Deploy an application written in Laravel 4, 5, or Lumen
@@ -554,17 +554,17 @@ ansible-playbook ansible/playbooks/deploy/python.yml
 ansible-playbook ansible/playbooks/deploy/ruby.yml
 ```
 
-The playbook will prompt you for your site's name, meaning the site vars file name you created, minus the `.yml` extension. Ansible will read your site vars file, do some basic validation, and then perform the following steps:
+The playbook will prompt you for your site's name, meaning the site vars file name you created without the `.yml` extension. Ansible will read your site vars file, do some basic validation, and then perform the following steps:
 
 - Add the remote to your local git repository
 - Push your site to production
 - Install any Node or Bower dependencies
 - Run the default Gulp and/or Grunt tasks
-- Install your framework's dependencies (composer.json/Gemfile/requirements.txt)
+- Install your framework's dependencies (based on `composer.json/composer.lock`, `Gemfile/Gemfile.lock` or `requirements.txt`)
 - Add the environment variables to the site configs
 - Migrate the database, if necessary
 
-The goal of these playbooks was to perform as many of the typical application setup steps as possible, without risking harm to existing data.
+The goal of these playbooks was to perform as many of the typical application setup steps as possible, while minimizing the risk to existing data. They will not, therefore, do any database seeding even if your framework supports it. You **must** seed your database by hand.
 
 # Vagrant Plugins (Optional)
 
@@ -572,7 +572,7 @@ The Vagrantfile includes support for some optional Vagrant plugins that can make
 
 ## VB Guest
 
-The [`vagrant-vbguest`](https://github.com/dotless-de/vagrant-vbguest) can be used to automatically update VirtualBox's software in the guest OS. To install, run the following on your Mac:
+The [`vagrant-vbguest`](https://github.com/dotless-de/vagrant-vbguest) plugin can automatically update VirtualBox's software in the guest OS. To install, run the following on your Mac:
 
 ```bash
 vagrant plugin install vagrant-vbguest
@@ -580,13 +580,13 @@ vagrant plugin install vagrant-vbguest
 
 ## DNS
 
-Your Mac can be configured to resolve any domain ending in `.dev` to the Vagrant server. To do this, you must install the [`vagrant-dns`](https://github.com/BerlinVagrant/vagrant-dns) plugin. First, install the plugin files:
+Your Mac can be configured to resolve any domain ending in `.dev` to the Vagrant server. To do this, you must install the [`vagrant-dns`](https://github.com/BerlinVagrant/vagrant-dns) plugin. First, install the plugin itself:
 
 ```bash
 vagrant plugin install vagrant-dns
 ```
 
-Then, from in directory containing your vagrant environment, run:
+Then, from the directory containing your vagrant environment, run:
 
 ```bash
 vagrant dns --install
@@ -606,12 +606,4 @@ Then, if your Vagrant environment is already running restart it with:
 
 ```bash
 vagrant reload
-```
-
-# Development Notes
-
-In an attempt to minimize confusion for students or generate false positives when using Git, this repository has rather *aggressive* `.gitignore` file. Basically, it ignores everything in the directory, unless it's explicitly listed. If you need to add a new file to the repository be sure it's listed in `.gitignore`. A comprehensive list of all the files in this repository can be generated using a command like the following:
-
-```bash
-find . \( -path "./.vagrant/*" -o -path "./.git/*" -o -name ".DS_Store" \) -prune -o -type file -print
 ```
