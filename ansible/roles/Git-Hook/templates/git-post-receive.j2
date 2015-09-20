@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while read oldrev newrev ref do
+while read oldrev newrev ref; do
     if [[ $ref =~ .*/{{ git_production_branch | default('master') }}$ ]]; then
         echo "Deploying {{ git_production_branch | default('master') }} branch"
         git --work-tree={{ www_home }}/{{ domain }} --git-dir={{ git_home }}/{{ domain }}.git checkout -f {{ git_production_branch | default('master') }}
