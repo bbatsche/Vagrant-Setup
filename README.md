@@ -566,7 +566,7 @@ The playbook will prompt you for your site's name, meaning the site vars file na
 
 The goal of these playbooks was to perform as many of the typical application setup steps as possible, while minimizing the risk to existing data. They will not, therefore, do any database seeding even if your framework supports it. You **must** seed your database by hand.
 
-# Vagrant Plugins (Optional)
+# Vagrant Enhancements (Optional)
 
 The Vagrantfile includes support for some optional Vagrant plugins that can make development quicker and easier. These plugins are not required, but can be useful.
 
@@ -607,3 +607,29 @@ Then, if your Vagrant environment is already running restart it with:
 ```bash
 vagrant reload
 ```
+
+## Passwordless NFS Export
+
+For optimal performance, your Mac shares files with the Vagrant environment using NFS. Unfortunately, this requires typing in your password each time you start the box. To avoid this, you can edit your `/etc/sudoers` file to grant access to Vagrant's NFS commands without prompting for a password.
+
+1. Run the following and type in your password when prompted
+
+    ```bash
+    sudo visudo
+    ```
+
+1. Press `Shift + G` to move to the end of the file
+1. Press `o` to create a new line and start editing.
+1. Paste the following lines into the file
+
+    ```bash
+    Cmnd_Alias VAGRANT_EXPORTS_ADD = /usr/bin/tee -a /etc/exports
+    Cmnd_Alias VAGRANT_NFSD = /sbin/nfsd restart
+    Cmnd_Alias VAGRANT_EXPORTS_REMOVE = /usr/bin/sed -E -e /*/ d -ibak /etc/exports
+    %admin ALL=(root) NOPASSWD: VAGRANT_EXPORTS_ADD, VAGRANT_NFSD, VAGRANT_EXPORTS_REMOVE
+    ```
+
+1. Pres `Esc` to leave editing mode
+1. Type `:wq` to save the file and exit Vi.
+
+The next time you start your box, you should not need to enter your password.
