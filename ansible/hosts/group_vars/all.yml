@@ -5,7 +5,7 @@ node_version:    v0.12.7
 phpunit_version: ~4.8
 
 ruby_build_version:   v20150818
-default_gems_version: v1.0.0
+default_gems_version: ead67889c91c53ad967f85f5a89d986fdb98f6fb
 rbenv_vars_version:   v1.2.0
 gem_rehash_version:   v1.0.0
 binstubs_version:     v1.4
