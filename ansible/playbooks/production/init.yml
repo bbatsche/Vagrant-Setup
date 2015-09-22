@@ -34,5 +34,6 @@
 
   roles:
     - Production
+    - Common
     - PHP
     - MySQL/Install
