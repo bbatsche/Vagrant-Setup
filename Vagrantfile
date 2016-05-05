@@ -2,42 +2,80 @@
 # vi: set ft=ruby :
 
 #############################
-# Codeup Server Setup
+# Development Server Setup
 #############################
 
-box      = 'parallels/ubuntu-14.04'
-hostname = 'vagrant-vm'
-ram      = '1024'
-timezone = 'America/Chicago'
-ip       = '10.37.129.200'
+box           = 'ubuntu/trusty64'
+vmware_box    = 'puppetlabs/ubuntu-14.04-64-nocm'
+parallels_box = 'parallels/ubuntu-14.04'
+hostname      = 'development-vm'
+ram           = '1024'
+num_cpus      = '1'
 
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.define "vagrant" do |v|
+  config.vm.define hostname do |v|
     v.vm.box = box
 
     v.vm.hostname = hostname
-    v.vm.network :private_network, ip: ip
+    v.vm.network :private_network, type: "dhcp"
 
-    v.vm.synced_folder "./sites", "/srv/www"
-    v.vm.synced_folder ".", "/vagrant", disabled: true
+    v.vm.synced_folder ".", "/vagrant", id: "vagrant-root"
 
-    v.vm.provider :parallels do |p|
+    v.vm.provider :virtualbox do |vb, override|
+      vb.name = hostname
+
+      vb.memory = ram
+      vb.cpus   = num_cpus
+
+      vb.customize ["modifyvm",             :id, "--natdnshostresolver1", "on"]
+      vb.customize ["setextradata",         :id, "--VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+      vb.customize ["guestproperty", "set", :id, "--timesync-threshold",  "1000"]
+
+      override.vm.synced_folder "./", "/vagrant", {
+        type: "nfs",
+        mount_options: ["nolock,vers=3,tcp,noatime,actimeo=1"]
+      }
+    end
+
+    # Configuration options for the VMware Fusion provider.
+    v.vm.provider :vmware_fusion do |vmw, override|
+      vmw.vmx["memsize"]  = ram
+      vmw.vmx["numvcpus"] = num_cpus
+
+      override.vm.box = vmware_box
+
+      override.vm.synced_folder ".", "/vagrant", {
+        owner: "vagrant",
+        group: "www-data",
+        mount_options: ["dmode=775,fmode=664"]
+      }
+    end
+
+    # Configuration options for the Parallels provider.
+    v.vm.provider :parallels do |p, override|
       p.name = hostname
 
       p.check_guest_tools  = true
       p.update_guest_tools = true
 
       p.memory = ram
-      p.cpus   = 1
+      p.cpus   = num_cpus
+
+      p.customize ["set", :id, "--longer-battery-life", "off"]
+
+      override.vm.box = parallels_box
+
+      override.vm.synced_folder ".", "/vagrant", {
+        owner: "vagrant",
+        group: "www-data",
+        mount_options: ["dmode=775,fmode=664"]
+      }
     end
 
     v.vm.provision :ansible do |ansible|
       ansible.playbook = "ansible/playbooks/vagrant/init.yml"
-      ansible.extra_vars = {
-        timezone: timezone
-      }
     end
 
     if Vagrant.has_plugin? "vagrant-reload"
@@ -47,8 +85,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Plugin specific options. Helpful for development but most likely not necessary for class
   if Vagrant.has_plugin? "vagrant-dns"
-    config.dns.tld      = "dev"
-    config.dns.patterns = [/^.*\.dev$/]
+    config.dns.tld      = "test"
+    config.dns.patterns = [/^.*\.test$/]
   end
   if Vagrant.has_plugin? "vagrant-cachier"
     config.cache.scope = :box
@@ -60,14 +98,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.cache.enable :bower
     config.cache.enable :npm
     config.cache.enable :gem
-
-    config.cache.synced_folder_opts = {
-      type: :nfs,
-      # The nolock option can be useful for an NFSv3 client that wants to avoid the
-      # NLM sideband protocol. Without this option, apt-get might hang if it tries
-      # to lock files needed for /var/cache/* operations. All of this can be avoided
-      # by using NFSv4 everywhere. Please note that the tcp option is not the default.
-      mount_options: ['rw', 'vers=3', 'nolock']
-    }
   end
 end

@@ -1,4 +1,7 @@
 ---
-ruby_version: 2.2.3
-
-ansible_python_interpreter: /usr/bin/python2
+# Some useful paths on the local file system
+# Realpath will take a relative path and expand it from where Ansible is being run
+#   (as opposed to being relative to what task/playbook it's referenced from)
+site_var_dir:    "{{ 'ansible/site_vars' | realpath }}"
+storage_dir:     "{{ 'ansible/storage'   | realpath }}"
+local_sites_dir: "{{ 'sites'             | realpath }}"

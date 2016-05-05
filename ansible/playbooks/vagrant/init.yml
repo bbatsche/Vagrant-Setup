@@ -1,7 +1,33 @@
 ---
-- name: Initialize Vagrant Box
-  hosts: vagrant
-  remote_user: vagrant
+- name: Initialize Vagrant Machine
+  hosts: development-vm
+
+  # Manually specify these since Vagrant doesn't seem to use ansible/hosts so it can't find them automatically
+  vars_files:
+    - ../../hosts/group_vars/all.yml
+    - ../../hosts/host_vars/development-vm.yml
+
+  pre_tasks:
+    - name: Check for VM Tools
+      stat: path=/etc/vmware-tools/locations
+      register: vmware_tools_file
+
+    - name: Enable Auto KMods
+      lineinfile:
+        dest: /etc/vmware-tools/locations
+        line: answer {{ item }} yes
+        regexp: ^answer {{ item }} (no|yes)
+      become: yes
+      when: vmware_tools_file.stat.exists
+      with_items:
+        - AUTO_KMODS_ENABLED_ANSWER
+        - AUTO_KMODS_ENABLED
+
+  post_tasks:
+    - name: Cd to /vagrant on Log In
+      lineinfile:
+        dest: "{{ ansible_user_dir }}/.bashrc"
+        line: cd /vagrant
 
   roles:
-    - common
+    - bbatsche.Base
