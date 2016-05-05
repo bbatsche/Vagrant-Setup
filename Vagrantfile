@@ -19,7 +19,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.vm.box = box
 
     v.vm.hostname = hostname
-    v.vm.network :private_network, type: "dhcp"
 
     v.vm.synced_folder ".", "/vagrant", id: "vagrant-root"
 
@@ -84,10 +83,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # Plugin specific options. Helpful for development but most likely not necessary for class
-  if Vagrant.has_plugin? "vagrant-dns"
-    config.dns.tld      = "test"
-    config.dns.patterns = [/^.*\.test$/]
+  if Vagrant.has_plugin? "vagrant-dnsmasq"
+    config.dnsmasq.domain = ".test"
+
+    # overwrite default location for /etc/dnsmasq.conf
+    brew_prefix = `brew --prefix`.strip
+    config.dnsmasq.dnsmasqconf = brew_prefix + '/etc/dnsmasq.conf'
+
+    # command for reloading dnsmasq after config changes
+    config.dnsmasq.reload_command = 'sudo launchctl unload /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist; sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist'
   end
+
   if Vagrant.has_plugin? "vagrant-cachier"
     config.cache.scope = :box
 
