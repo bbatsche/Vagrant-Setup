@@ -1,0 +1,52 @@
+---
+- src: bbatsche.Base
+  path: ansible/roles
+  version: v1.3.1
+
+- src: bbatsche.Nginx
+  path: ansible/roles
+  version: v2.0.1
+
+- src: bbatsche.Phpenv
+  path: ansible/roles
+  version: v1.0.1
+
+- src: bbatsche.Node
+  path: ansible/roles
+  version: v2.0.1
+
+- src: bbatsche.Python
+  path: ansible/roles
+  version: v2.0.0
+
+- src: bbatsche.Ruby
+  path: ansible/roles
+  version: v2.0.0
+
+- src: bbatsche.MongoDB-Install
+  path: ansible/roles
+  version: v2.0.0
+
+- src: bbatsche.MongoDB-Manage
+  path: ansible/roles
+  version: v2.0.0
+
+- src: bbatsche.MySQL-Install
+  path: ansible/roles
+  version: v2.0.0
+
+- src: bbatsche.MySQL-Manage
+  path: ansible/roles
+  version: v2.0.0
+
+- src: bbatsche.PostgreSQL-Install
+  path: ansible/roles
+  version: v2.0.0
+
+- src: bbatsche.PostgreSQL-Manage
+  path: ansible/roles
+  version: v2.0.0
+
+- src: bbatsche.WordPress
+  path: ansible/roles
+  version: v0.0.2

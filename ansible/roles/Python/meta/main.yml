@@ -1,3 +1,0 @@
----
-dependencies:
-  - { role: Nginx, site_type: python, passenger_type: wsgi }

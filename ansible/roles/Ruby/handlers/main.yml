@@ -1,4 +1,0 @@
----
-- name: Rehash Rbenv
-  command: rbenv rehash
-  sudo: yes

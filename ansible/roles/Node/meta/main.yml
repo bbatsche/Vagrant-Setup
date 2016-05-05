@@ -1,3 +1,0 @@
----
-dependencies:
-  - { role: Nginx, site_type: node, passenger_type: node }

@@ -1,3 +1,0 @@
----
-dependencies:
-  - { role: PHP, dynamic_php: yes }

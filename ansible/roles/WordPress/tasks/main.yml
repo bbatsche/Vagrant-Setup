@@ -1,8 +1,0 @@
----
-- name: Download
-  get_url: url=https://wordpress.org/latest.tar.gz dest=/tmp/wordpress.tar.gz
-
-- name: Extract
-  command: tar xzf /tmp/wordpress.tar.gz -C {{ www_home }}/{{ domain }}/public --strip-components=1
-  args:
-    creates: "{{ www_home }}/{{ domain }}/public/index.php"

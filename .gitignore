@@ -7,6 +7,8 @@ doc/
 .project
 .DS_Store
 .idea
+/ansible/roles/*
+/ansible/storage/*
 
 # Ignore vagrant files
 .vagrant/

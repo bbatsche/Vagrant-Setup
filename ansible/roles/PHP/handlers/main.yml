@@ -1,4 +1,0 @@
----
-- name: Restart FPM
-  service: name=php5-fpm state=restarted
-  sudo: yes
