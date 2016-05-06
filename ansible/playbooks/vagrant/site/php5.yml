@@ -9,16 +9,6 @@
 
     dynamic_php: yes
 
-    php_version:      5.6.21
-    xdebug_version:   2.4.0
-    phpunit_version: ~5.3
+    php_version: 5.6.21
 
-    pecl_extensions:
-    - name: yaml
-      version: 1.2.0
-
-    - name: imagick
-      version: 3.4.1
-
-    - name: redis
-      version: 2.2.7
+    pecl_extensions: "{{ default_pecl_extensions + php5_extensions }}"
