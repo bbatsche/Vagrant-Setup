@@ -25,7 +25,7 @@
 
 - src: bbatsche.MongoDB-Install
   path: ansible/roles
-  version: v2.0.0
+  version: v2.0.1
 
 - src: bbatsche.MongoDB-Manage
   path: ansible/roles
