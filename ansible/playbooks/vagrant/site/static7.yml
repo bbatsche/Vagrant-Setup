@@ -1,0 +1,21 @@
+---
+- include: ../_prompts/domain.yml
+
+- name: Create Static PHP 7 Site
+  hosts: development-vm
+
+  roles:
+  - role: bbatsche.Phpenv
+
+    dynamic_php: no
+
+    php_version:      7.0.6
+    xdebug_version:   2.4.0
+    phpunit_version: ~5.3
+
+    pecl_extensions:
+    - name: yaml
+      version: 2.0.0RC7
+
+    - name: imagick
+      version: 3.4.1
