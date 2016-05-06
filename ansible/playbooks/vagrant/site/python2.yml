@@ -1,0 +1,9 @@
+---
+- include: ../_prompts/domain.yml
+
+- name: Create Python 2.7 Site
+  hosts: development-vm
+
+  roles:
+    - role: bbatsche.Python
+      python_version: 2.7

@@ -1,0 +1,9 @@
+---
+- include: ../_prompts/domain.yml
+
+- name: Create Python 3.4 Site
+  hosts: development-vm
+
+  roles:
+    - role: bbatsche.Python
+      python_version: 3.4
