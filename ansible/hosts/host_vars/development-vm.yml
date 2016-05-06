@@ -2,3 +2,7 @@
 env_name: dev
 
 http_root: /vagrant/sites
+
+# This is already set by default within the various DB roles
+# However, we need to set it out here so that our preflight checks work
+db_admin: vagrant

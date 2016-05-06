@@ -1,25 +1,8 @@
 ---
+- include: ../_prompts/database.yml
+
 - name: Create MySQL Database
-  hosts: vagrant
-  remote_user: vagrant
-
-  vars_prompt:
-    - name:    db_name
-      prompt:  Database Name (e.g. something_db)
-      private: no
-    - name:    new_mysql_user
-      prompt:  Database Owner (e.g. something_user)
-      private: no
-    - name:    new_mysql_pass
-      prompt:  Password for Database Owner
-      private: yes
-      confirm: yes
-
-  pre_tasks:
-    - name: Generate Database Privileges
-      set_fact:
-        mysql_user_priv: "{{ db_name }}.*:ALL"
+  hosts: development-vm
 
   roles:
-    - MySQL-Install
-    - MySQL
+    - bbatsche.MySQL-Manage

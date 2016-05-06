@@ -1,19 +1,8 @@
 ---
-- name: Create MySQL Administrator
-  hosts: vagrant
-  remote_user: vagrant
+- include: ../_prompts/db-user.yml
 
-  vars:
-    mysql_user_priv: "*.*:ALL,GRANT"
-  vars_prompt:
-    - name:    new_mysql_user
-      prompt:  New MySQL Admin
-      private: no
-    - name:    new_mysql_pass
-      prompt:  New Admin Password
-      private: yes
-      confirm: yes
+- name: Create MySQL Administrator
+  hosts: development-vm
 
   roles:
-    - MySQL-Install
-    - MySQL
+    - bbatsche.MySQL-Manage

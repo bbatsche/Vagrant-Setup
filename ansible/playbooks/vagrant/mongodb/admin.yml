@@ -1,19 +1,8 @@
 ---
-- name: Create MongoDB Administrator
-  hosts: vagrant
-  remote_user: vagrant
+- include: ../_prompts/db-user.yml
 
-  vars:
-    mongodb_roles: root,backup,restore
-  vars_prompt:
-    - name:    new_mongodb_user
-      prompt:  New MongoDB Admin
-      private: no
-    - name:    new_mongodb_pass
-      prompt:  New Admin Password
-      private: yes
-      confirm: yes
+- name: Create MongoDB Administrator
+  hosts: development-vm
 
   roles:
-    - MongoDB-Install
-    - MongoDB
+    - bbatsche.MongoDB-Manage

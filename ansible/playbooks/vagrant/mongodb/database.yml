@@ -1,22 +1,8 @@
 ---
-- name: Create MongoDB Database
-  hosts: vagrant
-  remote_user: vagrant
+- include: ../_prompts/database.yml
 
-  vars:
-    mongodb_roles: dbOwner
-  vars_prompt:
-    - name:    db_name
-      prompt:  Database Name (e.g. something_db)
-      private: no
-    - name:    new_mongodb_user
-      prompt:  Database Owner (e.g. something_user)
-      private: no
-    - name:    new_mongodb_pass
-      prompt:  Password for Database Owner
-      private: yes
-      confirm: yes
+- name: Create MongoDB Database
+  hosts: development-vm
 
   roles:
-    - MongoDB-Install
-    - MongoDB
+    - bbatsche.MongoDB-Manage
