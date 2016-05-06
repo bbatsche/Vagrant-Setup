@@ -1,7 +1,0 @@
----
-- name: Create MongoDB Based Node.js Application
-  hosts: vagrant
-  remote_user: vagrant
-
-- include: ../../site/node.yml
-- include: ../database.yml

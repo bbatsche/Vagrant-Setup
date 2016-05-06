@@ -1,7 +1,0 @@
----
-- name: Create MySQL Based PHP Application
-  hosts: vagrant
-  remote_user: vagrant
-
-- include: ../../site/php-dynamic.yml
-- include: ../database.yml

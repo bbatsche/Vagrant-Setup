@@ -1,7 +1,0 @@
----
-- name: Create MySQL Based Ruby Application
-  hosts: vagrant
-  remote_user: vagrant
-
-- include: ../../site/ruby.yml
-- include: ../database.yml

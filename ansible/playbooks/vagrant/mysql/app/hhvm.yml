@@ -1,7 +1,0 @@
----
-- name: Create MySQL Based HipHop VM Application
-  hosts: vagrant
-  remote_user: vagrant
-
-- include: ../../site/hhvm.yml
-- include: ../database.yml
