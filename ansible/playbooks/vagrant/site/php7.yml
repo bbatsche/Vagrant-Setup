@@ -1,5 +1,5 @@
 ---
-- include: ../prompts/domain.yml
+- include: ../_prompts/domain.yml
 
 - name: Create Dynamic PHP 7 Site
   hosts: development-vm
