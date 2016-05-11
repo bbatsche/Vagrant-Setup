@@ -75,6 +75,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     v.vm.provision :ansible do |ansible|
       ansible.playbook = "ansible/playbooks/vagrant/init.yml"
+
+      ansible.galaxy_role_file  = "ansible/roles.yml"
+      ansible.galaxy_roles_path = "ansible/roles"
     end
 
     if Vagrant.has_plugin? "vagrant-reload"
