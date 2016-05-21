@@ -5,7 +5,7 @@
   hosts: development-vm
 
   roles:
-  - role: bbatsche.Phpenv
+  - role: bbatsche.PHP
 
     dynamic_php: no
 
