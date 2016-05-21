@@ -1,0 +1,44 @@
+---
+- hosts: development-vm
+  gather_facts: no
+
+  vars_prompt:
+  - name:    domain
+    prompt:  Domain Name (e.g. domain.name.test)
+    private: no
+
+  - name:    db_name
+    prompt:  Database Name (e.g. something_db)
+    private: no
+
+  - name:    new_db_user
+    prompt:  Database Owner (e.g. something_user)
+    private: no
+
+  - name:    new_db_pass
+    prompt:  Password for Database Owner
+    private: yes
+    confirm: yes
+
+
+  pre_tasks:
+    - name: Clean domain name
+      set_fact: "domain={{ domain | trim | lower }}"
+
+    - name: Domains must be made of alphanumeric characters
+      assert:
+        that: "domain | search('^[a-z0-9][a-z0-9\\-.]+[a-z0-9]$')"
+
+    - name: Development domains must end with .test
+      assert:
+        that: domain.endswith(".test")
+
+    - name: Password cannot be blank
+      assert:
+        that: new_db_pass != ''
+
+    - name: Cannot modify DB admin
+      assert:
+        that: new_db_user != db_admin
+
+    - set_fact: domain={{ domain }} db_name={{ db_name }} new_db_user={{ new_db_user }} new_db_pass={{ new_db_pass }}

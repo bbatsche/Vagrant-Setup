@@ -1,0 +1,12 @@
+---
+- include: ../_prompts/wordpress.yml
+
+- name: Create WordPress Site
+  hosts: development-vm
+
+  vars:
+    php_version: 7.0.6
+    dynamic_php: yes
+
+  roles:
+  - role: bbatsche.WordPress
