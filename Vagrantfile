@@ -90,7 +90,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.dnsmasq.domain = ".test"
 
     # overwrite default location for /etc/dnsmasq.conf
-    brew_prefix = `brew --prefix`.strip
+    brew_prefix = `/usr/local/bin/brew --prefix`.strip
     config.dnsmasq.dnsmasqconf = brew_prefix + '/etc/dnsmasq.conf'
 
     # command for reloading dnsmasq after config changes
