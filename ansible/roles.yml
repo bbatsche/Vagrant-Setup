@@ -1,39 +1,39 @@
 ---
 - src: bbatsche.Base
-  version: v1.5.0
+  version: v1.5.1
 
 - src: bbatsche.Nginx
-  version: v2.3.1
+  version: v2.3.2
 
 - src: bbatsche.PHP
-  version: v1.3.1
+  version: v1.3.2
 
 - src: bbatsche.Node
-  version: v2.0.1
+  version: v2.1.0
 
 - src: bbatsche.Python
-  version: v2.0.0
+  version: v2.1.0
 
 - src: bbatsche.Ruby
-  version: v2.1.0
+  version: v2.1.1
 
 - src: bbatsche.MongoDB-Install
-  version: v2.1.0
+  version: v2.1.2
 
 - src: bbatsche.MongoDB-Manage
-  version: v2.1.0
+  version: v2.1.1
 
 - src: bbatsche.MySQL-Install
-  version: v2.1.0
+  version: v2.1.1
 
 - src: bbatsche.MySQL-Manage
-  version: v2.0.0
+  version: v2.1.0
 
 - src: bbatsche.PostgreSQL-Install
-  version: v2.0.0
+  version: v2.1.0
 
 - src: bbatsche.PostgreSQL-Manage
-  version: v2.0.0
+  version: v2.1.0
 
 - src: bbatsche.WordPress
-  version: v1.2.0
+  version: v1.2.1
