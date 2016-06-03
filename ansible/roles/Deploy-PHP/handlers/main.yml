@@ -1,4 +1,0 @@
----
-# Really don't understand why this service task must be written as a command. Maybe a bug??
-- name: Reload Nginx Config
-  command: sudo /usr/sbin/service nginx reload

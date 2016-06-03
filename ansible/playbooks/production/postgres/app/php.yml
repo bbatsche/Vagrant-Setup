@@ -1,6 +1,0 @@
----
-- name: Create PostgreSQL Based PHP Application
-  hosts: production
-
-- include: ../../site/php-dynamic.yml
-- include: ../database.yml

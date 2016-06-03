@@ -1,9 +1,0 @@
----
-- name: Migrate Database
-  shell: ". {{ prod_site_dir }}/env/bin/activate && {{ prod_site_dir }}/env/bin/python manage.py migrate"
-  args:
-    chdir: "{{ prod_site_dir }}"
-  register: migrate_result
-  changed_when: >
-    migrate_result.stdout_lines is defined and
-    "No migrations to apply." not in migrate_result.stdout_lines | last
