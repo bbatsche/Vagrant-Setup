@@ -3,7 +3,7 @@
   version: v1.5.1
 
 - src: bbatsche.Nginx
-  version: v2.3.2
+  version: v2.3.3
 
 - src: bbatsche.PHP
   version: v1.3.2

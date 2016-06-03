@@ -6,7 +6,7 @@
 #############################
 
 box           = 'ubuntu/trusty64'
-vmware_box    = 'puppetlabs/ubuntu-14.04-64-nocm'
+vmware_box    = 'boxcutter/ubuntu1404'
 parallels_box = 'parallels/ubuntu-14.04'
 hostname      = 'development-vm'
 ram           = '1024'
@@ -47,8 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       override.vm.synced_folder ".", "/vagrant", {
         owner: "vagrant",
-        group: "www-data",
-        mount_options: ["dmode=775,fmode=664"]
+        group: "www-data"
       }
     end
 
