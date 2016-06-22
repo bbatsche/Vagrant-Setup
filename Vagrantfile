@@ -32,6 +32,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.customize ["setextradata",         :id, "--VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
       vb.customize ["guestproperty", "set", :id, "--timesync-threshold",  "1000"]
 
+      override.vm.network "private_network", type: "dhcp"
+
       override.vm.synced_folder "./", "/vagrant", {
         type: "nfs",
         mount_options: ["nolock,vers=3,tcp,noatime,actimeo=1"]
