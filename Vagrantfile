@@ -6,7 +6,7 @@
 #############################
 
 box           = 'ubuntu/trusty64'
-vmware_box    = 'boxcutter/ubuntu1404'
+vmware_box    = 'puppetlabs/ubuntu-14.04-64-nocm'
 parallels_box = 'parallels/ubuntu-14.04'
 hostname      = 'development-vm'
 ram           = '1024'
