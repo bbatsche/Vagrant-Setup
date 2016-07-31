@@ -6,7 +6,7 @@
   version: v2.3.3
 
 - src: bbatsche.PHP
-  version: v1.3.2
+  version: v1.3.4
 
 - src: bbatsche.Node
   version: v2.1.0
