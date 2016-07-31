@@ -4,13 +4,12 @@
 - name: Create Dynamic PHP 7 Site
   hosts: development-vm
 
+  vars:
+    dynamic_php: yes
+    php_version: 7.0.9
+
   roles:
   - role: bbatsche.PHP
-
-    dynamic_php: yes
-
-    php_version: 7.0.6
-
     pecl_extensions: "{{ default_pecl_extensions + php7_extensions }}"
 
 - include: ../_post_php_site.yml

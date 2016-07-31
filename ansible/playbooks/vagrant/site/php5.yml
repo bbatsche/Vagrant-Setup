@@ -4,13 +4,12 @@
 - name: Create Dynamic PHP 5.6 Site
   hosts: development-vm
 
+  vars:
+    dynamic_php: yes
+    php_version: 5.6.24
+
   roles:
   - role: bbatsche.PHP
-
-    dynamic_php: yes
-
-    php_version: 5.6.21
-
     pecl_extensions: "{{ default_pecl_extensions + php5_extensions }}"
 
 - include: ../_post_php_site.yml
