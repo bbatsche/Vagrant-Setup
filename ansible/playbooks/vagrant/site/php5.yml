@@ -1,15 +1,16 @@
 ---
-- include: ../_prompts/domain.yml
+- import_playbook: ../_prompts/domain.yml
 
 - name: Create Dynamic PHP 5.6 Site
   hosts: development-vm
 
   vars:
     dynamic_php: yes
-    php_version: 5.6.24
+    php_version: 5.6.33
 
   roles:
   - role: bbatsche.PHP
-    pecl_extensions: "{{ default_pecl_extensions + php5_extensions }}"
+    pecl_extensions: "{{ pecl_extensions + php5_extensions }}"
+    composer_packages: "{{ composer_packages + php5_packages }}"
 
-- include: ../_post_php_site.yml
+- import_playbook: ../_post_php_site.yml

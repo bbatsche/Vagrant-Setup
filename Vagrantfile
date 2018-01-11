@@ -5,12 +5,10 @@
 # Development Server Setup
 #############################
 
-box           = 'ubuntu/trusty64'
-vmware_box    = 'puppetlabs/ubuntu-14.04-64-nocm'
-parallels_box = 'parallels/ubuntu-14.04'
-hostname      = 'development-vm'
-ram           = '1024'
-num_cpus      = '1'
+box      = 'bento/ubuntu-16.04'
+hostname = 'development-vm'
+ram      = '2048'
+num_cpus = '2'
 
 VAGRANTFILE_API_VERSION = "2"
 
@@ -45,8 +43,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vmw.vmx["memsize"]  = ram
       vmw.vmx["numvcpus"] = num_cpus
 
-      override.vm.box = vmware_box
-
       override.vm.synced_folder ".", "/vagrant", {
         owner: "vagrant",
         group: "www-data"
@@ -65,8 +61,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       p.customize ["set", :id, "--longer-battery-life", "off"]
 
-      override.vm.box = parallels_box
-
       override.vm.synced_folder ".", "/vagrant", {
         owner: "vagrant",
         group: "www-data",
@@ -79,6 +73,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       ansible.galaxy_role_file  = "ansible/roles.yml"
       ansible.galaxy_roles_path = "ansible/roles"
+      
+      ansible.compatibility_mode = "2.0"
     end
 
     if Vagrant.has_plugin? "vagrant-reload"

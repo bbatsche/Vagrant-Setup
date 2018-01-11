@@ -1,6 +1,7 @@
 ---
 - name: Initialize Vagrant Machine
   hosts: development-vm
+  gather_facts: false
 
   # Manually specify these since Vagrant doesn't seem to use ansible/hosts so it can't find them automatically
   vars_files:
@@ -8,6 +9,17 @@
     - ../../hosts/host_vars/development-vm.yml
 
   pre_tasks:
+    - name: Install python2 for Ansible
+      raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal)"
+      become: yes
+      register: output
+      changed_when:
+        - output.stdout != ""
+        - output.stdout != "\r\n"
+
+    - name: Gathering Facts
+      setup:
+    
     - name: Check for VM Tools
       stat: path=/etc/vmware-tools/locations
       register: vmware_tools_file
