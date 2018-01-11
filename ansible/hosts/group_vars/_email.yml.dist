@@ -1,0 +1,5 @@
+---
+# HTTPS encryption requires a contact email address.
+# Rename this file to "_email.yml" and enter your email address below.
+# Otherwise, Ansible will prompt you for your email address whenever creating a new site.
+email_address: ## FILL ME IN ##

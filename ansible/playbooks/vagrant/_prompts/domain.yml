@@ -8,6 +8,21 @@
     private: no
 
   pre_tasks:
+    - block:
+      - name: Check for email var file
+        local_action: stat path=../../../hosts/group_vars/_email.yml
+        register: email_var_file
+      - include_vars: ../../../hosts/group_vars/_email.yml
+        when: email_var_file.stat.exists
+      when: email_address is not defined
+    
+    - block:
+      - pause:
+          prompt: Email Address
+        register: email_prompt
+      - set_fact: email_address={{ email_prompt.user_input }}
+      when: email_address is not defined
+      
     - name: Clean domain name
       set_fact: "domain={{ domain | trim | lower }}"
 

@@ -9,6 +9,7 @@ doc/
 .idea
 /ansible/roles/*
 /ansible/storage/*
+/ansible/hosts/group_vars/_email.yml
 
 # Ignore vagrant files
 .vagrant/

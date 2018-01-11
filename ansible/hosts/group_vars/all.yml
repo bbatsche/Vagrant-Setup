@@ -19,3 +19,5 @@ php5_extensions:
 php7_extensions:
   - name: yaml
     version: 2.0.2
+
+use_ssl: yes
