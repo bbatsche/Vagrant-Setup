@@ -1,0 +1,11 @@
+---
+- import_playbook: ../_prompts/db-user.yml
+
+- name: Create MySQL Readonly User
+  hosts: development-vm
+
+  vars:
+    new_db_privs: "{{ new_db_name + '.*:SELECT' if new_db_name is defined else '*.*:SELECT' }}"
+
+  roles:
+    - bbatsche.MySQL

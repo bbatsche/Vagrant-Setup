@@ -1,0 +1,11 @@
+---
+- import_playbook: ../_prompts/db-user.yml
+
+- name: Create MySQL CRUD User
+  hosts: development-vm
+
+  vars:
+    new_db_privs: "{{ new_db_name + '.*:CREATE_TEMPORARY_TABLES,DELETE,INSERT,LOCK_TABLES,SELECT,UPDATE' if new_db_name is defined else '*.*:CREATE_TEMPORARY_TABLES,DELETE,INSERT,LOCK_TABLES,SELECT,SHOW_DATABASES,UPDATE' }}"
+
+  roles:
+    - bbatsche.MySQL

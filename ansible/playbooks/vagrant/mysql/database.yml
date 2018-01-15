@@ -1,8 +1,8 @@
 ---
-- include: ../_prompts/database.yml
+- import_playbook: ../_prompts/database.yml
 
 - name: Create MySQL Database
   hosts: development-vm
 
   roles:
-    - bbatsche.MySQL-Manage
+    - bbatsche.MySQL

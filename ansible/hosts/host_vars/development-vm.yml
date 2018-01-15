@@ -25,3 +25,5 @@ php7_packages:
     version: ^6.5
   - name: phpspec/phpspec
     version: ^4.3
+
+install_mariadb: yes

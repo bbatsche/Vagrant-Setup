@@ -32,5 +32,5 @@
 - src: bbatsche.WordPress
   version: v1.2.1
 - src: bbatsche.MySQL
-  version: v3.0.0
+  version: v3.1.2
 

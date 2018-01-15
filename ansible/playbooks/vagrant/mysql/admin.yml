@@ -1,8 +1,8 @@
 ---
-- include: ../_prompts/db-user.yml
+- import_playbook: ../_prompts/db-user.yml
 
 - name: Create MySQL Administrator
   hosts: development-vm
 
   roles:
-    - bbatsche.MySQL-Manage
+    - bbatsche.MySQL

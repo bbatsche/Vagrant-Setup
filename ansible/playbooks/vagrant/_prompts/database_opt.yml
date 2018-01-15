@@ -3,18 +3,18 @@
   gather_facts: no
 
   vars_prompt:
-  - name:    new_db_name
-    prompt:  Database Name (e.g. something_db)
-    private: no
-
   - name:    new_db_user
-    prompt:  Database Owner (e.g. something_user)
+    prompt:  Database User (e.g. something_user)
     private: no
 
   - name:    new_db_pass
-    prompt:  Password for Database Owner
+    prompt:  Password
     private: yes
     confirm: yes
+
+  - name:    new_db_name
+    prompt:  Database Name (optional)
+    private: no
 
   pre_tasks:
     - name: Password cannot be blank
@@ -25,4 +25,6 @@
       assert:
         that: new_db_user != db_admin
 
-    - set_fact: new_db_name={{ new_db_name }} new_db_user={{ new_db_user }} new_db_pass={{ new_db_pass }}
+    - set_fact: new_db_user={{ new_db_user }} new_db_pass={{ new_db_pass }}
+    - set_fact: new_db_name={{ new_db_name }}
+      when: new_db_name != ''
