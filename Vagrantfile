@@ -5,26 +5,28 @@
 # Development Server Setup
 #############################
 
-box      = 'bento/ubuntu-16.04'
-hostname = 'development-vm'
-ram      = '2048'
-num_cpus = '2'
+require 'yaml'
+
+config_data = YAML.load_file 'config.yaml.dist'
+config_data = Vagrant::Util::DeepMerge.deep_merge(config_data, YAML.load_file('config.yaml')) if File.exists? 'config.yaml'
 
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.define hostname do |v|
-    v.vm.box = box
+  config.vm.define config_data['hostname'] do |v|
+    v.vm.box = config_data['box']
 
-    v.vm.hostname = hostname
+    v.vm.hostname = config_data['hostname']
 
     v.vm.synced_folder ".", "/vagrant", id: "vagrant-root"
 
     v.vm.provider :virtualbox do |vb, override|
-      vb.name = hostname
+      vb.name = config_data['hostname']
 
-      vb.memory = ram
-      vb.cpus   = num_cpus
+      override.vm.box = config_data['virtualbox_box'] if config_data.has_key? 'virtualbox_box'
+
+      vb.memory = config_data['ram']
+      vb.cpus   = config_data['num_cpus']
 
       vb.customize ["modifyvm",             :id, "--natdnshostresolver1", "on"]
       vb.customize ["setextradata",         :id, "--VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
@@ -40,8 +42,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Configuration options for the VMware Fusion provider.
     v.vm.provider :vmware_fusion do |vmw, override|
-      vmw.vmx["memsize"]  = ram
-      vmw.vmx["numvcpus"] = num_cpus
+      override.vm.box = config_data['vmware_box'] if config_data.has_key? 'vmware_box'
+      
+      vmw.vmx["memsize"]  = config_data['ram']
+      vmw.vmx["numvcpus"] = config_data['num_cpus']
 
       override.vm.synced_folder ".", "/vagrant", {
         owner: "vagrant",
@@ -51,13 +55,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Configuration options for the Parallels provider.
     v.vm.provider :parallels do |p, override|
-      p.name = hostname
+      p.name = config_data['hostname']
+      
+      override.vm.box = config_data['parallels_box'] if config_data.has_key? 'parallels_box'
+
+      p.memory = config_data['ram']
+      p.cpus   = config_data['num_cpus']
 
       p.check_guest_tools  = true
       p.update_guest_tools = true
-
-      p.memory = ram
-      p.cpus   = num_cpus
 
       p.customize ["set", :id, "--longer-battery-life", "off"]
 
