@@ -1,9 +1,9 @@
 ---
 - src: bbatsche.Base
-  version: v2.1.4
+  version: v2.1.6
 
 - src: bbatsche.Nginx
-  version: v3.1.0
+  version: v3.2.0
 
 - src: bbatsche.PHP
   version: v2.0.0
