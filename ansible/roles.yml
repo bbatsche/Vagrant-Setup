@@ -3,10 +3,10 @@
   version: v2.1.6
 
 - src: bbatsche.Nginx
-  version: v3.2.0
+  version: v4.0.1
 
 - src: bbatsche.PHP
-  version: v2.0.0
+  version: v2.1.1
 
 - src: bbatsche.Node
   version: v2.1.0
