@@ -21,5 +21,6 @@
     - name: Copy Magento Nginx Config
       copy: src=../../../files/magento.conf dest=/etc/nginx/conf.d/magento.conf
       become: yes
+      notify: Restart Nginx
 
 - import_playbook: ../_post_php_site.yml
