@@ -12,6 +12,8 @@ default_extensions:
   - name: redis
     version: 3.1.6
 
+php_memory_limit: 768M
+
 php5_extensions:
   - name: yaml
     version: 1.3.1
@@ -21,3 +23,5 @@ php7_extensions:
     version: 2.0.2
 
 use_ssl: yes
+
+mysql_socket: /var/run/mysqld/mysqld.sock
