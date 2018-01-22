@@ -7,8 +7,11 @@
 
 require 'yaml'
 
-config_data = YAML.load_file 'config.yaml.dist'
-config_data = Vagrant::Util::DeepMerge.deep_merge(config_data, YAML.load_file('config.yaml')) if File.exists? 'config.yaml'
+default_config_file = File.join(File.dirname(__FILE__), 'config.yaml.dist')
+local_config_file   = File.join(File.dirname(__FILE__), 'config.yaml')
+
+config_data = YAML.load_file default_config_file
+config_data = Vagrant::Util::DeepMerge.deep_merge(config_data, YAML.load_file(local_config_file)) if File.exists? local_config_file
 
 VAGRANTFILE_API_VERSION = "2"
 
@@ -49,7 +52,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       override.vm.synced_folder ".", "/vagrant", {
         owner: "vagrant",
-        group: "www-data"
+        group: "www-data",
+        mount_options: ["umask=002"]
       }
     end
 
