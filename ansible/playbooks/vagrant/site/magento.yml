@@ -1,0 +1,25 @@
+---
+- import_playbook: ../_prompts/domain.yml
+
+- name: Create Magento 2 Site
+  hosts: development-vm
+
+  vars:
+    dynamic_php: yes
+    php_version: 7.1.13
+    public_directory: pub
+    nginx_configs: 
+      - php.conf
+      - magento.conf
+
+  roles:
+  - role: bbatsche.PHP
+    pecl_extensions: "{{ default_extensions | union(php7_extensions) }}"
+    composer_packages: "{{ default_packages | union(php7_packages) }}"
+
+  tasks:
+    - name: Copy Magento Nginx Config
+      copy: src=../../../files/magento.conf dest=/etc/nginx/conf.d/magento.conf
+      become: yes
+
+- import_playbook: ../_post_php_site.yml
