@@ -3,19 +3,19 @@
   version: v2.1.6
 
 - src: bbatsche.Nginx
-  version: v4.0.1
+  version: v4.2.1
 
 - src: bbatsche.PHP
-  version: v2.1.1
+  version: v2.1.4
 
 - src: bbatsche.Node
-  version: v2.1.0
+  version: v3.0.0
 
 - src: bbatsche.Python
   version: v2.1.0
 
 - src: bbatsche.Ruby
-  version: v2.1.1
+  version: v3.0.0
 
 - src: bbatsche.MongoDB-Install
   version: v2.1.2
