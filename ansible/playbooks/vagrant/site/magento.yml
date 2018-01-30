@@ -6,7 +6,7 @@
 
   vars:
     dynamic_php: yes
-    php_version: 7.1.13
+    php_version: 7.0.27
     public_directory: pub
     nginx_configs: 
       - php.conf
