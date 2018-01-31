@@ -8,7 +8,8 @@
     dynamic_php: yes
     php_version: 7.0.27
     public_directory: pub
-    nginx_configs: 
+    php_max_execution_time: 300
+    nginx_configs:
       - php.conf
       - magento.conf
 

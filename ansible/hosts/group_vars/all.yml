@@ -12,7 +12,7 @@ default_extensions:
   - name: redis
     version: 3.1.6
 
-php_memory_limit: 768M
+php_memory_limit: 1536M
 
 php5_extensions:
   - name: yaml
