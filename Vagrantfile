@@ -46,7 +46,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Configuration options for the VMware Fusion provider.
     v.vm.provider :vmware_fusion do |vmw, override|
       override.vm.box = config_data['vmware_box'] if config_data.has_key? 'vmware_box'
-      
+
       vmw.vmx["memsize"]  = config_data['ram']
       vmw.vmx["numvcpus"] = config_data['num_cpus']
 
@@ -60,7 +60,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Configuration options for the Parallels provider.
     v.vm.provider :parallels do |p, override|
       p.name = config_data['hostname']
-      
+
       override.vm.box = config_data['parallels_box'] if config_data.has_key? 'parallels_box'
 
       p.memory = config_data['ram']
@@ -83,7 +83,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       ansible.galaxy_role_file  = "ansible/roles.yml"
       ansible.galaxy_roles_path = "ansible/roles"
-      
+
       ansible.compatibility_mode = "2.0"
     end
 
@@ -101,7 +101,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.dnsmasq.dnsmasqconf = brew_prefix + '/etc/dnsmasq.conf'
 
     # command for reloading dnsmasq after config changes
-    config.dnsmasq.reload_command = 'sudo launchctl unload /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist; sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist'
+    config.dnsmasq.reload_command = 'sudo brew services restart dnsmasq'
   end
 
   if Vagrant.has_plugin? "vagrant-cachier"
