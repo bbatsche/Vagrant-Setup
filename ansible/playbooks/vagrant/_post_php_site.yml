@@ -2,6 +2,11 @@
 - hosts: development-vm
   gather_facts: no
 
+  tasks:
+    - name: Install Redis Server
+      apt: name=redis-server state=present
+      become: yes
+
   post_tasks:
   - name: Create Psysh Share Directory
     file: path=/usr/local/share/psysh state=directory mode=0775 group=web-admin
