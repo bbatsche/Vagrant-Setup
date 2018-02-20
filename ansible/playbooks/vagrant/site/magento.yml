@@ -10,7 +10,7 @@
     public_directory: pub
     php_max_execution_time: 300
     nginx_configs:
-      - php.conf
+      - php-{{ domain }}.conf
       - magento.conf
 
   roles:
