@@ -23,14 +23,9 @@
 - src: bbatsche.MongoDB-Manage
   version: v2.1.1
 
-- src: bbatsche.PostgreSQL-Install
-  version: v2.1.0
-
-- src: bbatsche.PostgreSQL-Manage
-  version: v2.1.0
-
-- src: bbatsche.WordPress
-  version: v1.2.1
 - src: bbatsche.MySQL
   version: v3.1.2
+
+- src: bbatsche.PostgreSQL
+  version: v3.0.0
 
