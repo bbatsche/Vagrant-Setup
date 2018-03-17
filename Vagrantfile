@@ -21,7 +21,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     v.vm.hostname = config_data['hostname']
 
-    v.vm.synced_folder ".", "/vagrant", id: "vagrant-root"
+    v.vm.synced_folder ".", "/vagrant", {
+      nfs: true,
+      mount_options: ["tcp", "nolock", "actimeo=1", "async"],
+      bsd__nfs_options: ["async"]
+    }
 
     v.vm.provider :virtualbox do |vb, override|
       vb.name = config_data['hostname']
@@ -36,11 +40,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.customize ["guestproperty", "set", :id, "--timesync-threshold",  "1000"]
 
       override.vm.network "private_network", type: "dhcp"
-
-      override.vm.synced_folder "./", "/vagrant", {
-        type: "nfs",
-        mount_options: ["nolock,vers=3,tcp,noatime,actimeo=1"]
-      }
     end
 
     # Configuration options for the VMware Fusion provider.
@@ -49,12 +48,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       vmw.vmx["memsize"]  = config_data['ram']
       vmw.vmx["numvcpus"] = config_data['num_cpus']
-
-      override.vm.synced_folder ".", "/vagrant", {
-        owner: "vagrant",
-        group: "www-data",
-        mount_options: ["umask=002"]
-      }
     end
 
     # Configuration options for the Parallels provider.
@@ -72,9 +65,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       p.customize ["set", :id, "--longer-battery-life", "off"]
 
       override.vm.synced_folder ".", "/vagrant", {
-        owner: "vagrant",
-        group: "www-data",
-        mount_options: ["dmode=775,fmode=664"]
+        nfs: true,
+        mount_options: ["tcp", "nolock", "actimeo=1", "async"],
+        bsd__nfs_options: ["async"]
       }
     end
 
@@ -105,14 +98,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   if Vagrant.has_plugin? "vagrant-cachier"
-    config.cache.scope = :box
-
-    config.cache.enable :apt
-    config.cache.enable :apt_lists
-    config.cache.enable :apt_cacher
-    config.cache.enable :composer
-    config.cache.enable :bower
-    config.cache.enable :npm
-    config.cache.enable :gem
+  #   config.cache.scope = :box
+  #
+  #   config.cache.enable :apt
+  #   config.cache.enable :apt_lists
+  #   config.cache.enable :apt_cacher
+  #   config.cache.enable :composer
+  #   config.cache.enable :bower
+  #   config.cache.enable :npm
+  #   config.cache.enable :gem
   end
 end
