@@ -63,12 +63,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       p.update_guest_tools = true
 
       p.customize ["set", :id, "--longer-battery-life", "off"]
-
-      override.vm.synced_folder ".", "/vagrant", {
-        nfs: true,
-        mount_options: ["tcp", "nolock", "actimeo=1", "async"],
-        bsd__nfs_options: ["async"]
-      }
     end
 
     v.vm.provision :ansible do |ansible|
@@ -78,10 +72,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.galaxy_roles_path = "ansible/roles"
 
       ansible.compatibility_mode = "2.0"
-    end
 
-    if Vagrant.has_plugin? "vagrant-reload"
-      v.vm.provision :reload
+      ansible.extra_vars = config_data["ansible_vars"] if config_data.has_key? "ansible_vars"
     end
   end
 
@@ -95,17 +87,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # command for reloading dnsmasq after config changes
     config.dnsmasq.reload_command = 'sudo brew services restart dnsmasq'
-  end
-
-  if Vagrant.has_plugin? "vagrant-cachier"
-  #   config.cache.scope = :box
-  #
-  #   config.cache.enable :apt
-  #   config.cache.enable :apt_lists
-  #   config.cache.enable :apt_cacher
-  #   config.cache.enable :composer
-  #   config.cache.enable :bower
-  #   config.cache.enable :npm
-  #   config.cache.enable :gem
   end
 end
