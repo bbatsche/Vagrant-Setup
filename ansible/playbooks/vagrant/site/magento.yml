@@ -6,7 +6,6 @@
 
   vars:
     dynamic_php: yes
-    php_version: 7.0.27
     public_directory: pub
     php_max_execution_time: 300
     nginx_configs:
@@ -15,8 +14,6 @@
 
   roles:
   - role: bbatsche.PHP
-    pecl_extensions: "{{ default_extensions | union(php7_extensions) }}"
-    composer_packages: "{{ default_packages | union(php7_packages) }}"
 
   tasks:
     - name: Copy Magento Nginx Config

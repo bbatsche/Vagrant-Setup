@@ -6,11 +6,8 @@
 
   vars:
     dynamic_php: yes
-    php_version: 7.1.13
 
   roles:
   - role: bbatsche.PHP
-    pecl_extensions: "{{ default_extensions | union(php7_extensions) }}"
-    composer_packages: "{{ default_packages | union(php7_packages) }}"
 
 - import_playbook: ../_post_php_site.yml

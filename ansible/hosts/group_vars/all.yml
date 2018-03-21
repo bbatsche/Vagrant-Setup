@@ -6,21 +6,17 @@ site_var_dir:    "{{ 'ansible/site_vars' | realpath }}"
 storage_dir:     "{{ 'ansible/storage'   | realpath }}"
 local_sites_dir: "{{ 'sites'             | realpath }}"
 
-default_extensions:
+php_version: 7.1.15
+
+pecl_extensions:
   - name: imagick
     version: 3.4.3
   - name: redis
-    version: 3.1.6
-
-php_memory_limit: 1536M
-
-php5_extensions:
-  - name: yaml
-    version: 1.3.1
-
-php7_extensions:
+    version: 4.0.0
   - name: yaml
     version: 2.0.2
+
+php_memory_limit: 1536M
 
 use_ssl: yes
 

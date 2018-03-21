@@ -8,21 +8,13 @@ http_root: /vagrant/sites
 db_admin: vagrant
 
 # Required vars for Phpenv role
-xdebug_version: 2.5.5
+xdebug_version: 2.6.0
 
-default_packages:
+composer_packages:
   - name: psy/psysh
     version: ^0.8
   - name: hirak/prestissimo
     version: ^0.3
-
-php5_packages:
-  - name: phpunit/phpunit
-    version: ^5.7
-  - name: phpspec/phpspec
-    version: ^3.4
-
-php7_packages:
   - name: phpunit/phpunit
     version: ^6.5
   - name: phpspec/phpspec
