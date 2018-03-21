@@ -1,6 +1,6 @@
 ---
 - src: bbatsche.Base
-  version: v2.1.6
+  version: v2.2.0
 
 - src: bbatsche.Nginx
   version: v4.3.0
@@ -14,16 +14,17 @@
 - src: bbatsche.Python
   version: v3.0.0
 
-- src: bbatsche.MongoDB-Install
-  version: v2.1.2
 - src: bbatsche.Ruby
   version: v3.0.1
 
-- src: bbatsche.MongoDB-Manage
-  version: v2.1.1
+# - src: bbatsche.MongoDB-Install
+#   version: v2.1.2
+#
+# - src: bbatsche.MongoDB-Manage
+#   version: v2.1.1
 
 - src: bbatsche.MySQL
-  version: v3.1.2
+  version: v3.1.4
 
 - src: bbatsche.PostgreSQL
   version: v3.0.0
