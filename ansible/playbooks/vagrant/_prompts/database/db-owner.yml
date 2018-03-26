@@ -1,0 +1,22 @@
+---
+- hosts: development-vm
+  gather_facts: no
+
+  vars_prompt:
+  - name:    new_db_name
+    prompt:  Database Name (e.g. something_db)
+    private: no
+
+  - name:    new_db_user
+    prompt:  Database Owner
+    private: no
+
+  - name:    new_db_pass
+    prompt:  Password for Database Owner
+    private: yes
+    confirm: yes
+
+  pre_tasks:
+    - import_tasks: _validate-user-params.yml
+
+    - set_fact: new_db_name={{ new_db_name }} new_db_user={{ new_db_user }} new_db_pass={{ new_db_pass }}

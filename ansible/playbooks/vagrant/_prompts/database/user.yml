@@ -4,7 +4,7 @@
 
   vars_prompt:
   - name:    new_db_user
-    prompt:  Database User (e.g. something_user)
+    prompt:  Database User
     private: no
 
   - name:    new_db_pass
@@ -13,12 +13,6 @@
     confirm: yes
 
   pre_tasks:
-    - name: Password cannot be blank
-      assert:
-        that: new_db_pass != ''
-
-    - name: Cannot modify DB admin
-      assert:
-        that: new_db_user != db_admin
+    - import_tasks: _validate-user-params.yml
 
     - set_fact: new_db_user={{ new_db_user }} new_db_pass={{ new_db_pass }}

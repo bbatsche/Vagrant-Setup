@@ -1,0 +1,13 @@
+---
+- import_playbook: ../_prompts/database/db-user.yml
+
+- name: Create PostgreSQL Readonly User
+  hosts: development-vm
+
+  vars:
+    new_db_priv:
+      table: [ SELECT, INSERT, UPDATE, DELETE, TRUNCATE ]
+      sequence: [ SELECT, UPDATE ]
+
+  roles:
+    - bbatsche.PostgreSQL

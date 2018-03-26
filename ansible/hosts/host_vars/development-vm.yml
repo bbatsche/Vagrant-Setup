@@ -21,3 +21,6 @@ composer_packages:
     version: ^4.3
 
 install_mariadb: yes
+install_postgres: yes
+
+postgres_enable_network: yes

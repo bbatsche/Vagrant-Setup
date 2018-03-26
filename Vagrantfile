@@ -27,6 +27,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       bsd__nfs_options: ["async"]
     }
 
+    v.vm.network "forwarded_port", guest: 5432, host: 5432
+
     v.vm.provider :virtualbox do |vb, override|
       vb.name = config_data['hostname']
 

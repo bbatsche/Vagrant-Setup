@@ -1,8 +1,8 @@
 ---
-- include: ../_prompts/db-user.yml
+- include: ../_prompts/database/user.yml
 
 - name: Create PostgreSQL Administrator
   hosts: development-vm
 
   roles:
-    - bbatsche.PostgreSQL-Manage
+    - bbatsche.PostgreSQL

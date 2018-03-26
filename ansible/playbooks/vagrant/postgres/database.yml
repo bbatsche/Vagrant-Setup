@@ -1,8 +1,8 @@
 ---
-- include: ../_prompts/database.yml
+- include: ../_prompts/database/db-owner.yml
 
 - name: Create PostgreSQL Database
   hosts: development-vm
 
   roles:
-    - bbatsche.PostgreSQL-Manage
+    - bbatsche.PostgreSQL

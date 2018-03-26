@@ -1,5 +1,5 @@
 ---
-- import_playbook: ../_prompts/db-user.yml
+- import_playbook: ../_prompts/database/user.yml
 
 - name: Create MySQL Administrator
   hosts: development-vm

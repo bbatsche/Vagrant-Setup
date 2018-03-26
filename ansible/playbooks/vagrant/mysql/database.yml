@@ -1,5 +1,5 @@
 ---
-- import_playbook: ../_prompts/database.yml
+- import_playbook: ../_prompts/database/db-owner.yml
 
 - name: Create MySQL Database
   hosts: development-vm

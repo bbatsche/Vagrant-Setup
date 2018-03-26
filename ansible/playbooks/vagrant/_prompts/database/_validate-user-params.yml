@@ -1,0 +1,8 @@
+---
+- name: Password cannot be blank
+  assert:
+    that: new_db_pass != ''
+
+- name: Cannot modify DB admin
+  assert:
+    that: new_db_user != db_admin
