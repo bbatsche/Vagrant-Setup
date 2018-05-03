@@ -19,7 +19,7 @@
 
     - name: Gathering Facts
       setup:
-    
+
     - name: Check for VM Tools
       stat: path=/etc/vmware-tools/locations
       register: vmware_tools_file
@@ -42,4 +42,19 @@
         line: cd /vagrant
 
   roles:
-    - bbatsche.Base
+    - role: bbatsche.Base
+
+    - role: geerlingguy.nodejs
+      become: yes
+
+    - role: geerlingguy.ruby
+      become: yes
+
+    - role: geerlingguy.ntp
+      become: yes
+
+    - role: Oefenweb.yarn
+      become: yes
+
+    - role: tersmitten.swapfile
+      become: yes

@@ -21,3 +21,16 @@ php_memory_limit: 1536M
 use_ssl: yes
 
 mysql_socket: /var/run/mysqld/mysqld.sock
+
+nodejs_version: 8.x
+
+nodejs_npm_global_packages:
+  - bower
+  - gulp
+  - grunt-cli
+
+ruby_install_gems:
+  - sass
+
+ntp_manage_config: yes
+ntp_area: us

@@ -24,3 +24,6 @@ install_mariadb: yes
 install_postgres: yes
 
 postgres_enable_network: yes
+
+ntp_enabled: no
+ntp_timezone: America/Chicago
