@@ -41,6 +41,30 @@
         dest: "{{ ansible_user_dir }}/.bashrc"
         line: cd /vagrant
 
+    - name: Check for iTerm Integration
+      stat: path={{ ansible_user_dir }}/.iterm2_shell_integration.bash
+      register: integration_script
+
+    - name: Download & Install iTerm Integration
+      block:
+      - name: Temp Directory for iTerm Integration
+        tempfile: state=directory
+        register: integration_temp_dir
+
+      - name: Download iTerm Integration Installer
+        get_url:
+          url: https://iterm2.com/shell_integration/install_shell_integration.sh
+          dest: "{{ integration_temp_dir.path}}/"
+          mode: 0755
+
+      - name: Install iTerm Integration
+        shell: install_shell_integration.sh
+        args:
+          executable: /bin/bash
+          creates: "{{ ansible_user_dir }}/.iterm2_shell_integration.bash"
+          chdir: "{{ integration_temp_dir.path }}"
+      when: not integration_script.stat.exists
+
   roles:
     - role: bbatsche.Base
 
