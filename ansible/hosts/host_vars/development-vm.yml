@@ -12,7 +12,7 @@ xdebug_version: 2.6.0
 
 composer_packages:
   - name: psy/psysh
-    version: ^0.8
+    version: ^0.9
   - name: hirak/prestissimo
     version: ^0.3
   - name: phpunit/phpunit

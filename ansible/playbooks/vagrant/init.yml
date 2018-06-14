@@ -58,11 +58,10 @@
           mode: 0755
 
       - name: Install iTerm Integration
-        shell: install_shell_integration.sh
+        shell: "{{ integration_temp_dir.path }}/install_shell_integration.sh"
         args:
           executable: /bin/bash
           creates: "{{ ansible_user_dir }}/.iterm2_shell_integration.bash"
-          chdir: "{{ integration_temp_dir.path }}"
       when: not integration_script.stat.exists
 
   roles:
@@ -80,5 +79,5 @@
     - role: Oefenweb.yarn
       become: yes
 
-    - role: tersmitten.swapfile
+    - role: geerlingguy.swap
       become: yes

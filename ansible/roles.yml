@@ -1,9 +1,9 @@
 ---
 - src: bbatsche.Base
-  version: v3.0.1
+  version: v3.0.2
 
 - src: Oefenweb.yarn
-  version: v1.0.17
+  version: v1.0.19
 
 - src: geerlingguy.nodejs
   version: 4.2.0
@@ -14,26 +14,26 @@
 - src: geerlingguy.ntp
   version: 1.6.0
 
-- src: tersmitten.swapfile
-  version: v2.0.4
+- src: geerlingguy.swap
+  version: 1.0.0
 
 - src: jnv.unattended-upgrades
-  version: v1.5.0
+  version: v1.6.0
 
 - src: bbatsche.Nginx
-  version: v4.3.0
+  version: v5.0.0
 
 - src: bbatsche.PHP
-  version: v2.2.1
+  version: v3.1.0
 
 - src: bbatsche.Node
-  version: v3.0.0
+  version: v4.0.0
 
 - src: bbatsche.Python
-  version: v3.0.0
+  version: v4.0.0
 
 - src: bbatsche.Ruby
-  version: v3.0.1
+  version: v4.0.0
 
 # - src: bbatsche.MongoDB-Install
 #   version: v2.1.2
@@ -42,7 +42,7 @@
 #   version: v2.1.1
 
 - src: bbatsche.MySQL
-  version: v3.1.4
+  version: v4.0.0
 
 - src: bbatsche.PostgreSQL
-  version: v3.0.0
+  version: v4.0.0
