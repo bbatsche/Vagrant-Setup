@@ -23,8 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     v.vm.synced_folder ".", "/vagrant", {
       nfs: true,
-      mount_options: ["tcp", "nolock", "actimeo=1", "async"],
-      bsd__nfs_options: ["async"]
+      mount_options: ["nolock", "actimeo=1", "async"]
     }
 
     v.vm.network "forwarded_port", guest: 5432, host: 5432
@@ -40,8 +39,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.customize ["modifyvm",             :id, "--natdnshostresolver1", "on"]
       vb.customize ["setextradata",         :id, "--VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
       vb.customize ["guestproperty", "set", :id, "--timesync-threshold",  "1000"]
+      vb.customize ["modifyvm",             :id, "--uartmode1",           "disconnected"]
 
-      override.vm.network "private_network", type: "dhcp"
+      vb.linked_clone = true
+
+      override.vm.network "private_network", ip: "172.28.128.3"
     end
 
     # Configuration options for the VMware Fusion provider.
@@ -89,5 +91,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # command for reloading dnsmasq after config changes
     config.dnsmasq.reload_command = 'sudo brew services restart dnsmasq'
+  end
+
+  if Vagrant.has_plugin? 'vagrant-vbguest'
+    config.vbguest.no_install = true
   end
 end
