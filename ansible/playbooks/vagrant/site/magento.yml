@@ -21,25 +21,8 @@
       become: yes
       notify: Restart Nginx
 
-    - name: Install RabbitMQ and Elasticsearch
-      apt: name={{ item }} state=present
+    - name: Install RabbitMQ
+      apt: name=rabbitmq-server state=present
       become: yes
-      with_items:
-        - rabbitmq-server
-        - elasticsearch
-
-    - name: Enable Elasticsearch Daemon
-      lineinfile:
-        path: /etc/default/elasticsearch
-        regexp: "^#?\\s*START_DAEMON"
-        line: START_DAEMON=true
-      become: yes
-      notify: Restart Elasticsearch
-
-  handlers:
-    - name: Restart Elasticsearch
-      service: name=elasticsearch state=restarted
-      become: yes
-
 
 - import_playbook: ../_post_php_site.yml
