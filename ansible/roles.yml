@@ -1,6 +1,6 @@
 ---
 - src: bbatsche.Base
-  version: v3.0.2
+  version: v3.0.3
 
 - src: Oefenweb.yarn
   version: v1.0.19
@@ -21,10 +21,10 @@
   version: v1.6.0
 
 - src: bbatsche.Nginx
-  version: v5.0.0
+  version: v5.1.0
 
 - src: bbatsche.PHP
-  version: v3.1.0
+  version: v3.1.1
 
 - src: bbatsche.Node
   version: v4.0.0

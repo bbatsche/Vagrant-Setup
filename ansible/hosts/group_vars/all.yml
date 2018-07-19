@@ -34,3 +34,5 @@ ruby_install_gems:
 
 ntp_manage_config: yes
 ntp_area: us
+
+mariadb_apt_mirror: http://ftp.utexas.edu/
