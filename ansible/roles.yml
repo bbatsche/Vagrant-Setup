@@ -8,8 +8,11 @@
 - src: geerlingguy.nodejs
   version: 4.2.0
 
-- src: geerlingguy.ruby
-  version: 2.5.0
+# - src: geerlingguy.ruby
+#   version: 2.5.0
+- src: https://github.com/bbatsche/ansible-role-ruby
+  version: fix-require
+  name: geerlingguy.ruby
 
 - src: geerlingguy.ntp
   version: 1.6.0
@@ -42,7 +45,7 @@
 #   version: v2.1.1
 
 - src: bbatsche.MySQL
-  version: v4.0.0
+  version: v4.1.0
 
 - src: bbatsche.PostgreSQL
-  version: v4.0.0
+  version: v4.1.0
