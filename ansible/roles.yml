@@ -3,7 +3,7 @@
   version: v3.0.3
 
 - src: Oefenweb.yarn
-  version: v1.0.19
+  version: v1.0.20
 
 - src: geerlingguy.nodejs
   version: 4.2.0
@@ -30,13 +30,13 @@
   version: v3.1.1
 
 - src: bbatsche.Node
-  version: v4.0.0
+  version: v4.0.1
 
 - src: bbatsche.Python
-  version: v4.0.0
+  version: v4.0.1
 
 - src: bbatsche.Ruby
-  version: v4.0.0
+  version: v4.0.1
 
 # - src: bbatsche.MongoDB-Install
 #   version: v2.1.2
