@@ -9,15 +9,16 @@
     public_directory: pub
     php_max_execution_time: 300
     nginx_configs:
-      - php-{{ domain }}.conf
-      - magento.conf
+      - magento-{{ domain }}.conf
 
   roles:
   - role: bbatsche.PHP
 
   tasks:
     - name: Copy Magento Nginx Config
-      copy: src=../../../files/magento.conf dest=/etc/nginx/conf.d/magento.conf
+      template:
+        src: ../../../templates/magento.conf.j2
+        dest: /etc/nginx/conf.d/magento-{{ domain }}.conf
       become: yes
       notify: Restart Nginx
 

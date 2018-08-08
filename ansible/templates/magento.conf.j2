@@ -1,8 +1,34 @@
-proxy_connect_timeout 300s;
-proxy_send_timeout    300s;
-proxy_read_timeout    300s;
-fastcgi_send_timeout  300s;
-fastcgi_read_timeout  300s;
+index index.php index.html index.htm;
+
+location / {
+  try_files $uri $uri/ {{ "/index.php$is_args$args" if dynamic_php else "=404" }};
+}
+
+location ~ \.php$ {
+  # regex to split $uri to $fastcgi_script_name and $fastcgi_path
+  fastcgi_split_path_info ^(.+\.php)(/.+)$;
+
+  try_files $fastcgi_script_name =404;
+
+  # Bypass the fact that try_files resets $fastcgi_path_info
+  # see: http://trac.nginx.org/nginx/ticket/321
+  set $path_info $fastcgi_path_info;
+  fastcgi_param PATH_INFO $path_info;
+  fastcgi_param MAGE_MODE {{ "developer" if env_name == "dev" else "production" }};
+  fastcgi_param HTTPS on;
+
+  fastcgi_index index.php;
+
+  include fastcgi.conf;
+
+  proxy_connect_timeout {{ php_max_execution_time }}s;
+  proxy_send_timeout    {{ php_max_execution_time }}s;
+  proxy_read_timeout    {{ php_max_execution_time }}s;
+  fastcgi_send_timeout  {{ php_max_execution_time }}s;
+  fastcgi_read_timeout  {{ php_max_execution_time }}s;
+
+  fastcgi_pass unix:{{ phpenv_root }}/versions/{{ php_version }}/var/run/{{ domain }}.sock;
+}
 
 # PHP entry point for setup application
 location ~* ^/setup($|/) {
