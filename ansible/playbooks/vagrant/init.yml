@@ -67,8 +67,8 @@
   roles:
     - role: bbatsche.Base
 
-    - role: geerlingguy.nodejs
-      become: yes
+    - role: sansible.nodejs
+      sansible_nodejs_workspace_user: vagrant
 
     - role: geerlingguy.ruby
       become: yes

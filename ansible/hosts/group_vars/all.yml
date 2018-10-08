@@ -6,7 +6,7 @@ site_var_dir:    "{{ 'ansible/site_vars' | realpath }}"
 storage_dir:     "{{ 'ansible/storage'   | realpath }}"
 local_sites_dir: "{{ 'sites'             | realpath }}"
 
-php_version: 7.1.18
+php_version: 7.1.22
 
 pecl_extensions:
   - name: imagick
@@ -22,12 +22,11 @@ use_ssl: yes
 
 mysql_socket: /var/run/mysqld/mysqld.sock
 
-nodejs_version: 8.x
-
-nodejs_npm_global_packages:
-  - bower
-  - gulp
-  - grunt-cli
+sansible_nodejs_version: 8
+sansible_nodejs_npms:
+  - name: bower
+  - name: gulp
+  - name: grunt-cli
 
 ruby_install_gems:
   - sass
