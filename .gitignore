@@ -11,6 +11,7 @@ doc/
 /ansible/roles/*
 /ansible/storage/*
 /ansible/hosts/group_vars/_email.yml
+/ansible/callback_plugins/__pycache__
 
 # Ignore vagrant files
 .vagrant/
