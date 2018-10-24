@@ -77,10 +77,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       ansible.compatibility_mode = "2.0"
 
-      ansible.extra_vars = config_data["ansible_vars"] if config_data.has_key? "ansible_vars"
       ansible.host_vars = {
         "development-vm" => {"ansible_python_interpreter" => "/usr/bin/python3"}
       }
+      ansible.host_vars["development-vm"] = Vagrant::Util::DeepMerge.deep_merge(ansible.host_vars["development-vm"], config_data["ansible_vars"]) if config_data.has_key? "ansible_vars"
     end
   end
 

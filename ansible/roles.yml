@@ -24,7 +24,7 @@
   version: v5.1.0
 
 - src: bbatsche.PHP
-  version: v3.2.0
+  version: v3.2.1
 
 - src: bbatsche.Node
   version: v4.0.1

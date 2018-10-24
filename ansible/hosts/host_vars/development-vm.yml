@@ -27,3 +27,5 @@ postgres_enable_network: yes
 
 ntp_enabled: no
 ntp_timezone: America/Chicago
+
+mariadb_apt_mirror: http://ftp.utexas.edu/
