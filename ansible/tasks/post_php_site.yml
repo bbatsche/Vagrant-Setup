@@ -1,0 +1,14 @@
+---
+- name: Install Redis Server
+  apt: name=redis-server state=present
+  become: yes
+
+- name: Download Documentation for Psysh
+  block:
+    - name: Create Psysh Share Directory
+      file: path=/usr/local/share/psysh state=directory mode=0775 group=web-admin
+      become: yes
+
+    - name: Download PHP Documentation
+      get_url: url=http://psysh.org/manual/en/php_manual.sqlite dest=/usr/local/share/psysh/php_manual.sqlite
+  when: env_name == "dev"

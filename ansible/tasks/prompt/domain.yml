@@ -1,0 +1,17 @@
+---
+- pause:
+    prompt: Domain Name (e.g. domain.name.{{ domain_tld if domain_tld is defined else "com" }})
+  register: domain_prompt
+
+- name: Clean domain name
+  set_fact:
+    domain: "{{ domain_prompt.user_input | trim | lower }}"
+
+- assert:
+    that: domain is match('^[a-z0-9][a-z0-9\\-.]+[a-z0-9]$')
+    msg: Domains must be made of alphanumeric characters
+
+- assert:
+    that: domain.endswith(".{{ domain_tld }}")
+    msg: Domain name must end with .{{ domain_tld }}
+  when: domain_tld is defined

@@ -29,3 +29,5 @@ ntp_enabled: no
 ntp_timezone: America/Chicago
 
 mariadb_apt_mirror: http://ftp.utexas.edu/
+
+domain_tld: test

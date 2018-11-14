@@ -1,0 +1,11 @@
+---
+- pause:
+    prompt: Email Address{{ " [" + email_address + "]" if email_address is defined else "" }}
+  register: email_prompt
+
+- name: Clean input
+  set_fact:
+    email_input: "{{ email_prompt.user_input | trim | lower }}"
+
+- set_fact:
+    email_address: "{{ email_prompt.user_input if email_input != '' else email_address | default ('') }}"

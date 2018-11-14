@@ -1,8 +1,14 @@
 ---
-- include: ../_prompts/domain.yml
-
 - name: Create Ruby Site
   hosts: development-vm
+
+  pre_tasks:
+    - import_tasks: ../../../tasks/import_vars.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/email.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/domain.yml
+      tags: silent
 
   roles:
     - bbatsche.Ruby

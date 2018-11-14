@@ -1,13 +1,20 @@
 ---
-- import_playbook: ../_prompts/domain.yml
-
 - name: Create Dynamic PHP 7 Site
   hosts: development-vm
 
   vars:
     dynamic_php: yes
 
+  pre_tasks:
+    - import_tasks: ../../../tasks/import_vars.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/email.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/domain.yml
+      tags: silent
+
   roles:
   - role: bbatsche.PHP
 
-- import_playbook: ../_post_php_site.yml
+  post_tasks:
+    - import_tasks: ../../../tasks/post_php_site.yml

@@ -1,0 +1,17 @@
+---
+- name: Check for Optional Vars File
+  local_action: stat path={{ extra_config_file }}
+  register: config_file
+
+- name: Import Vars
+  block:
+  - include_vars:
+      file: "{{ config_file.stat.path }}"
+      name: imported_config
+
+  - set_fact: "{{ item.key }}={{ item.value }}"
+    loop: "{{ imported_config.ansible_vars.all | default({}) | dict2items }}"
+
+  - set_fact: "{{ item.key }}={{ item.value }}"
+    loop: "{{ imported_config.ansible_vars[inventory_hostname] | default({}) | dict2items }}"
+  when: config_file.stat.exists

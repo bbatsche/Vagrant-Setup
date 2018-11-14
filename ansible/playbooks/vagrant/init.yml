@@ -20,6 +20,9 @@
     - name: Gathering Facts
       setup:
 
+    - import_tasks: ../../tasks/import_vars.yml
+      tags: silent
+
     - name: Check for VM Tools
       stat: path=/etc/vmware-tools/locations
       register: vmware_tools_file
@@ -31,7 +34,7 @@
         regexp: ^answer {{ item }} (no|yes)
       become: yes
       when: vmware_tools_file.stat.exists
-      with_items:
+      loop:
         - AUTO_KMODS_ENABLED_ANSWER
         - AUTO_KMODS_ENABLED
 
