@@ -1,17 +1,24 @@
-# Ignore all logfiles and tempfiles.
-/log/*.log
-/tmp
-doc/
+/*
+!.gitignore
+!/ansible.cfg
+!/config.yaml.dist
+!/LICENSE.txt
+!/README.md
+!/Vagrantfile
+
+!/ansible/
+/ansible/roles/*
+/ansible/hosts/*
+
+!/ansible/hosts/vagrant_ansible_inventory
+!/ansible/hosts/group_vars/
+!/ansible/hosts/host_vars/
+
+*.bak
 *.swp
 *~
-.project
 .DS_Store
 .idea
-/config.yaml
-/ansible/roles/*
-/ansible/storage/*
-/ansible/hosts/group_vars/_email.yml
-/ansible/callback_plugins/__pycache__
-
-# Ignore vagrant files
-.vagrant/
+.project
+._*
+__pycache__

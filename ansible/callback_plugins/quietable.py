@@ -3,6 +3,8 @@ __metaclass__ = type
 
 from ansible.playbook.task_include import TaskInclude
 from ansible.plugins.callback import CallbackBase
+from ansible.utils.color import colorize, hostcolor
+
 from ansible import constants as C
 
 from pprint import pprint
@@ -41,20 +43,19 @@ class CallbackModule(CallbackBase):
         if self._last_task_banner != result._task._uuid:
             self._print_task_banner(result._task, force_print=True)
 
-        self._handle_exception(result._result, use_stderr=self.display_failed_stderr)
+        self._handle_exception(result._result, use_stderr=True)
         self._handle_warnings(result._result)
 
         if result._task.loop and 'results' in result._result:
             self._process_items(result)
-
         else:
             if delegated_vars:
                 self._display.display("fatal: [%s -> %s]: FAILED! => %s" % (result._host.get_name(), delegated_vars['ansible_host'],
                                                                             self._dump_results(result._result)),
-                                      color=C.COLOR_ERROR, stderr=self.display_failed_stderr)
+                                      color=C.COLOR_ERROR, stderr=True)
             else:
                 self._display.display("fatal: [%s]: FAILED! => %s" % (result._host.get_name(), self._dump_results(result._result)),
-                                      color=C.COLOR_ERROR, stderr=self.display_failed_stderr)
+                                      color=C.COLOR_ERROR, stderr=True)
 
         if ignore_errors:
             self._display.display("...ignoring", color=C.COLOR_SKIP)
@@ -84,7 +85,12 @@ class CallbackModule(CallbackBase):
                 msg = "ok: [%s]" % result._host.get_name()
             color = C.COLOR_OK
 
+        # Assertion passed, extra metadata is just noise
+        if result._task.action == 'assert':
+            result._result = []
+
         self._handle_warnings(result._result)
+
 
         if result._task.loop and 'results' in result._result:
             self._process_items(result)
@@ -94,6 +100,23 @@ class CallbackModule(CallbackBase):
             if (self._display.verbosity > 0 or '_ansible_verbose_always' in result._result) and '_ansible_verbose_override' not in result._result:
                 msg += " => %s" % (self._dump_results(result._result),)
             self._display.display(msg, color=color)
+
+    def v2_runner_on_skipped(self, result):
+        if isinstance(result._task, TaskInclude) or 'silent' in result._task.tags:
+            return
+
+        self._clean_results(result._result, result._task.action)
+
+        if self._last_task_banner != result._task._uuid:
+            self._print_task_banner(result._task)
+
+        if result._task.loop and 'results' in result._result:
+            self._process_items(result)
+        else:
+            msg = "skipping: [%s]" % result._host.get_name()
+            if (self._display.verbosity > 0 or '_ansible_verbose_always' in result._result) and '_ansible_verbose_override' not in result._result:
+                msg += " => %s" % self._dump_results(result._result)
+            self._display.display(msg, color=C.COLOR_SKIP)
 
     def v2_runner_on_unreachable(self, result):
         if not self._last_play_printed:
@@ -122,9 +145,6 @@ class CallbackModule(CallbackBase):
             msg = 'changed'
             color = C.COLOR_CHANGED
         else:
-            if not self.display_ok_hosts:
-                return
-
             if self._last_task_banner != result._task._uuid:
                 self._print_task_banner(result._task)
 
@@ -141,6 +161,19 @@ class CallbackModule(CallbackBase):
         if (self._display.verbosity > 0 or '_ansible_verbose_always' in result._result) and '_ansible_verbose_override' not in result._result:
             msg += " => %s" % self._dump_results(result._result)
         self._display.display(msg, color=color)
+
+    def v2_runner_item_on_skipped(self, result):
+        if "silent" in result._task.tags:
+            return
+
+        if self._last_task_banner != result._task._uuid:
+            self._print_task_banner(result._task)
+
+        self._clean_results(result._result, result._task.action)
+        msg = "skipping: [%s] => (item=%s) " % (result._host.get_name(), self._get_item_label(result._result))
+        if (self._display.verbosity > 0 or '_ansible_verbose_always' in result._result) and '_ansible_verbose_override' not in result._result:
+            msg += " => %s" % self._dump_results(result._result)
+        self._display.display(msg, color=C.COLOR_SKIP)
 
     def v2_runner_item_on_failed(self, result):
         if not self._last_play_printed:
@@ -165,6 +198,51 @@ class CallbackModule(CallbackBase):
 
         self._handle_warnings(result._result)
         self._display.display(msg + " (item=%s) => %s" % (self._get_item_label(result._result), self._dump_results(result._result)), color=C.COLOR_ERROR)
+
+    def v2_playbook_on_stats(self, stats):
+        self._display.banner("Summary")
+
+        hosts = sorted(stats.processed.keys())
+        for h in hosts:
+            t = stats.summarize(h)
+
+            self._display.display(u"%s : %s %s %s %s %s" % (
+                hostcolor(h, t),
+                colorize(u'Ok', t['ok'], C.COLOR_OK),
+                colorize(u'Changed', t['changed'], C.COLOR_CHANGED),
+                colorize(u'Unreachable', t['unreachable'], C.COLOR_UNREACHABLE),
+                colorize(u'Failed', t['failures'], C.COLOR_ERROR),
+                colorize(u'Skipped', t['skipped'], C.COLOR_SKIP)),
+                screen_only=True
+            )
+
+            self._display.display(u"%s : %s %s %s %s %s" % (
+                hostcolor(h, t, False),
+                colorize(u'Ok', t['ok'], None),
+                colorize(u'Changed', t['changed'], None),
+                colorize(u'Unreachable', t['unreachable'], None),
+                colorize(u'Failed', t['failures'], None),
+                colorize(u'Skip', t['skipped'], None)),
+                log_only=True
+            )
+
+        self._display.display("", screen_only=True)
+
+        # print custom stats if required
+        if stats.custom and self.show_custom_stats:
+            self._display.banner("Custom stats: ")
+            # per host
+            # TODO: come up with 'pretty format'
+            for k in sorted(stats.custom.keys()):
+                if k == '_run':
+                    continue
+                self._display.display('\t%s: %s' % (k, self._dump_results(stats.custom[k], indent=1).replace('\n', '')))
+
+            # print per run custom stats
+            if '_run' in stats.custom:
+                self._display.display("", screen_only=True)
+                self._display.display('\tRun: %s' % self._dump_results(stats.custom['_run'], indent=1).replace('\n', ''))
+            self._display.display("", screen_only=True)
 
     def _task_start(self, task, prefix=None):
         # Cache output prefix for task if provided
@@ -221,7 +299,7 @@ class CallbackModule(CallbackBase):
 
         self._last_task_printed = False
 
-        if 'silent' in task.tags and not force_print:
+        if isinstance(task, TaskInclude) or 'silent' in task.tags and not force_print:
             return
 
         self._last_task_printed = True

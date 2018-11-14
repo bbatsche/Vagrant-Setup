@@ -1,5 +1,0 @@
-# Put your Digital Ocean IP Address Here
-; digital_ocean ansible_ssh_host=xxx.xxx.xxx.xxx
-
-[production]
-digital_ocean
