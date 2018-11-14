@@ -2,19 +2,20 @@
 # Some useful paths on the local file system
 # Realpath will take a relative path and expand it from where Ansible is being run
 #   (as opposed to being relative to what task/playbook it's referenced from)
-site_var_dir:    "{{ 'ansible/site_vars' | realpath }}"
-storage_dir:     "{{ 'ansible/storage'   | realpath }}"
-local_sites_dir: "{{ 'sites'             | realpath }}"
+extra_config_file: "{{ 'config.yaml'       | realpath }}"
+site_var_dir:      "{{ 'ansible/site_vars' | realpath }}"
+storage_dir:       "{{ 'ansible/storage'   | realpath }}"
+local_sites_dir:   "{{ 'sites'             | realpath }}"
 
-php_version: 7.1.22
+php_version: 7.1.24
 
 pecl_extensions:
   - name: imagick
     version: 3.4.3
   - name: redis
-    version: 4.0.2
+    version: 4.1.1
   - name: yaml
-    version: 2.0.2
+    version: 2.0.3
 
 php_memory_limit: 1536M
 

@@ -47,7 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     # Configuration options for the VMware Fusion provider.
-    v.vm.provider :vmware_fusion do |vmw, override|
+    v.vm.provider :vmware_desktop do |vmw, override|
       override.vm.box = config_data['vmware_box'] if config_data.has_key? 'vmware_box'
 
       vmw.vmx["memsize"]  = config_data['ram']
