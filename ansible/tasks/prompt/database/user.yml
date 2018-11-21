@@ -1,0 +1,31 @@
+---
+- pause:
+    prompt: Databse Username
+  register: user_prompt
+
+- pause:
+    prompt: Database User Password
+    echo: no
+  register: password_prompt
+
+- pause:
+    prompt: Password Confirmation
+    echo: no
+  register: confirmation_prompt
+
+- name: Clean username
+  set_fact:
+    new_db_user: "{{ user_prompt.user_input | trim | lower }}"
+    new_db_pass: "{{ password_prompt.user_input }}"
+
+- assert:
+    that: new_db_pass == confirmation_prompt.user_input
+    msg: Password and confirmation do not match
+
+- assert:
+    that: new_db_pass != ''
+    msg: Password cannot be blank
+
+- assert:
+    that: new_db_user != db_admin
+    msg: Cannot modify DB admin

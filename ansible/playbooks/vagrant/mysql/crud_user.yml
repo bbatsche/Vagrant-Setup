@@ -1,11 +1,16 @@
 ---
-- import_playbook: ../_prompts/database/db-opt.yml
-
 - name: Create MySQL CRUD User
   hosts: development-vm
 
-  vars:
-    new_db_privs: "{{ new_db_name + '.*:CREATE_TEMPORARY_TABLES,DELETE,INSERT,LOCK_TABLES,SELECT,UPDATE' if new_db_name is defined else '*.*:CREATE_TEMPORARY_TABLES,DELETE,INSERT,LOCK_TABLES,SELECT,SHOW_DATABASES,UPDATE' }}"
+  pre_tasks:
+    - import_tasks: ../../../tasks/prompt/database/user.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/database/database.yml
+      tags: silent
+
+    - set_fact:
+        new_db_priv: "{{ new_db_name + '.*:CREATE_TEMPORARY_TABLES,DELETE,INSERT,LOCK_TABLES,SELECT,UPDATE' if new_db_name is defined else '*.*:CREATE_TEMPORARY_TABLES,DELETE,INSERT,LOCK_TABLES,SELECT,SHOW_DATABASES,UPDATE' }}"
+      tags: silent
 
   roles:
     - bbatsche.MySQL

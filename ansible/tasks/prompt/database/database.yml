@@ -1,0 +1,17 @@
+---
+- pause:
+    prompt: Databse Name (e.g. something_db)
+  register: database_prompt
+
+- name: Clean databse name
+  set_fact:
+    database_input: "{{ database_prompt.user_input | trim | lower }}"
+
+- block:
+  - set_fact:
+      new_db_name: "{{ database_input }}"
+
+  - assert:
+      that: new_db_name is match('^[a-z0-9_]+$')
+      msg: Database names must be alphanumerics or underscores
+  when: database_input != ''

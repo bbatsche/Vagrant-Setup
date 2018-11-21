@@ -1,8 +1,17 @@
 ---
-- include: ../_prompts/database/db-owner.yml
-
 - name: Create PostgreSQL Database
   hosts: development-vm
+
+  pre_tasks:
+    - import_tasks: ../../../tasks/prompt/database/database.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/database/user.yml
+      tags: silent
+
+    - assert:
+        that: new_db_name is defined
+        msg: Database name is required
+      tags: silent
 
   roles:
     - bbatsche.PostgreSQL

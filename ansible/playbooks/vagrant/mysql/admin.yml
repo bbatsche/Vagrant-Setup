@@ -1,8 +1,10 @@
 ---
-- import_playbook: ../_prompts/database/user.yml
-
 - name: Create MySQL Administrator
   hosts: development-vm
+
+  pre_tasks:
+    - import_tasks: ../../../tasks/prompt/database/user.yml
+      tags: silent
 
   roles:
     - bbatsche.MySQL

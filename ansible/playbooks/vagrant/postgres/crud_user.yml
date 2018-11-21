@@ -1,6 +1,4 @@
 ---
-- import_playbook: ../_prompts/database/db-user.yml
-
 - name: Create PostgreSQL Readonly User
   hosts: development-vm
 
@@ -8,6 +6,12 @@
     new_db_priv:
       table: [ SELECT, INSERT, UPDATE, DELETE, TRUNCATE ]
       sequence: [ SELECT, UPDATE ]
+
+  pre_tasks:
+    - import_tasks: ../../../tasks/prompt/database/user.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/database/database.yml
+      tags: silent
 
   roles:
     - bbatsche.PostgreSQL
