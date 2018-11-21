@@ -42,7 +42,7 @@
 #   version: v2.1.1
 
 - src: bbatsche.MySQL
-  version: v4.1.0
+  version: v5.0.0
 
 - src: bbatsche.PostgreSQL
   version: v4.1.0
