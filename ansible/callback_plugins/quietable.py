@@ -87,10 +87,9 @@ class CallbackModule(CallbackBase):
 
         # Assertion passed, extra metadata is just noise
         if result._task.action == 'assert':
-            result._result = []
+            result._result = {}
 
         self._handle_warnings(result._result)
-
 
         if result._task.loop and 'results' in result._result:
             self._process_items(result)
