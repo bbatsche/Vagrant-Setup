@@ -1,0 +1,63 @@
+---
+- pause:
+    prompt: Admin Username [{{ magento_admin_user if magento_admin_user is defined else "admin" }}]
+  register: username_prompt
+
+- pause:
+    prompt: Admin Password{{ " [********]" if magento_admin_password is defined else "" }}
+    echo: no
+  register: password_prompt
+
+- pause:
+    prompt: Confirm Admin Password
+    echo: no
+  register: confirmation_prompt
+  when: password_prompt.user_input != "" or magento_admin_password is not defined
+
+- pause:
+    prompt: Admin First Name{{ " [" + magento_admin_firstname + "]" if magento_admin_firstname is defined else "" }}
+  register: first_name_prompt
+
+- pause:
+    prompt: Admin Last Name{{ " [" + magento_admin_lastname + "]" if magento_admin_lastname is defined else "" }}
+  register: last_name_prompt
+
+- name: Clean input
+  set_fact:
+    username_input: "{{ username_prompt.user_input | trim | lower }}"
+    password_input: "{{ password_prompt.user_input }}"
+    first_name_input: "{{ first_name_prompt.user_input | trim }}"
+    last_name_input: "{{ last_name_prompt.user_input | trim }}"
+
+- assert:
+    that: password_input == confirmation_prompt.user_input
+    msg: Password and confirmation do not match
+  when: password_input != ''
+
+- set_fact:
+    magento_admin_password: "{{ password_input if password_input != '' else magento_admin_password }}"
+  when: password_input != '' or magento_admin_password is defined
+
+- assert:
+    that: magento_admin_password is defined
+    msg: Admin password is required
+
+- set_fact:
+    magento_admin_firstname: "{{ first_name_input if first_name_input != '' else magento_admin_firstname }}"
+  when: first_name_input != '' or magento_admin_firstname is defined
+
+- assert:
+    that: magento_admin_firstname is defined
+    msg: Admin first name is required
+
+- set_fact:
+    magento_admin_lastname: "{{ last_name_input if last_name_input != '' else magento_admin_lastname }}"
+  when: last_name_input != '' or magento_admin_lastname is defined
+
+- assert:
+    that: magento_admin_lastname is defined
+    msg: Admin last name is required
+
+- set_fact:
+    magento_admin_user: "{{ username_input if username_input != '' else 'admin' }}"
+  when: magento_admin_user is not defined or username_input != ''

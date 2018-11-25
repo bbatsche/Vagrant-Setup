@@ -1,0 +1,16 @@
+---
+- name: Check for {{ item.path }} Setting
+  replace:
+    path: "{{ http_root }}/{{ domain }}/app/etc/env.php"
+    regexp: "{{ item.regexp }}"
+  check_mode: yes
+  changed_when: no
+  register: config_exists
+
+- name: Update {{ item.path }}
+  command: >
+    {{ http_root }}/{{ domain }}/bin/magento config:set --no-interaction --lock-env {{ item.path }} {{ item.value }}
+  args:
+    chdir: "{{ http_root }}/{{ domain }}"
+  when: config_exists.msg == ""
+  notify: Flush Magento Cache

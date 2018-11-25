@@ -1,6 +1,4 @@
 ---
-- import_playbook: ../_prompts/domain.yml
-
 - name: Create Magento 2 Site
   hosts: development-vm
 
@@ -8,11 +6,32 @@
     dynamic_php: yes
     public_directory: pub
     php_max_execution_time: 300
+    php_exec: /usr/local/phpenv/shims/php
     nginx_configs:
       - magento-{{ domain }}.conf
 
+  environment:
+    PHPENV_ROOT: "{{ phpenv_root }}"
+    PHPENV_VERSION: "{{ php_version }}"
+    PATH: "{{ phpenv_root }}/shims:{{ ansible_env.PATH }}"
+
+  pre_tasks:
+    - import_tasks: ../../../tasks/import_vars.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/domain.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/database/database.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/database/user.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/email.yml
+      tags: silent
+    - import_tasks: ../../../tasks/prompt/magento.yml
+      tags: silent
+
   roles:
   - role: bbatsche.PHP
+  - role: bbatsche.MySQL
 
   tasks:
     - name: Copy Magento Nginx Config
@@ -26,4 +45,115 @@
       apt: name=rabbitmq-server state=present
       become: yes
 
-- import_playbook: ../_post_php_site.yml
+    - import_tasks: ../../../tasks/post_php_site.yml
+
+    - name: Check for composer.json
+      stat: path={{ http_root }}/{{ domain }}/composer.json
+      register: composer_json
+
+    - name: Install Magento Dependencies
+      command: composer install --prefer-dist
+      args:
+        chdir: "{{ http_root }}/{{ domain }}"
+      register: composer_output
+      changed_when: "'Nothing to install or update' not in composer_output.stderr"
+      when: composer_json.stat.exists
+
+    - name: Check for bin/magento
+      stat: path={{ http_root }}/{{ domain }}/bin/magento
+      register: bin_magento
+
+    - name: Setup & Install Magento
+      block:
+        - name: Enable All Modules
+          command: "{{ http_root }}/{{ domain }}/bin/magento module:enable --all"
+          args:
+            chdir: "{{ http_root }}/{{ domain }}"
+          register: modules_enable
+          changed_when: "'No modules were changed.' not in modules_enable.stdout"
+
+        - name: Compile DI
+          command: "{{ http_root }}/{{ domain }}/bin/magento setup:di:compile"
+          args:
+            chdir: "{{ http_root }}/{{ domain }}"
+            creates: "{{ http_root }}/{{ domain }}/generated/code"
+
+        - name: Check for env.php
+          stat: path={{ http_root }}/{{ domain }}/app/etc/env.php
+          register: env_php
+
+        - name: Check if Magento is Installed
+          replace:
+            path: "{{ http_root }}/{{ domain }}/app/etc/env.php"
+            regexp: "['\"]install['\"]\\s*=>.+\\n\\s*['\"]date['\"]"
+          check_mode: yes
+          changed_when: no
+          register: magento_installed
+          when: env_php.stat.exists
+
+        - name: Install Magento
+          command: >
+            {{ http_root }}/{{ domain }}/bin/magento setup:install --no-interaction --db-host=localhost
+            --db-name={{ new_db_name }} --db-user={{ new_db_user }} --db-password={{ new_db_pass }}
+            --admin-user={{ magento_admin_user }} --admin-password={{ magento_admin_password }}
+            --admin-email={{ email_address }} --admin-firstname={{ magento_admin_firstname }}
+            --admin-lastname={{ magento_admin_lastname }} --session-save=redis --cache-backend=redis --page-cache=redis
+          args:
+            chdir: "{{ http_root }}/{{ domain }}"
+          when: not env_php.stat.exists or magento_installed.msg == ""
+          notify: Install Magento Cron
+
+        - name: Upgrade Magento
+          command: "{{ http_root }}/{{ domain }}/bin/magento setup:upgrade --no-interaction"
+          args:
+            chdir: "{{ http_root }}/{{ domain }}"
+          when: env_php.stat.exists and magento_installed.msg != ""
+
+        - name: Check Admin URL
+          replace:
+            path: "{{ http_root }}/{{ domain }}/app/etc/env.php"
+            regexp: "['\"]backend['\"]\\s*=>.*\\n\\s*['\"]frontName['\"]\\s*=>\\s*['\"]admin['\"]"
+          check_mode: yes
+          changed_when: no
+          register: admin_url
+
+        - name: Set Admin URL
+          command: >
+            {{ http_root }}/{{ domain }}/bin/magento setup:config:set --no-interaction --backend-frontname=admin
+          args:
+            chdir: "{{ http_root }}/{{ domain }}"
+          when: admin_url.msg == ""
+
+        - name: Set Magento Configs
+          include_tasks: ../../../tasks/set_magento_config.yml
+          loop:
+            - regexp: "['\"]timezone['\"]\\s*=>\\s*['\"]{{ ntp_timezone }}['\"]"
+              path: general/locale/timezone
+              value: "{{ ntp_timezone }}"
+            - regexp: "['\"]base_url['\"]\\s*=>\\s*['\"]http://{{ domain }}/['\"]"
+              path: web/unsecure/base_url
+              value: http://{{ domain }}/
+            - regexp: "['\"]base_url['\"]\\s*=>\\s*['\"]https://{{ domain }}/['\"]"
+              path: web/secure/base_url
+              value: https://{{ domain }}/
+            - regexp: "['\"]use_in_adminhtml['\"]\\s*=>\\s*['\"]?1['\"]?"
+              path: web/secure/use_in_adminhtml
+              value: 1
+            - regexp: "['\"]use_in_frontend['\"]\\s*=>\\s*['\"]?1['\"]?"
+              path: web/secure/use_in_frontend
+              value: 1
+      when: bin_magento.stat.exists
+
+  handlers:
+    - name: Install Magento Cron
+      command: "{{ http_root }}/{{ domain }}/bin/magento cron:install --no-interaction"
+      args:
+        chdir: "{{ http_root }}/{{ domain }}"
+      register: cron_install
+      failed_when: cron_install.rc != 0 and cron_install.stdout != "Crontab has already been generated and saved"
+      changed_when: cron_install.stdout == "Crontab has been generated and saved"
+
+    - name: Flush Magento Cache
+      command: "{{ http_root }}/{{ domain }}/bin/magento cache:flush --no-interaction"
+      args:
+        chdir: "{{ http_root }}/{{ domain }}"
