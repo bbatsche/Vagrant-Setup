@@ -15,7 +15,7 @@ pecl_extensions:
   - name: redis
     version: 4.1.1
   - name: yaml
-    version: 2.0.3
+    version: 2.0.2
 
 php_memory_limit: 1536M
 
