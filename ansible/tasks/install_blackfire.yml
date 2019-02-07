@@ -1,0 +1,34 @@
+---
+- name: Add Blackfire APT Key
+  apt_key:
+    url: https://packages.blackfire.io/gpg.key
+    state: present
+  become: yes
+
+- name: Add Blackfire Repository
+  apt_repository:
+    repo: deb http://packages.blackfire.io/debian any main
+    state: present
+  become: yes
+
+- name: Install Blackfire Agent
+  apt:
+    name:
+      - blackfire-agent
+      - blackfire-php
+    update_cache: yes
+    cache_valid_time: 86400
+    state: present
+  notify: Restart FPM
+  become: yes
+
+- name: Set Server ID & Token
+  lineinfile:
+    path: /etc/blackfire/agent
+    line: "{{ item.config }}={{ item.value }}"
+    regexp: "^{{ item.config }}="
+  notify: Restart Blackfire Agent
+  become: yes
+  loop:
+    - { config: "server-id", value: "{{ blackfire.server_id }}"}
+    - { config: "server-token", value: "{{ blackfire.token }}"}

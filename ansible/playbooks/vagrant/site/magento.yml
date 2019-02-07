@@ -47,6 +47,8 @@
 
     - import_tasks: ../../../tasks/post_php_site.yml
 
+    - import_tasks: ../../../tasks/install_blackfire.yml
+
     - name: Check for composer.json
       stat: path={{ http_root }}/{{ domain }}/composer.json
       register: composer_json
@@ -145,6 +147,8 @@
       when: bin_magento.stat.exists
 
   handlers:
+    - import_tasks: ../../../handlers/main.yml
+
     - name: Install Magento Cron
       command: "{{ http_root }}/{{ domain }}/bin/magento cron:install --no-interaction"
       args:
