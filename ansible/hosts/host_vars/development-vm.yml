@@ -16,7 +16,7 @@ composer_packages:
   - name: hirak/prestissimo
     version: ^0.3
   - name: phpunit/phpunit
-    version: ^7.4
+    version: ^7.5
   - name: phpspec/phpspec
     version: ^5.1
 
