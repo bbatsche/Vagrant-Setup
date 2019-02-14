@@ -17,6 +17,9 @@
 - src: geerlingguy.swap
   version: 1.0.0
 
+- src: geerlingguy.elasticsearch
+  version: 3.0.1
+
 - src: jnv.unattended-upgrades
   version: v1.7.0
 

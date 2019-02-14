@@ -32,6 +32,11 @@
   roles:
   - role: bbatsche.PHP
   - role: bbatsche.MySQL
+  - role: geerlingguy.java
+    become: yes
+  - role: geerlingguy.elasticsearch
+    become: yes
+    elasticsearch_version: 5.x
 
   tasks:
     - name: Copy Magento Nginx Config
@@ -144,6 +149,15 @@
             - regexp: "['\"]use_in_frontend['\"]\\s*=>\\s*['\"]?1['\"]?"
               path: web/secure/use_in_frontend
               value: 1
+            - regexp: "['\"]engine['\"]\\s*=>\\s*['\"]elasticsearch5['\"]"
+              path: catalog/search/engine
+              value: elasticsearch5
+            - regexp: "['\"]elasticsearch5_server_hostname['\"]\\s*=>\\s*['\"]localhost['\"]"
+              path: catalog/search/elasticsearch5_server_hostname
+              value: localhost
+            - regexp: "['\"]elasticsearch5_server_port['\"]\\s*=>\\s*['\"]?9200['\"]?"
+              path: catalog/search/elasticsearch5_server_port
+              value: 9200
       when: bin_magento.stat.exists
 
   handlers:
