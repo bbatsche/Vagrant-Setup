@@ -34,9 +34,6 @@
   - role: bbatsche.MySQL
   - role: geerlingguy.java
     become: yes
-  - role: geerlingguy.elasticsearch
-    become: yes
-    elasticsearch_version: 5.x
 
   tasks:
     - name: Copy Magento Nginx Config
@@ -45,6 +42,13 @@
         dest: /etc/nginx/conf.d/magento-{{ domain }}.conf
       become: yes
       notify: Restart Nginx
+
+    - name: Install Elasticsearch
+      import_role:
+        name: geerlingguy.elasticsearch
+      vars:
+        elasticsearch_version: 5.x
+      become: yes
 
     - name: Install RabbitMQ
       apt: name=rabbitmq-server state=present
@@ -158,6 +162,9 @@
             - regexp: "['\"]elasticsearch5_server_port['\"]\\s*=>\\s*['\"]?9200['\"]?"
               path: catalog/search/elasticsearch5_server_port
               value: 9200
+            - regexp: "['\"]use_rewrites['\"]\\s*=>\\s*['\"]?1['\"]?"
+              path: web/seo/use_rewrites
+              value: 1
       when: bin_magento.stat.exists
 
   handlers:
