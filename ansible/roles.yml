@@ -3,7 +3,7 @@
   version: v3.2.0
 
 - src: Oefenweb.yarn
-  version: v1.0.30
+  version: v1.0.32
 
 - src: sansible.nodejs
   version: v3.1.1

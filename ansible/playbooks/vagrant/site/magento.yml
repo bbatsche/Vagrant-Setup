@@ -104,8 +104,8 @@
 
         - name: Install Magento
           command: >
-            {{ http_root }}/{{ domain }}/bin/magento setup:install --no-interaction --db-host=localhost
-            --db-name={{ new_db_name }} --db-user={{ new_db_user }} --db-password={{ new_db_pass }}
+            {{ http_root }}/{{ domain }}/bin/magento setup:install --no-interaction --cleanup-database
+            --db-host=localhost --db-name={{ new_db_name }} --db-user={{ new_db_user }} --db-password={{ new_db_pass }}
             --admin-user={{ magento_admin_user }} --admin-password={{ magento_admin_password }}
             --admin-email={{ email_address }} --admin-firstname={{ magento_admin_firstname }}
             --admin-lastname={{ magento_admin_lastname }} --session-save=redis --cache-backend=redis --page-cache=redis
