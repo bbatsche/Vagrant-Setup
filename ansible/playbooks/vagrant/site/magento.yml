@@ -2,6 +2,9 @@
 - name: Create Magento 2 Site
   hosts: development-vm
 
+  vars_files:
+    - "{{ 'ansible/vars/local_paths.yml' | realpath }}"
+
   vars:
     dynamic_php: yes
     public_directory: pub
@@ -40,17 +43,17 @@
     PATH: "{{ phpenv_root }}/shims:{{ ansible_env.PATH }}"
 
   pre_tasks:
-    - import_tasks: ../../../tasks/import_vars.yml
+    - import_tasks: "{{ tasks_dir }}/import_vars.yml"
       tags: silent
-    - import_tasks: ../../../tasks/prompt/domain.yml
+    - import_tasks: "{{ tasks_dir }}/prompt/domain.yml"
       tags: silent
-    - import_tasks: ../../../tasks/prompt/database/database.yml
+    - import_tasks: "{{ tasks_dir }}/prompt/database/database.yml"
       tags: silent
-    - import_tasks: ../../../tasks/prompt/database/user.yml
+    - import_tasks: "{{ tasks_dir }}/prompt/database/user.yml"
       tags: silent
-    - import_tasks: ../../../tasks/prompt/email.yml
+    - import_tasks: "{{ tasks_dir }}/prompt/email.yml"
       tags: silent
-    - import_tasks: ../../../tasks/prompt/magento.yml
+    - import_tasks: "{{ tasks_dir }}/prompt/magento.yml"
       tags: silent
 
   roles:
@@ -62,7 +65,7 @@
   tasks:
     - name: Copy Magento Nginx Config
       template:
-        src: ../../../templates/magento.conf.j2
+        src: "{{ansible_dir }}/templates/magento.conf.j2"
         dest: /etc/nginx/conf.d/magento-{{ domain }}.conf
       become: yes
       notify: Restart Nginx
@@ -78,9 +81,8 @@
       apt: name=rabbitmq-server state=present
       become: yes
 
-    - import_tasks: ../../../tasks/post_php_site.yml
-
-    - import_tasks: ../../../tasks/install_blackfire.yml
+    - include_tasks: "{{ tasks_dir }}/post_php_site.yml"
+    - include_tasks: "{{ tasks_dir }}/install_blackfire.yml"
 
     - name: Check for composer.json
       stat: path={{ http_root }}/{{ domain }}/composer.json
@@ -100,19 +102,6 @@
 
     - name: Setup & Install Magento
       block:
-        - name: Enable All Modules
-          command: "{{ http_root }}/{{ domain }}/bin/magento module:enable --all"
-          args:
-            chdir: "{{ http_root }}/{{ domain }}"
-          register: modules_enable
-          changed_when: "'No modules were changed.' not in modules_enable.stdout"
-
-        - name: Compile DI
-          command: "{{ http_root }}/{{ domain }}/bin/magento setup:di:compile"
-          args:
-            chdir: "{{ http_root }}/{{ domain }}"
-            creates: "{{ http_root }}/{{ domain }}/generated/code"
-
         - name: Check for env.php
           stat: path={{ http_root }}/{{ domain }}/app/etc/env.php
           register: env_php
@@ -125,6 +114,25 @@
           changed_when: no
           register: magento_installed
           when: env_php.stat.exists
+
+        - name: Remove Cron Jobs
+          command: "{{ http_root }}/{{ domain }}/bin/magento cron:remove --no-interaction"
+          args:
+            chdir: "{{ http_root }}/{{ domain }}"
+          when: env_php.stat.exists and magento_installed.msg != ""
+
+        - name: Enable All Modules
+          command: "{{ http_root }}/{{ domain }}/bin/magento module:enable --all"
+          args:
+            chdir: "{{ http_root }}/{{ domain }}"
+          register: modules_enable
+          changed_when: "'No modules were changed.' not in modules_enable.stdout"
+
+        - name: Compile DI
+          command: "{{ http_root }}/{{ domain }}/bin/magento setup:di:compile"
+          args:
+            chdir: "{{ http_root }}/{{ domain }}"
+            creates: "{{ http_root }}/{{ domain }}/generated/code"
 
         - name: Install Magento
           command: >
@@ -143,7 +151,9 @@
           args:
             chdir: "{{ http_root }}/{{ domain }}"
           when: env_php.stat.exists and magento_installed.msg != ""
-          notify: Flush Magento Cache
+          notify:
+            - Flush Magento Cache
+            - Install Magento Cron
 
         - name: Check Admin URL
           replace:
@@ -161,7 +171,7 @@
           when: admin_url.msg == ""
 
         - name: Set Magento Configs
-          include_tasks: ../../../tasks/set_magento_config.yml
+          include_tasks: "{{ tasks_dir }}/set_magento_config.yml"
           loop:
             - regexp: "['\"]timezone['\"]\\s*=>\\s*['\"]{{ ntp_timezone }}['\"]"
               path: general/locale/timezone
@@ -193,10 +203,14 @@
       when: bin_magento.stat.exists
 
   post_tasks:
-    - import_tasks: ../../../tasks/post_ssl_dev_site.yml
+    - include_tasks: "{{ tasks_dir }}/post_ssl_dev_site.yml"
 
   handlers:
-    - import_tasks: ../../../handlers/main.yml
+    - name: Restart Blackfire Agent
+      service:
+        name: blackfire-agent
+        state: restarted
+      become: yes
 
     - name: Install Magento Cron
       command: "{{ http_root }}/{{ domain }}/bin/magento cron:install --no-interaction"

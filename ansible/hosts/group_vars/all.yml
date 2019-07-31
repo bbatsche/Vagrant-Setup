@@ -1,13 +1,4 @@
 ---
-# Some useful paths on the local file system
-# Realpath will take a relative path and expand it from where Ansible is being run
-#   (as opposed to being relative to what task/playbook it's referenced from)
-extra_config_file: "{{ 'config.yaml'       | realpath }}"
-site_var_dir:      "{{ 'ansible/site_vars' | realpath }}"
-storage_dir:       "{{ 'ansible/storage'   | realpath }}"
-local_sites_dir:   "{{ 'sites'             | realpath }}"
-certs_dir:         "{{ 'certs'             | realpath }}"
-
 php_version: 7.2.20
 
 pecl_extensions:

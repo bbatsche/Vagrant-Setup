@@ -1,6 +1,0 @@
----
-- name: Restart Blackfire Agent
-  service:
-    name: blackfire-agent
-    state: restarted
-  become: yes

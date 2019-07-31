@@ -1,0 +1,7 @@
+---
+# Realpath will take a relative path and expand it from where Ansible is being run
+#   (as opposed to being relative to what task/playbook it's referenced from)
+ansible_dir:       "{{ 'ansible'     | realpath }}"
+extra_config_file: "{{ 'config.yaml' | realpath }}"
+certs_dir:         "{{ 'certs'       | realpath }}"
+tasks_dir:         "{{ ansible_dir }}/tasks"

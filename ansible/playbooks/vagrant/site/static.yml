@@ -2,20 +2,23 @@
 - name: Create Static PHP 7 Site
   hosts: development-vm
 
+  vars_files:
+    - "{{ 'ansible/vars/local_paths.yml' | realpath }}"
+
   vars:
     dynamic_php: no
 
   pre_tasks:
-    - import_tasks: ../../../tasks/import_vars.yml
+    - import_tasks: "{{ tasks_dir }}/import_vars.yml"
       tags: silent
-    - import_tasks: ../../../tasks/prompt/email.yml
+    - import_tasks: "{{ tasks_dir }}/prompt/email.yml"
       tags: silent
-    - import_tasks: ../../../tasks/prompt/domain.yml
+    - import_tasks: "{{ tasks_dir }}/prompt/domain.yml"
       tags: silent
 
   roles:
     - role: bbatsche.PHP
 
   post_tasks:
-    - import_tasks: ../../../tasks/post_php_site.yml
-    - import_tasks: ../../../tasks/post_ssl_dev_site.yml
+    - import_tasks: "{{ tasks_dir }}/post_php_site.yml"
+    - import_tasks: "{{ tasks_dir }}/post_ssl_dev_site.yml"

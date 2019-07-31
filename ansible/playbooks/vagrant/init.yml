@@ -5,8 +5,9 @@
 
   # Manually specify these since Vagrant doesn't seem to use ansible/hosts so it can't find them automatically
   vars_files:
-    - ../../hosts/group_vars/all.yml
-    - ../../hosts/host_vars/development-vm.yml
+    - "{{ 'ansible/vars/local_paths.yml' | realpath }}"
+    - "{{ ansible_dir }}/hosts/group_vars/all.yml"
+    - "{{ ansible_dir }}/hosts/host_vars/development-vm.yml"
 
   pre_tasks:
     - name: Install Python for Ansible
@@ -20,7 +21,7 @@
     - name: Gathering Facts
       setup:
 
-    - import_tasks: ../../tasks/import_vars.yml
+    - include_tasks: "{{ tasks_dir }}/import_vars.yml"
       tags: silent
 
     - name: Check for VM Tools

@@ -9,5 +9,5 @@
 
 - name: Add Cert to Keychain
   local_action: >
-    command security add-trusted-cert -d -r trustRoot -k ~/Library/Keychains/login.keychain {{ certs_dir }}/{{ domain }}.crt
+    command sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ certs_dir }}/{{ domain }}.crt warn=no
   when: cert_copied is changed

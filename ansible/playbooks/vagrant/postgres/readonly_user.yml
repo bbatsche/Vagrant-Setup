@@ -2,15 +2,18 @@
 - name: Create PostgreSQL Readonly User
   hosts: development-vm
 
+  vars_files:
+    - "{{ 'ansible/vars/local_paths.yml' | realpath }}"
+
   vars:
     new_db_priv:
       table: [ SELECT ]
       sequence: [ SELECT ]
 
   pre_tasks:
-    - import_tasks: ../../../tasks/prompt/database/user.yml
+    - import_tasks: "{{ tasks_dir }}/prompt/database/user.yml"
       tags: silent
-    - import_tasks: ../../../tasks/prompt/database/database.yml
+    - import_tasks: "{{ tasks_dir }}/prompt/database/database.yml"
       tags: silent
 
   roles:
