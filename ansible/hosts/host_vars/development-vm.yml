@@ -8,7 +8,7 @@ http_root: /vagrant/sites
 db_admin: vagrant
 
 # Required vars for Phpenv role
-xdebug_version: 2.6.1
+xdebug_version: 2.7.2
 
 composer_packages:
   - name: psy/psysh
@@ -16,9 +16,26 @@ composer_packages:
   - name: hirak/prestissimo
     version: ^0.3
   - name: phpunit/phpunit
-    version: ^7.5
+    version: ^6.5
   - name: phpspec/phpspec
     version: ^5.1
+  - name: localheinz/composer-normalize
+    version: ^1.1
+
+content_security_policy:
+  "default-src":
+    - self
+  "script-src":
+    - self
+    - unsafe-inline
+  "style-src":
+    - self
+    - unsafe-inline
+  "base-uri": []
+  "form-action":
+    - self
+  "frame-ancestors": []
+  "upgrade-insecure-requests": yes
 
 install_mariadb: yes
 install_postgres: yes

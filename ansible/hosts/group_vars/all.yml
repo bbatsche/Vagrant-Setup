@@ -6,14 +6,15 @@ extra_config_file: "{{ 'config.yaml'       | realpath }}"
 site_var_dir:      "{{ 'ansible/site_vars' | realpath }}"
 storage_dir:       "{{ 'ansible/storage'   | realpath }}"
 local_sites_dir:   "{{ 'sites'             | realpath }}"
+certs_dir:         "{{ 'certs'             | realpath }}"
 
-php_version: 7.2.14
+php_version: 7.2.20
 
 pecl_extensions:
   - name: imagick
-    version: 3.4.3
-  - name: redis
-    version: 4.2.0
+    version: 3.4.4
+  - name:    redis
+    version: 5.0.2
   - name: yaml
     version: 2.0.4
 
@@ -23,7 +24,7 @@ use_ssl: yes
 
 mysql_socket: /var/run/mysqld/mysqld.sock
 
-sansible_nodejs_version: 8
+sansible_nodejs_version: 10
 sansible_nodejs_npms:
   - name: bower
   - name: gulp

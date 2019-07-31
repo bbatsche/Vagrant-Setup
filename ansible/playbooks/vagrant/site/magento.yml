@@ -7,8 +7,32 @@
     public_directory: pub
     php_max_execution_time: 300
     php_exec: /usr/local/phpenv/shims/php
+    php_open_basedir:
+      - /usr/lib/ssl
+      - /etc/ssl/certs
     nginx_configs:
       - magento-{{ domain }}.conf
+    content_security_policy:
+      "default-src":
+        - self
+      "script-src":
+        - self
+        - unsafe-inline
+        - unsafe-eval
+        - www.google.com
+        - www.gstatic.com
+      "style-src":
+        - self
+        - unsafe-inline
+        - "data:"
+      "img-src":
+        - self
+        - static.magento.com
+      "base-uri": []
+      "form-action":
+        - self
+      "frame-ancestors": []
+      "upgrade-insecure-requests": yes
 
   environment:
     PHPENV_ROOT: "{{ phpenv_root }}"
@@ -119,6 +143,7 @@
           args:
             chdir: "{{ http_root }}/{{ domain }}"
           when: env_php.stat.exists and magento_installed.msg != ""
+          notify: Flush Magento Cache
 
         - name: Check Admin URL
           replace:
@@ -166,6 +191,9 @@
               path: web/seo/use_rewrites
               value: 1
       when: bin_magento.stat.exists
+
+  post_tasks:
+    - import_tasks: ../../../tasks/post_ssl_dev_site.yml
 
   handlers:
     - import_tasks: ../../../handlers/main.yml

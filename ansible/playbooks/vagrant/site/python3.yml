@@ -13,3 +13,6 @@
   roles:
     - role: bbatsche.Python
       python_version: 3.4
+
+  post_tasks:
+    - import_tasks: ../../../tasks/post_ssl_dev_site.yml

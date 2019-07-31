@@ -12,3 +12,6 @@
 
   roles:
     - bbatsche.Ruby
+
+  post_tasks:
+    - import_tasks: ../../../tasks/post_ssl_dev_site.yml

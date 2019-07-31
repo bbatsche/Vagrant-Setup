@@ -1,0 +1,13 @@
+---
+- name: Copy Dev Cert to Vagrant Directory
+  copy:
+    src:        /etc/nginx/certs/{{ domain }}.crt
+    dest:       /vagrant/certs/{{ domain }}.crt
+    remote_src: yes
+    force:      "{{ ssl_cert_generated is changed }}"
+  register: cert_copied
+
+- name: Add Cert to Keychain
+  local_action: >
+    command security add-trusted-cert -d -r trustRoot -k ~/Library/Keychains/login.keychain {{ certs_dir }}/{{ domain }}.crt
+  when: cert_copied is changed
